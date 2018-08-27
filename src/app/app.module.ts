@@ -2,13 +2,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { GteCoreComponent } from './gte-core/gte-core.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GteCoreComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

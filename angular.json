@@ -29,7 +29,12 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/mathjs/dist/math.js",
+              "node_modules/file-saver/FileSaver.js",
+              "node_modules/phaser-ce/build/custom/pixi.js",
+              "node_modules/phaser-ce/build/phaser.js"
+            ]
           },
           "configurations": {
             "production": {

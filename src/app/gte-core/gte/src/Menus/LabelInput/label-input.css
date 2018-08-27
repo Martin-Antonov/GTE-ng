@@ -1,0 +1,28 @@
+#input-label{
+    display:none;
+    position:absolute;
+    width:10%;
+    height:3%;
+    z-index:1234;
+    left:30%;
+    top:30%;
+    font-size:1.5em;
+}
+
+#label-overlay{
+    position:absolute;
+    z-index:-1;
+    background-color:black;
+    opacity:0;
+    width:100%;
+    height:100%;
+    transition: opacity 200ms linear;
+}
+
+#input-label.show-label{
+    display:block;
+}
+#label-overlay.show-overlay{
+    opacity:0.3;
+    z-index: 1000;
+}
