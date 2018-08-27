@@ -12,6 +12,8 @@
             "element",
             "app",
             "kebab-case"
-        ]
+        ],
+      "prefer-const":false,
+      "one-line":false
     }
 }
