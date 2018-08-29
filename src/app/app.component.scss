@@ -1,0 +1,27 @@
+.grid-wrapper {
+  display: grid;
+  width:100%;
+  height:100%;
+  grid-gap: 0;
+  grid-template-columns: 4.6% 92.7% 2.7%;
+  grid-template-rows: 4.6% 92.7% 2.7%;
+  grid-template-areas: "g-top g-top g-top" "g-left g-middle g-right" "g-bottom g-bottom g-bottom";
+
+  app-left-menu {
+    grid-area: g-left;
+  }
+
+  app-right-menu {
+    grid-area: g-right;
+  }
+  app-top-menu {
+    grid-area: g-top;
+  }
+  app-bottom-menu {
+    grid-area: g-bottom;
+  }
+  app-gte-core {
+    grid-area: g-middle;
+  }
+}
+

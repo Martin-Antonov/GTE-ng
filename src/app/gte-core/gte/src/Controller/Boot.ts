@@ -27,17 +27,17 @@ export class Boot extends Phaser.State {
   radius: number;
 
   preload() {
-    this.game.load.image('link', 'src/Assets/Images/HoverMenu/Link.png');
-    this.game.load.image('minus', 'src/Assets/Images/HoverMenu/Minus.png');
-    this.game.load.image('player', 'src/Assets/Images/HoverMenu/Player.png');
-    this.game.load.image('plus', 'src/Assets/Images/HoverMenu/Plus.png');
-    this.game.load.image('scissors', 'src/Assets/Images/HoverMenu/Scissors.png');
-    this.game.load.image('unlink', 'src/Assets/Images/HoverMenu/Unlink.png');
-    this.game.load.image('chance', 'src/Assets/Images/HoverMenu/Chance.png');
-    this.game.load.image('zoomIn', 'src/Assets/Images/Misc/zoom-in.png');
-    this.game.load.image('zoomIn', 'src/Assets/Images/Misc/zoom-out.png');
-    this.game.load.image('zoomOut', 'src/Assets/Images/Misc/zoom-out.png');
-    this.game.load.image('close', 'src/Assets/Images/TopMenu/close-info.png');
+    // this.game.load.image('link', 'src/Assets/Images/HoverMenu/Link.png');
+    // this.game.load.image('minus', 'src/Assets/Images/HoverMenu/Minus.png');
+    // this.game.load.image('player', 'src/Assets/Images/HoverMenu/Player.png');
+    // this.game.load.image('plus', 'src/Assets/Images/HoverMenu/Plus.png');
+    // this.game.load.image('scissors', 'src/Assets/Images/HoverMenu/Scissors.png');
+    // this.game.load.image('unlink', 'src/Assets/Images/HoverMenu/Unlink.png');
+    // this.game.load.image('chance', 'src/Assets/Images/HoverMenu/Chance.png');
+    // this.game.load.image('zoomIn', 'src/Assets/Images/Misc/zoom-in.png');
+    // this.game.load.image('zoomIn', 'src/Assets/Images/Misc/zoom-out.png');
+    // this.game.load.image('zoomOut', 'src/Assets/Images/Misc/zoom-out.png');
+    // this.game.load.image('close', 'src/Assets/Images/TopMenu/close-info.png');
   }
 
   create() {

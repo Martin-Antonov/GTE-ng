@@ -1,6 +1,5 @@
 /// <reference path="../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
 
-
 import {Boot} from './src/Controller/Boot';
 import {MainScene} from './src/Controller/MainScene';
 

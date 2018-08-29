@@ -7,6 +7,7 @@ import {HoverMenuController} from './HoverMenuController';
 import {LabelInput} from '../Menus/LabelInput/LabelInput';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
 import {TreeViewProperties} from '../View/TreeViewProperties';
+import {UserActionControllerService} from '../../../../services/user-action-controller.service';
 
 /**A class for the main part of the software. This is the starting point of the core software*/
 export class MainScene extends Phaser.State {
@@ -26,6 +27,10 @@ export class MainScene extends Phaser.State {
   // For resizing the game
   resizeLocked: boolean;
 
+  constructor(private uac: UserActionControllerService) {
+    super();
+  }
+
   /** The create method is built-into the engine for every state. It acts as a constructor.*/
   create() {
 
@@ -33,7 +38,6 @@ export class MainScene extends Phaser.State {
     this.userActionController = new UserActionController(this.game, this.treeController);
     this.keyboardController = new KeyboardController(this.game, this.userActionController);
     this.hoverManager = new HoverMenuController(this.game, this.userActionController);
-
     this.resizeLocked = false;
     this.gameResize();
   }
@@ -43,12 +47,11 @@ export class MainScene extends Phaser.State {
       if (!this.resizeLocked) {
         this.resizeLocked = true;
         this.game.time.events.add(100, () => {
-          let width = window.innerWidth * devicePixelRatio;
-          let height = window.innerHeight * devicePixelRatio;
-          if (width > 1920) {
-            width = 1920;
-            height = 1920 / window.innerWidth * window.innerHeight;
-          }
+          let element = document.getElementById('phaser-div');
+          console.log(element);
+          let boundingRect = element.getBoundingClientRect();
+          let width = boundingRect.width;
+          let height = boundingRect.height;
           this.game.scale.setGameSize(width, height);
           this.treeController.treeViewProperties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
             this.game.width * INITIAL_TREE_WIDTH);
