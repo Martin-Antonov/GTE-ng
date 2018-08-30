@@ -1,5 +1,24 @@
 @import "../../shared/constants";
+@import "../../shared/mixins";
 
-:host{
+:host {
   background: $grey2;
+  display: flex;
+  #logo-wrapper {
+    position:relative;
+    display:inline-block;
+    @include center(false,true);
+    height:100%;
+    width:auto;
+
+    img {
+      position: relative;
+      height: 60%;
+      width: auto;
+      margin-right: 1em;
+      margin-left: 0.5em;
+      @include center(false, true);
+      @include removeSelection();
+    }
+  }
 }

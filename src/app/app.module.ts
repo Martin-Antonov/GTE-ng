@@ -8,6 +8,8 @@ import {UserActionControllerService} from './services/user-action-controller.ser
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 import { RightMenuComponent } from './components/right-menu/right-menu.component';
 import { BottomMenuComponent } from './components/bottom-menu/bottom-menu.component';
+import { BasicButtonComponent } from './components/top-menu/basic-button/basic-button.component';
+
 
 @NgModule({
   declarations: [
@@ -17,6 +19,7 @@ import { BottomMenuComponent } from './components/bottom-menu/bottom-menu.compon
     LeftMenuComponent,
     RightMenuComponent,
     BottomMenuComponent,
+    BasicButtonComponent,
   ],
   imports: [
     BrowserModule,

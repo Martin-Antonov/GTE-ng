@@ -10,6 +10,7 @@ import {UserActionController} from '../../gte-core/gte/src/Controller/UserAction
 export class TopMenuComponent implements OnInit {
 
   userActionController: UserActionController;
+  logoSrc: string;
 
   constructor(private uac: UserActionControllerService) {
   }
@@ -18,5 +19,10 @@ export class TopMenuComponent implements OnInit {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
+    this.logoSrc = 'assets/images/logo.png';
+  }
+
+  someFunction() {
+    console.log('fuck you');
   }
 }

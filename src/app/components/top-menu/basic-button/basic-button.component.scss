@@ -1,0 +1,24 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+.button-wrapper {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  width: auto;
+  @include center(false, true);
+  :hover {
+    background: $grey3;
+  }
+  img {
+    position: relative;
+    height: 70%;
+    width: auto;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    @include center(false, true);
+    @include removeSelection();
+  }
+}
+
+
