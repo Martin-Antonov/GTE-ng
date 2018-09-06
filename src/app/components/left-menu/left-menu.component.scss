@@ -1,5 +1,28 @@
 @import "../../shared/constants";
+@import "../../shared/mixins";
 
-:host{
-  background: $grey4;
+:host {
+  background: $grey2;
+  hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 1px;
+    width: 70%;
+    border: none;
+    color: $grey4;
+    background-color: $grey4;
+  }
+  .circle {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1em;
+    height: 1em;
+    border-radius: 0.5em;
+    margin-bottom: 0.2em;
+    opacity: 0.75;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+  @include buttonInactive();
 }

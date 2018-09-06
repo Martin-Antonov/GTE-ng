@@ -3,11 +3,9 @@
 import {TreeController} from './TreeController';
 import {UserActionController} from './UserActionController';
 import {KeyboardController} from './KeyboardController';
-import {HoverMenuController} from './HoverMenuController';
-import {LabelInput} from '../Menus/LabelInput/LabelInput';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
 import {TreeViewProperties} from '../View/TreeViewProperties';
-import {UserActionControllerService} from '../../../../services/user-action-controller.service';
+import {InitialBitmapsCreator} from '../Utils/InitialBitmapsCreator';
 
 /**A class for the main part of the software. This is the starting point of the core software*/
 export class MainScene extends Phaser.State {
@@ -18,26 +16,19 @@ export class MainScene extends Phaser.State {
   userActionController: UserActionController;
   // The Keyboard Controller handles input and sends signals and executes methods from the treeController
   keyboardController: KeyboardController;
-  // The Hover Menu Manager handles the buttons and signals when hovering on a node or iset.
-  hoverManager: HoverMenuController;
-  // Top Menu with action buttons
-
-  // The label input field which appears when you click on a label
-  labelInput: LabelInput;
   // For resizing the game
   resizeLocked: boolean;
 
-  constructor(private uac: UserActionControllerService) {
-    super();
+  preload() {
+    this.game.load.image('scissors', 'assets/images/Scissors.png');
   }
 
   /** The create method is built-into the engine for every state. It acts as a constructor.*/
   create() {
-
+    let bmdCreator = new InitialBitmapsCreator(this.game);
     this.treeController = new TreeController(this.game);
     this.userActionController = new UserActionController(this.game, this.treeController);
     this.keyboardController = new KeyboardController(this.game, this.userActionController);
-    this.hoverManager = new HoverMenuController(this.game, this.userActionController);
     this.resizeLocked = false;
     this.gameResize();
   }
@@ -48,7 +39,6 @@ export class MainScene extends Phaser.State {
         this.resizeLocked = true;
         this.game.time.events.add(100, () => {
           let element = document.getElementById('phaser-div');
-          console.log(element);
           let boundingRect = element.getBoundingClientRect();
           let width = boundingRect.width;
           let height = boundingRect.height;

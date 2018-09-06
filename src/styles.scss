@@ -1,11 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+@import "app/shared/constants";
 html, body, app-root {
   width: 100%;
   height: 100%;
   margin:0;
   padding:0;
+  box-sizing: border-box;
 }
 body {
   //overflow: hidden;
   margin:0;
+  font-family: $myriad-pro;
+}
+
+html {
+ ;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }

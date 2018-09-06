@@ -1,3 +1,5 @@
+@import "constants";
+
 @mixin center($horizontally, $vertically) {
   @if $horizontally {
     left: 50%;
@@ -33,5 +35,23 @@
   -ms-user-select: none;
   user-select: none;
   -webkit-user-drag: none;
+}
 
+@mixin clickableButton {
+  background: $grey3;
+  border: 1px solid $grey-border;
+  border-radius: 5px;
+  &:hover {
+    background: $grey-border;
+  }
+  &:active {
+    background: $grey2;
+  }
+}
+
+@mixin buttonInactive {
+  .inactive {
+    opacity: 0.3;
+    pointer-events: none;
+  }
 }

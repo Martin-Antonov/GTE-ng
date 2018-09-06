@@ -1,0 +1,10 @@
+<div *ngIf="this.userActionController" class="player-sign" [ngClass]="{'inactive':this.isMinusDisabled()}"
+     (click)="this.userActionController.removeLastPlayerHandler()"><img [src]=this.minusIconPath
+                                                                        alt="minus-icon"></div>
+<div *ngIf="this.userActionController" class="players-container">
+  <img [src]=this.userIconPath alt="player-icon">
+  {{" "+(this.userActionController.treeController.tree.players.length-1)}}
+</div>
+
+<div *ngIf="this.userActionController" class="player-sign" [ngClass]="{'inactive':this.isPlusDisabled()}"
+     (click)="this.userActionController.addPlayerHandler()"><img [src]=this.plusIconPath alt="plus-icon"></div>

@@ -1,0 +1,39 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+:host {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  color: $grey-text;
+  @include removeSelection();
+
+  .player-sign {
+    display: flex;
+    width: 1.5em;
+    height: 1.5em;
+    align-items: center;
+    justify-content: center;
+    @include clickableButton();
+    img {
+      height: 60%;
+    }
+  }
+  .players-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5em;
+    width: 4em;
+    background: $grey1;
+    border: 1px solid $grey-border;
+    border-radius: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    img {
+      height: 60%;
+      margin-right: 6px;
+    }
+  }
+  @include buttonInactive();
+}

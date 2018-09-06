@@ -11,7 +11,6 @@ import {ISetView} from '../View/ISetView';
 import {MoveView} from '../View/MoveView';
 import {ISet} from '../Model/ISet';
 import {Node} from '../Model/Node';
-import {LabelInput} from '../Menus/LabelInput/LabelInput';
 
 
 /**A class which connects the TreeView and the Tree Model.
@@ -22,7 +21,6 @@ export class TreeController {
   tree: Tree;
   treeView: TreeView;
   treeViewProperties: TreeViewProperties;
-  labelInput = new LabelInput(this.game);
 
   // An array used to list all nodes that need to be deleted
   private nodesToDelete: Array<Node>;
@@ -34,7 +32,6 @@ export class TreeController {
     this.game = game;
     this.setCircleBitmapData(1);
     this.nodesToDelete = [];
-    this.labelInput = new LabelInput(this.game);
     this.createInitialTree();
     this.attachHandlersToNodes();
     this.hoverSignal = new Phaser.Signal();
@@ -143,20 +140,20 @@ export class TreeController {
   /**Handler for the signal CLICK on a Move Label*/
   private handleInputDownMoveLabel(label: Phaser.Text, move: MoveView) {
     if (label.alpha !== 0) {
-      this.labelInput.show(label, move);
+      // this.labelInput.show(label, move);
     }
   }
 
   /**Handler for the signal CLICK on a Node Label*/
   private handleInputDownNodeLabel(label: Phaser.Text, node: NodeView) {
     if (label.alpha !== 0) {
-      this.labelInput.show(label, node);
+      // this.labelInput.show(label, node);
     }
   }
 
   private handleInputDownNodePayoffs(label: Phaser.Text, node: NodeView) {
     if (label.alpha !== 0) {
-      this.labelInput.show(label, node);
+      // this.labelInput.show(label, node);
     }
   }
 

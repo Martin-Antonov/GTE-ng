@@ -2,23 +2,24 @@
 @import "../../shared/mixins";
 
 :host {
-  background: $grey2;
   display: flex;
-  #logo-wrapper {
-    position:relative;
-    display:inline-block;
-    @include center(false,true);
-    height:100%;
-    width:auto;
+  box-shadow: 0 3px 14px -1px rgba(0,0,0,0.78);
+  z-index: 20;
+  background: $grey2;
+  .image-wrapper {
+    display: flex;
+    align-items: center;
+    background: $grey1;
+    padding-right: 2em;
+    padding-left: 2em;
 
     img {
-      position: relative;
-      height: 60%;
-      width: auto;
-      margin-right: 1em;
-      margin-left: 0.5em;
-      @include center(false, true);
+      height: 70%;
       @include removeSelection();
     }
   }
+  .button-wrapper {
+    height: 40% !important;
+  }
 }
+

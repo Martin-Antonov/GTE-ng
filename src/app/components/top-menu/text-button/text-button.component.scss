@@ -1,0 +1,22 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+:host {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  @include removeSelection();
+
+  .text-button-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 60%;
+    padding-left: 2em;
+    padding-right: 2em;
+    @include clickableButton();
+    font-family: $myriad-pro;
+    color: $grey-text;
+  }
+}

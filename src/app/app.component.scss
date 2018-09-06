@@ -1,7 +1,9 @@
+@import "shared/constants";
+
 .grid-wrapper {
   display: grid;
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   grid-gap: 0;
   grid-template-columns: 2% 96.5% 1.5%;
   grid-template-rows: 4.5% 93% 2.5%;
@@ -24,4 +26,5 @@
     grid-area: g-middle;
   }
 }
+
 

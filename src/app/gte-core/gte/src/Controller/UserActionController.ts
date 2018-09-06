@@ -271,12 +271,20 @@ export class UserActionController {
 
   /**A method which removes the last player from the list of players*/
   removeLastPlayerHandler() {
-    this.treeController.tree.removePlayer(this.treeController.tree.players[this.treeController.tree.players.length - 1]);
-    // $('#player-number').html((this.treeController.tree.players.length - 1).toString());
+    let numberOfPlayers = this.treeController.tree.players.length - 1;
+    if (numberOfPlayers > 1) {
+      this.treeController.tree.removePlayer(this.treeController.tree.players[numberOfPlayers]);
+      this.treeController.resetTree(false, false);
+      this.destroyStrategicForm();
+      this.undoRedoController.saveNewTree();
+    }
+  }
 
-    this.treeController.resetTree(false, false);
-    this.destroyStrategicForm();
-    this.undoRedoController.saveNewTree();
+  addPlayerHandler() {
+    let numberOfPlayers = this.treeController.tree.players.length - 1;
+    if (numberOfPlayers < 4) {
+      this.treeController.addPlayer(numberOfPlayers + 1);
+    }
   }
 
   /**A method for creating an iSet (keyboard I)*/
@@ -341,8 +349,20 @@ export class UserActionController {
   }
 
   /**Starts the 'Cut' state for an Information set*/
-  initiateCutSpriteHandler(iSetV: ISetView) {
-    this.cutInformationSet = iSetV;
+  initiateCutSpriteHandler(iSetV?: ISetView) {
+    if (iSetV) {
+      this.cutInformationSet = iSetV;
+    }
+    else {
+      let distinctISetsSelected = this.treeController.getDistinctISetsFromNodes(this.selectedNodes);
+      if (distinctISetsSelected.length === 1) {
+        this.cutInformationSet = this.treeController.treeView.findISetView(distinctISetsSelected[0]);
+      }
+    }
+    if (!this.cutInformationSet) {
+      return;
+    }
+
     this.cutSprite.bringToTop();
     this.deselectNodesHandler();
     this.game.add.tween(this.cutSprite).to({alpha: 1}, 300, Phaser.Easing.Default, true);
@@ -513,9 +533,9 @@ export class UserActionController {
 
   /**Hides the input*/
   hideInputLabel() {
-    if (this.treeController.labelInput.active) {
-      this.treeController.labelInput.hide();
-    }
+    // if (this.treeController.labelInput.active) {
+    //   this.treeController.labelInput.hide();
+    // }
   }
 
   /**A helper method which calculates the next possible index of a labeled node*/
@@ -596,6 +616,7 @@ export class UserActionController {
     }
   }
 
+  // TODO: Remove this
   solveGame() {
     console.log('hanged');
     this.createStrategicForm();

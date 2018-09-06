@@ -23,6 +23,8 @@ export class TopMenuComponent implements OnInit {
   }
 
   someFunction() {
-    console.log('fuck you');
+
   }
+
+
 }

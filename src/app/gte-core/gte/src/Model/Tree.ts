@@ -111,11 +111,26 @@ export class Tree {
 
   /**Checks whether any 2 nodes of an array share a path to the root.*/
   private checkIfNodesSharePathToRoot(nodes: Array<Node>): boolean {
-    for (let i = 0; i < nodes.length; i++) {
-      let n1 = nodes[i];
+    let allNodesFromISets = [];
+    nodes.forEach(n => {
+
+      if (n.iSet) {
+        n.iSet.nodes.forEach(nI => {
+          if (allNodesFromISets.indexOf(nI) === -1) {
+            allNodesFromISets.push(nI);
+          }
+        });
+      }
+
+      else{
+        allNodesFromISets.push(n);
+      }
+    });
+    for (let i = 0; i < allNodesFromISets.length; i++) {
+      let n1 = allNodesFromISets[i];
       let path1 = n1.getPathToRoot();
-      for (let j = i + 1; j < nodes.length; j++) {
-        let n2 = nodes[j];
+      for (let j = i + 1; j < allNodesFromISets.length; j++) {
+        let n2 = allNodesFromISets[j];
         let path2 = n2.getPathToRoot();
         if (path1.indexOf(n2) !== -1 || path2.indexOf(n1) !== -1) {
           return true;

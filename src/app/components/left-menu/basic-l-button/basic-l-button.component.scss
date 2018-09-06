@@ -3,13 +3,12 @@
 
 :host {
   display: flex;
-  align-items: center;
-
-  .button-wrapper {
+  justify-content: center;
+  .button-l-wrapper {
     display: flex;
     align-items: center;
-    height: 70%;
-    margin-left: 1vh;
+    justify-content: center;
+    width: 80%;
     &:hover {
       background: $grey3;
     }
@@ -17,12 +16,13 @@
       background: $grey2;
     }
     img {
-      height: 70%;
+      width: 70%;
       z-index: 10;
+      padding-top: 0.2vw;
+      padding-bottom: 0.2vw;
       @include removeSelection();
-      padding-left: 0.5vh;
-      padding-right: 0.5vh;
     }
   }
 }
+
 

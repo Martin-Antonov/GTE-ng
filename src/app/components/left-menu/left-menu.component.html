@@ -1,1 +1,34 @@
-a
+<app-basic-l-button [imageKey]="'plus.png'" (clicked)="this.userActionController.addNodesHandler();"
+                    style="margin-top:20px;" [ngClass]="{'inactive':this.areNodesSelected()}"></app-basic-l-button>
+<app-basic-l-button [imageKey]="'minus.png'"
+                    (clicked)="this.userActionController.deleteNodeHandler();"
+                    [ngClass]="{'inactive':this.areNodesSelected()}"></app-basic-l-button>
+<app-basic-l-button [imageKey]="'user.png'" (clicked)="this.togglePlayerActive()"
+                    [ngClass]="{'inactive':!this.doSelectedHaveChildren()}"></app-basic-l-button>
+
+<div *ngIf="this.playerIsClicked && this.doSelectedHaveChildren()">
+  <div class="circle" [ngStyle]="{'background-color': playerColor}"
+       *ngFor="let playerColor of this.playerColors; let i=index" (click)="this.assignPlayer(i)"></div>
+</div>
+
+
+<app-basic-l-button [imageKey]="'chance-node.png'"
+                    (clicked)="this.userActionController.assignChancePlayerToNodeHandler();"
+                    [ngClass]="{'inactive':!this.doSelectedHaveChildren()}"></app-basic-l-button>
+<app-basic-l-button [imageKey]="'link.png'"
+                    (clicked)="this.userActionController.createISetHandler();"
+                    [ngClass]="{'inactive':!this.canCreateISet()}"></app-basic-l-button>
+<app-basic-l-button [imageKey]="'unlink.png'"
+                    (clicked)="this.userActionController.removeISetsByNodesHandler();"
+                    [ngClass]="{'inactive':!this.canUnlinkOrCut()}"></app-basic-l-button>
+<app-basic-l-button [imageKey]="'cut.png'"
+                    (clicked)="this.userActionController.initiateCutSpriteHandler()"
+                    [ngClass]="{'inactive':!this.canUnlinkOrCut()}"></app-basic-l-button>
+<hr>
+<app-toggle-l-button [imageKey]="'non-zero-sum.png'" [secondImageKey]="'zero-sum.png'"
+                     (clicked)="this.userActionController.toggleZeroSum();"></app-toggle-l-button>
+<app-basic-l-button [imageKey]="'random-payoffs.png'" (clicked)="this.userActionController.randomPayoffsHandler();"
+                    style="margin-top:10px; margin-bottom:10px;"></app-basic-l-button>
+<app-toggle-l-button [imageKey]="'fraction.png'" [secondImageKey]="'decimal.png'"
+                     (clicked)="this.userActionController.toggleFractionDecimal();"></app-toggle-l-button>
+<hr>

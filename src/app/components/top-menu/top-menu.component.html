@@ -1,8 +1,15 @@
-<div id="logo-wrapper"><img [src]="this.logoSrc" alt="logo-image"></div>
-
-<app-basic-button [imageKey]="'new_tree.png'" (clicked)="someFunction()"></app-basic-button>
+<div class="image-wrapper"><img [src]="this.logoSrc" alt="logo-image"></div>
+<app-basic-button [imageKey]="'new-tree.png'" (clicked)="someFunction()"></app-basic-button>
 <app-basic-button [imageKey]="'save.png'" (clicked)="someFunction()"></app-basic-button>
 <app-basic-button [imageKey]="'load.png'" (clicked)="someFunction()"></app-basic-button>
-<app-basic-button [imageKey]="'save_image.png'" (clicked)="someFunction()"></app-basic-button>
-<app-basic-button [imageKey]="'undo.png'" (clicked)="someFunction()"></app-basic-button>
-<app-basic-button [imageKey]="'redo.png'" (clicked)="someFunction()"></app-basic-button>
+<app-basic-button [imageKey]="'save-image.png'" (clicked)="someFunction()"></app-basic-button>
+<app-basic-button [imageKey]="'undo.png'" (clicked)="this.userActionController.undoRedoHandler(true)" style="padding-left:2em"></app-basic-button>
+<app-basic-button [imageKey]="'redo.png'" (clicked)="this.userActionController.undoRedoHandler(false)"></app-basic-button>
+
+<app-players-box></app-players-box>
+
+<app-text-button [text]="'Strategic Form'"></app-text-button>
+<app-text-button [text]="'Matrix Input'"></app-text-button>
+<app-text-button [text]="'Solver'"></app-text-button>
+
+
