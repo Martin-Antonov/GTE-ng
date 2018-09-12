@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToggleLButtonComponent } from './toggle-l-button.component';
+import { StrategicFormComponent } from './strategic-form.component';
 
-describe('ToggleLButtonComponent', () => {
-  let component: ToggleLButtonComponent;
-  let fixture: ComponentFixture<ToggleLButtonComponent>;
+describe('StrategicFormComponent', () => {
+  let component: StrategicFormComponent;
+  let fixture: ComponentFixture<StrategicFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToggleLButtonComponent ]
+      declarations: [ StrategicFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ToggleLButtonComponent);
+    fixture = TestBed.createComponent(StrategicFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {UserActionController} from '../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+
 
 @Injectable({
   providedIn: 'root'

@@ -3,6 +3,9 @@
 
 :host {
   background: $grey2;
+  display:flex;
+  flex-direction: column;
+  align-items:center;
   hr {
     margin-top: 20px;
     margin-bottom: 20px;

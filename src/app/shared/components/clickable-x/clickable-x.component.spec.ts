@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BasicButtonComponent } from './basic-button.component';
+import { ClickableXComponent } from './clickable-x.component';
 
-describe('BasicButtonComponent', () => {
-  let component: BasicButtonComponent;
-  let fixture: ComponentFixture<BasicButtonComponent>;
+describe('ClickableXComponent', () => {
+  let component: ClickableXComponent;
+  let fixture: ComponentFixture<ClickableXComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BasicButtonComponent ]
+      declarations: [ ClickableXComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BasicButtonComponent);
+    fixture = TestBed.createComponent(ClickableXComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

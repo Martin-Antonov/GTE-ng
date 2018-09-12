@@ -112,7 +112,7 @@ export class UserActionController {
   createNewTree() {
     this.deleteNodeHandler(this.treeController.treeView.nodes[0]);
     this.addNodesHandler(this.treeController.treeView.nodes[0]);
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
   }
 
   /**Saves a tree to a txt file*/
@@ -184,7 +184,7 @@ export class UserActionController {
       this.errorPopUp.show('Error in reading file. ');
       this.treeController.createInitialTree();
     }
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
   }
 
   /**A method which saves the tree to a png file*/
@@ -243,7 +243,7 @@ export class UserActionController {
       this.selectedNodes.splice(this.selectedNodes.indexOf(n), 1);
     });
 
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
@@ -255,6 +255,7 @@ export class UserActionController {
     else if (this.selectedNodes.length > 0) {
       this.treeController.assignPlayerToNode(playerID, this.selectedNodes);
     }
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
@@ -266,6 +267,7 @@ export class UserActionController {
     else if (this.selectedNodes.length > 0) {
       this.treeController.assignChancePlayerToNode(this.selectedNodes);
     }
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
@@ -275,7 +277,7 @@ export class UserActionController {
     if (numberOfPlayers > 1) {
       this.treeController.tree.removePlayer(this.treeController.tree.players[numberOfPlayers]);
       this.treeController.resetTree(false, false);
-      this.destroyStrategicForm();
+      this.checkCreateStrategicForm();
       this.undoRedoController.saveNewTree();
     }
   }
@@ -298,14 +300,15 @@ export class UserActionController {
         return;
       }
     }
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
   /**Remove iSetHandler*/
   removeISetHandler(iSet: ISet) {
     this.treeController.removeISetHandler(iSet);
-    this.destroyStrategicForm();
+
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
@@ -317,7 +320,7 @@ export class UserActionController {
     else {
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
     }
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
@@ -326,20 +329,20 @@ export class UserActionController {
     this.undoRedoController.changeTreeInController(undo);
     // $('#player-number').html((this.treeController.tree.players.length - 1).toString());
     this.emptySelectedNodes();
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
   }
 
   /**A method for assigning random payoffs*/
   randomPayoffsHandler() {
     this.treeController.assignRandomPayoffs();
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the zero sum on or off*/
   toggleZeroSum() {
     this.treeController.treeViewProperties.zeroSumOn = !this.treeController.treeViewProperties.zeroSumOn;
-    this.destroyStrategicForm();
     this.treeController.resetTree(false, false);
+    this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the fractional or decimal view of chance moves*/
@@ -586,40 +589,24 @@ export class UserActionController {
     this.treeController.treeView.drawISets();
   }
 
-  createStrategicForm() {
+  checkCreateStrategicForm() {
     this.destroyStrategicForm();
-
     if (this.treeController.tree.checkAllNodesLabeled()) {
       this.strategicForm = new StrategicForm(this.treeController.tree);
-      this.strategicFormView = new StrategicFormView(this.game, this.strategicForm);
-      this.strategicFormView.background.events.onDragStart.add(() => {
-        this.game.canvas.style.cursor = 'move';
-        this.selectionRectangle.active = false;
-      });
-      this.strategicFormView.background.events.onDragStop.add(() => {
-        this.game.canvas.style.cursor = 'move';
-        this.selectionRectangle.active = true;
-      });
-      this.strategicFormView.closeIcon.events.onInputDown.add(() => {
-        this.strategicForm.destroy();
-        this.strategicFormView.destroy();
-      });
     }
   }
 
   destroyStrategicForm() {
     if (this.strategicForm) {
       this.strategicForm.destroy();
-    }
-    if (this.strategicFormView) {
-      this.strategicFormView.destroy();
+      this.strategicForm = null;
     }
   }
 
   // TODO: Remove this
   solveGame() {
     console.log('hanged');
-    this.createStrategicForm();
+    this.checkCreateStrategicForm();
 
     if (this.strategicForm) {
       console.log(this.strategicForm.payoffsMatrix);

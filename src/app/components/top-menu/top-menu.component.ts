@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {UserActionControllerService} from '../../services/user-action-controller.service';
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {ITooltips} from '../../services/tooltips/tooltips';
+import {TooltipsService} from '../../services/tooltips/tooltips.service';
+import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
+import {UiSettingsService} from '../../services/ui-settings/ui-settings.service';
 
 @Component({
   selector: 'app-top-menu',
@@ -10,21 +13,30 @@ import {UserActionController} from '../../gte-core/gte/src/Controller/UserAction
 export class TopMenuComponent implements OnInit {
 
   userActionController: UserActionController;
+  tooltips: ITooltips;
   logoSrc: string;
 
-  constructor(private uac: UserActionControllerService) {
+  strategicFormActive: boolean;
+
+  constructor(private uac: UserActionControllerService, public tts: TooltipsService, public uis: UiSettingsService) {
   }
 
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
+
+    this.tts.getTooltips().subscribe((tooltips) => {
+      this.tooltips = tooltips;
+    });
     this.logoSrc = 'assets/images/logo.png';
+    this.strategicFormActive = false;
   }
 
   someFunction() {
-
   }
 
-
+  toggleStrategicForm() {
+    this.uis.strategicFormActive = !this.uis.strategicFormActive;
+  }
 }

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {UserActionControllerService} from '../../../services/user-action-controller.service';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 
 @Component({
   selector: 'app-players-box',

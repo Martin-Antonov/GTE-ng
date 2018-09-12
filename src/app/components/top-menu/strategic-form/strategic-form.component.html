@@ -1,0 +1,45 @@
+<div class="strat-form-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle" >
+  <div #dragHandle class="top-handle">
+    <span class="strat-form-title">Strategic Form</span>
+    <app-clickable-x (click)="this.close()"></app-clickable-x>
+  </div>
+  <div class="strat-form-content">
+    <div class="table-container" [ngStyle]="{transform: this.stratFormScaleCSS}"
+         *ngIf="this.userActionController && this.userActionController.strategicForm; else not_available">
+      <div class="diagonal-line">
+        <div class="p1-label">{{this.userActionController.treeController.tree.players[1].label}}</div>
+        <div class="p2-label">{{this.userActionController.treeController.tree.players[2].label}}</div>
+      </div>
+      <div class="row-strategies">
+        <div class="row-strat" *ngFor="let strategy of this.userActionController.strategicForm.rows">{{strategy}}</div>
+      </div>
+      <div class="col-strategies">
+        <div class="col-strat" *ngFor="let strategy of this.userActionController.strategicForm.cols">{{strategy}}</div>
+      </div>
+      <table cellspacing="0" cellpadding="0">
+        <tr *ngFor="let row of this.userActionController.strategicForm.rows; index as i">
+          <td *ngFor="let column of this.userActionController.strategicForm.cols; index as j">
+            <div class="payoffs-wrapper">
+              <div class="p1-payoff">
+                {{this.userActionController.strategicForm.payoffsMatrix[i][j].outcomes[0].toString() }}
+              </div>
+              <div class="p2-payoff">
+                {{this.userActionController.strategicForm.payoffsMatrix[i][j].outcomes[1].toString() }}
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <ng-template #not_available> Strategic form not available...</ng-template>
+  </div>
+
+  <div class="bottom-field">
+    <div class="zoom-button">
+      <img [src]="'assets/images/zoom-out.png'" alt="zoom out button" (click)="this.changeScale(-0.3)">
+    </div>
+    <div class="zoom-button">
+      <img [src]="'assets/images/zoom-in.png'" alt="zoom in button" (click)="this.changeScale(0.3)">
+    </div>
+  </div>
+</div>

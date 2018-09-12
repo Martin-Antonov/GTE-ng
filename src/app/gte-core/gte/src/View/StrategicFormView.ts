@@ -31,8 +31,8 @@ export class StrategicFormView {
     this.strategicForm = strategicForm;
 
     this.group = this.game.add.group();
-    this.rows = strategicForm.strategyToString(strategicForm.p1Strategies);
-    this.cols = strategicForm.strategyToString(strategicForm.p2Strategies);
+    this.rows = this.strategicForm.rows;
+    this.cols = this.strategicForm.cols;
     // --------------------------------
     // this.rows = ["X P","X Q","Y P","Y Q","Z P","Z Q"];
     // this.cols = ["a d","a e","b d","b e","c d","c e"];

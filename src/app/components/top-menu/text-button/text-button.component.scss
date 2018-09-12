@@ -12,11 +12,18 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    height: 60%;
     padding-left: 2em;
     padding-right: 2em;
+    padding-top: 4px;
     @include clickableButton();
     font-family: $myriad-pro;
     color: $grey-text;
+  }
+  .isActive {
+    background-color: $grey4;
+    color: $grey1;
+    &:hover{
+      background-color: #b0b0b0;
+    }
   }
 }

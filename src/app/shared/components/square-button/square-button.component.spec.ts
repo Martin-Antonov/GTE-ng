@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BasicLButtonComponent } from './basic-l-button.component';
+import { SquareButtonComponent } from './square-button.component';
 
-describe('BasicLButtonComponent', () => {
-  let component: BasicLButtonComponent;
-  let fixture: ComponentFixture<BasicLButtonComponent>;
+describe('SquareButtonComponent', () => {
+  let component: SquareButtonComponent;
+  let fixture: ComponentFixture<SquareButtonComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BasicLButtonComponent ]
+      declarations: [ SquareButtonComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BasicLButtonComponent);
+    fixture = TestBed.createComponent(SquareButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,34 +1,46 @@
-<app-basic-l-button [imageKey]="'plus.png'" (clicked)="this.userActionController.addNodesHandler();"
-                    style="margin-top:20px;" [ngClass]="{'inactive':this.areNodesSelected()}"></app-basic-l-button>
-<app-basic-l-button [imageKey]="'minus.png'"
-                    (clicked)="this.userActionController.deleteNodeHandler();"
-                    [ngClass]="{'inactive':this.areNodesSelected()}"></app-basic-l-button>
-<app-basic-l-button [imageKey]="'user.png'" (clicked)="this.togglePlayerActive()"
-                    [ngClass]="{'inactive':!this.doSelectedHaveChildren()}"></app-basic-l-button>
+<ng-container *ngIf="this.tooltips && this.userActionController">
+  <app-square-button [imageKey]="'plus.png'" (click)="this.userActionController.addNodesHandler();"
+                     style="margin-top:20px;" [ngClass]="{'inactive':this.areNodesSelected()}"
+                     [tooltipText]="this.tooltips.plus"></app-square-button>
+  <app-square-button [imageKey]="'minus.png'"
+                     (click)="this.userActionController.deleteNodeHandler();"
+                     [ngClass]="{'inactive':this.areNodesSelected()}"
+                     [tooltipText]="this.tooltips.minus"></app-square-button>
+  <app-square-button [imageKey]="'user.png'" (click)="this.togglePlayerActive()"
+                     [ngClass]="{'inactive':!this.doSelectedHaveChildren()}"
+                     [tooltipText]="this.tooltips.player"></app-square-button>
 
-<div *ngIf="this.playerIsClicked && this.doSelectedHaveChildren()">
-  <div class="circle" [ngStyle]="{'background-color': playerColor}"
-       *ngFor="let playerColor of this.playerColors; let i=index" (click)="this.assignPlayer(i)"></div>
-</div>
+  <div *ngIf="this.playerIsClicked && this.doSelectedHaveChildren()">
+    <div class="circle" [ngStyle]="{'background-color': playerColor}"
+         *ngFor="let playerColor of this.playerColors; let i=index" (click)="this.assignPlayer(i)"></div>
+  </div>
 
 
-<app-basic-l-button [imageKey]="'chance-node.png'"
-                    (clicked)="this.userActionController.assignChancePlayerToNodeHandler();"
-                    [ngClass]="{'inactive':!this.doSelectedHaveChildren()}"></app-basic-l-button>
-<app-basic-l-button [imageKey]="'link.png'"
-                    (clicked)="this.userActionController.createISetHandler();"
-                    [ngClass]="{'inactive':!this.canCreateISet()}"></app-basic-l-button>
-<app-basic-l-button [imageKey]="'unlink.png'"
-                    (clicked)="this.userActionController.removeISetsByNodesHandler();"
-                    [ngClass]="{'inactive':!this.canUnlinkOrCut()}"></app-basic-l-button>
-<app-basic-l-button [imageKey]="'cut.png'"
-                    (clicked)="this.userActionController.initiateCutSpriteHandler()"
-                    [ngClass]="{'inactive':!this.canUnlinkOrCut()}"></app-basic-l-button>
-<hr>
-<app-toggle-l-button [imageKey]="'non-zero-sum.png'" [secondImageKey]="'zero-sum.png'"
-                     (clicked)="this.userActionController.toggleZeroSum();"></app-toggle-l-button>
-<app-basic-l-button [imageKey]="'random-payoffs.png'" (clicked)="this.userActionController.randomPayoffsHandler();"
-                    style="margin-top:10px; margin-bottom:10px;"></app-basic-l-button>
-<app-toggle-l-button [imageKey]="'fraction.png'" [secondImageKey]="'decimal.png'"
-                     (clicked)="this.userActionController.toggleFractionDecimal();"></app-toggle-l-button>
-<hr>
+  <app-square-button [imageKey]="'chance-node.png'"
+                     (click)="this.userActionController.assignChancePlayerToNodeHandler();"
+                     [ngClass]="{'inactive':!this.doSelectedHaveChildren()}"
+                     [tooltipText]="this.tooltips.chance"></app-square-button>
+  <app-square-button [imageKey]="'link.png'"
+                     (click)="this.userActionController.createISetHandler();"
+                     [ngClass]="{'inactive':!this.canCreateISet()}"
+                     [tooltipText]="this.tooltips.link"></app-square-button>
+  <app-square-button [imageKey]="'unlink.png'"
+                     (click)="this.userActionController.removeISetsByNodesHandler();"
+                     [ngClass]="{'inactive':!this.canUnlinkOrCut()}"
+                     [tooltipText]="this.tooltips.unlink"></app-square-button>
+  <app-square-button [imageKey]="'cut.png'"
+                     (click)="this.userActionController.initiateCutSpriteHandler()"
+                     [ngClass]="{'inactive':!this.canUnlinkOrCut()}"
+                     [tooltipText]="this.tooltips.cut"></app-square-button>
+  <hr>
+  <app-square-button [imageKey]="'non-zero-sum.png'" [secondImageKey]="'zero-sum.png'"
+                     (click)="this.userActionController.toggleZeroSum();"
+                     [tooltipText]="this.tooltips.zero_sum"></app-square-button>
+  <app-square-button [imageKey]="'random-payoffs.png'" (click)="this.userActionController.randomPayoffsHandler();"
+                     style="margin-top:10px; margin-bottom:10px;"
+                     [tooltipText]="this.tooltips.random_payoffs"></app-square-button>
+  <app-square-button [imageKey]="'fraction.png'" [secondImageKey]="'decimal.png'"
+                     (click)="this.userActionController.toggleFractionDecimal();"
+                     [tooltipText]="this.tooltips.fraction_decimal"></app-square-button>
+  <hr>
+</ng-container>

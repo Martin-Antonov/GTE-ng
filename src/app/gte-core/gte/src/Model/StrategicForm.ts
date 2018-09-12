@@ -13,6 +13,9 @@ export class StrategicForm {
   p2Strategies: Array<Array<Move>>;
   payoffsMatrix: Array<Array<Payoffs>>;
 
+  rows: Array<string>;
+  cols: Array<string>;
+
   // Properties for the generation of payoffs matrix
   private movesToReachLeafP1: Array<Move>;
   private movesToReachLeafP2: Array<Move>;
@@ -61,6 +64,9 @@ export class StrategicForm {
     this.generateStrategies(p1InfoSets);
     this.generateStrategies(p2InfoSets);
     this.generatePayoffs();
+
+    this.rows = this.strategyToString(this.p1Strategies);
+    this.cols = this.strategyToString(this.p2Strategies);
   }
 
   /**A method which checks whether the conditions for generating a strategic form are kept*/

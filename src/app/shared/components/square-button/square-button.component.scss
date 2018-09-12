@@ -1,0 +1,53 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+:host {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  display: inline-block;
+  margin: 0.1em 0.1em;
+
+  &:hover {
+    background: $grey3;
+  }
+  &:active {
+    background: $grey2;
+  }
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 65%;
+    @include removeSelection();
+  }
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    top: 40px;
+    left: 20px;
+    background-color: $tooltip-color;
+    pointer-events: none;
+    width: auto;
+    opacity: 0;
+    transition: opacity 0s;
+    transition-delay: 0s;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 4px;
+    border: 1px solid black;
+    z-index: 10000;
+    @include removeSelection();
+  }
+
+  .active {
+    opacity: 1;
+    transition: opacity 0.3s;
+    transition-delay: 2s;
+  }
+}
+
+

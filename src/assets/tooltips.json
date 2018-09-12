@@ -1,0 +1,18 @@
+{
+  "new_tree": "Create a new tree   (Ctrl+N)",
+  "save_tree": "Save tree to file   (Ctrl+S)",
+  "load_tree": "Load tree to file   (Ctrl+O)",
+  "save_image": "Save tree as an Image   (Ctrl+Shift+S)",
+  "undo": "Undo action   (Ctrl+Z)",
+  "redo": "Redo action   (Ctrl+Z)",
+  "plus": "Add nodes   (N)",
+  "minus": "Remove nodes   (D/Del)",
+  "player": "Assign player to node   (1-4)",
+  "chance": "Assign chance node   (0/C)",
+  "link": "Create information set from nodes   (I)",
+  "unlink": "Destroy information set from nodes   (U)",
+  "cut": "Split/Cut information set   (C)",
+  "zero_sum": "Toggle between zero sum and non-zero sum mode",
+  "random_payoffs": "Assign random payoffs",
+  "fraction_decimal": "Toggle between fraction and decimal probabilities"
+}

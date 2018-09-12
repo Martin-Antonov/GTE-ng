@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
-import {UserActionControllerService} from '../../services/user-action-controller.service';
+import {ITooltips} from '../../services/tooltips/tooltips';
+import {TooltipsService} from '../../services/tooltips/tooltips.service';
+import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
+
 
 @Component({
   selector: 'app-left-menu',
@@ -9,15 +12,20 @@ import {UserActionControllerService} from '../../services/user-action-controller
 })
 export class LeftMenuComponent implements OnInit {
   userActionController: UserActionController;
+
   playerIsClicked: boolean;
   playerColors: Array<string>;
+  tooltips: ITooltips;
 
-  constructor(private uac: UserActionControllerService) {
+  constructor(private uac: UserActionControllerService, private tts: TooltipsService) {
   }
 
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+    });
+    this.tts.getTooltips().subscribe((tooltips) => {
+      this.tooltips = tooltips;
     });
     this.playerIsClicked = false;
     this.playerColors = ['#ff0000', '#0000ff', '#00ff00', '#ff00ff'];
@@ -57,9 +65,10 @@ export class LeftMenuComponent implements OnInit {
   }
 
   canCreateISet() {
-    if (this.userActionController) {
+    if (this.userActionController && this.userActionController.selectedNodes.length > 1) {
+      let selectedNodes = this.userActionController.selectedNodes;
       let nodes = [];
-      this.userActionController.selectedNodes.forEach((n => {
+      selectedNodes.forEach((n => {
         nodes.push(n.node);
       }));
 
@@ -69,8 +78,14 @@ export class LeftMenuComponent implements OnInit {
       catch {
         return false;
       }
-
-      return this.userActionController.treeController.getDistinctISetsFromNodes(this.userActionController.selectedNodes).length !== 1;
+      let distinctISets = this.userActionController.treeController
+        .getDistinctISetsFromNodes(selectedNodes).length;
+      for (let i = 0; i < selectedNodes.length; i++) {
+        if (!selectedNodes[i].node.iSet) {
+          return true;
+        }
+      }
+      return distinctISets !== 1;
     }
     else {
       return false;

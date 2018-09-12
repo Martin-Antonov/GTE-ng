@@ -5,14 +5,13 @@
   width: 100%;
   height: 100%;
   grid-gap: 0;
-  grid-template-columns: 2% 96.5% 1.5%;
-  grid-template-rows: 4.5% 93% 2.5%;
+  grid-template-columns: 40px calc(100% - 60px) 20px;
+  grid-template-rows: 40px calc(100% - 70px) 30px;
   grid-template-areas: "g-top g-top g-top" "g-left g-middle g-right" "g-bottom g-bottom g-bottom";
 
   app-left-menu {
     grid-area: g-left;
   }
-
   app-right-menu {
     grid-area: g-right;
   }

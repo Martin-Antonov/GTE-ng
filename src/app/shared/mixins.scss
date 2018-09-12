@@ -52,6 +52,17 @@
 @mixin buttonInactive {
   .inactive {
     opacity: 0.3;
-    pointer-events: none;
+    //pointer-events: none;
   }
+}
+
+@mixin window{
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  @include removeSelection();
+  background: $grey2;
+  font-family: $myriad-pro;
+  color: $grey-text;
+  box-shadow: 3px 3px 16px -1px rgba(0, 0, 0, 0.51);
 }

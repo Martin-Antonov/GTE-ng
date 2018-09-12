@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {UiSettingsService} from './services/ui-settings/ui-settings.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'gte-v2';
+
+  constructor(private uis: UiSettingsService) {
+    this.uis.init();
+  }
 }

@@ -30,19 +30,4 @@
   .middle-element {
     margin: auto;
   }
-  .close-button-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20px;
-    width: 20px;
-    @include clickableButton();
-    img {
-      position: relative;
-      height: 70%;
-      width: auto;
-      transform: rotate(45deg);
-    }
-  }
 }

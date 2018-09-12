@@ -1,0 +1,8 @@
+<div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle" >
+  <div #dragHandle class="top-handle">
+    <span class="maxtrix-input-title">Matrix Input</span>
+    <app-clickable-x (click)="this.close()"></app-clickable-x>
+  </div>
+  <div class="bottom-field">
+  </div>
+</div>

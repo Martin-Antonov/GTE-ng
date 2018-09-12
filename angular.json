@@ -27,7 +27,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/angular2-draggable/css/resizable.min.css"
             ],
             "scripts": [
               "node_modules/mathjs/dist/math.js",

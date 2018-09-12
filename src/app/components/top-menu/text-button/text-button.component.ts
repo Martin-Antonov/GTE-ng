@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-text-button',
@@ -9,18 +9,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 export class TextButtonComponent implements OnInit {
 
   @Input() text: string;
-  @Output() public clicked: EventEmitter<any> = new EventEmitter();
-  isActive: boolean;
+  @Input() isActive: boolean;
 
-  constructor() {
-  }
+  constructor() { }
 
-  ngOnInit() {
-    this.isActive = false;
-  }
 
-  sendSignal(){
-    this.isActive = !this.isActive;
-    this.clicked.emit();
-  }
+  ngOnInit() {}
 }
