@@ -18,6 +18,7 @@ import {UserActionControllerService} from './services/user-action-controller/use
 import {TooltipsService} from './services/tooltips/tooltips.service';
 import {UiSettingsService} from './services/ui-settings/ui-settings.service';
 import { MatrixInputComponent } from './components/top-menu/matrix-input/matrix-input.component';
+import {FormsModule} from '@angular/forms';
 
 
 
@@ -38,7 +39,7 @@ import { MatrixInputComponent } from './components/top-menu/matrix-input/matrix-
     MatrixInputComponent,
   ],
   imports: [
-    BrowserModule, HttpClientModule, AngularDraggableModule
+    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,
   ],
   providers: [UserActionControllerService, TooltipsService, UiSettingsService],
   bootstrap: [AppComponent]

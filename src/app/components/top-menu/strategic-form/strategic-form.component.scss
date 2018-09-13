@@ -2,21 +2,14 @@
 @import "../../../shared/mixins";
 
 .strat-form-container {
-  @include window();
-  top: 4%;
+  @include window(500px, 500px);
+  top: 5%;
   right: 2%;
   .top-handle {
-    position: relative;
-    top: 0;
-    left: 0;
-    height: 32px;
-    width: 100%;
-    padding: 5px;
+    @include window-handle();
 
     .strat-form-title {
-      font-family: $myriad-pro;
-      color: $grey-text;
-      float: left;
+      @include window-title();
     }
 
     app-clickable-x {
@@ -24,15 +17,7 @@
     }
   }
   .strat-form-content {
-    background-color: white;
-    width: calc(100% - 6px);
-    height: calc(100% - 64px);
-    margin: 0 3px;
-    z-index: 19;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include window-content();
     overflow: hidden;
     .table-container {
       .diagonal-line {
@@ -122,17 +107,10 @@
           }
         }
       }
-
     }
   }
   .bottom-field {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 32px;
-    width: 100%;
-    padding-left: 5px;
-    z-index: -100;
+    @include window-bottom();
     .zoom-button {
       position: relative;
       top: 50%;

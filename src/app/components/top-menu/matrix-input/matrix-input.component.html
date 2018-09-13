@@ -1,7 +1,57 @@
-<div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle" >
+<div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle">
   <div #dragHandle class="top-handle">
-    <span class="maxtrix-input-title">Matrix Input</span>
+    <span class="matrix-input-title">Matrix Input</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>
+  </div>
+  <div class="matrix-input-content">
+    <div class="matrix-input-options">
+
+      <div (click)="activateFromText()" [ngClass]="{'selected':this.fromTextActive}">From Text</div>
+      <div (click)="activatePlayerMatrix()" class="middle-option" [ngClass]="{'selected':this.fromMatricesActive}">
+        Player Matrices
+      </div>
+      <div>From File</div>
+    </div>
+    <form *ngIf="this.fromTextActive" #matrixTextForm="ngForm" class="from-text-active-form">
+      <br><br><label for="matrix-text-input">Input the game in the specified format:</label><br><br>
+      <textarea [placeholder]="this.textMatrixPlaceholder" cols="40" rows="15" id="matrix-text-input"
+                name="matrixTextInput"></textarea><br><br>
+      <button type="submit" onsubmit="this.close()">Solve</button>
+    </form>
+    <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form">
+      <div class="dimensions-input">
+        <label for="rows">Rows: </label>
+        <input type="text" id="rows" name="rows" [(ngModel)]="this.matrixInputModel.rows">
+        <label for="cols">Columns: </label>
+        <input type="text" id="cols" name="cols" [(ngModel)]="this.matrixInputModel.cols">
+      </div>
+      <div class="player-matrix-container" *ngIf="this.matrixInputModel.rows>1 && this.matrixInputModel.cols>1">
+
+        <div class="player-matrix">
+          P1 Matrix
+          <table cellspacing="0" cellpadding="0">
+            <tr *ngFor="let row of this.createArray(this.matrixInputModel.rows); index as i">
+              <td *ngFor="let column of this.createArray(this.matrixInputModel.cols); index as j">
+                <input type="text" style="width:20px; height:20px">
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="player-matrix">
+          P2 Matrix
+          <table cellspacing="0" cellpadding="0">
+            <tr *ngFor="let row of this.createArray(this.matrixInputModel.rows); index as i">
+              <td *ngFor="let column of this.createArray(this.matrixInputModel.cols); index as j">
+                <input type="text" style="width:20px; height:20px">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <button type="submit" onsubmit="this.close()">Solve</button>
+    </form>
+
   </div>
   <div class="bottom-field">
   </div>

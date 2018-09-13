@@ -87,6 +87,8 @@ export class KeyboardController {
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.THREE);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.FOUR);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ENTER);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TAB);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.CONTROL);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SHIFT);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ALT);
