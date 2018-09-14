@@ -12,27 +12,26 @@
       </div>
       <div>From File</div>
     </div>
-    <form *ngIf="this.fromTextActive" #matrixTextForm="ngForm" class="from-text-active-form">
+    <form *ngIf="this.fromTextActive" #matrixTextForm="ngForm" class="from-text-active-form" autocomplete="off">
       <br><br><label for="matrix-text-input">Input the game in the specified format:</label><br><br>
       <textarea [placeholder]="this.textMatrixPlaceholder" cols="40" rows="15" id="matrix-text-input"
-                name="matrixTextInput"></textarea><br><br>
-      <button type="submit" onsubmit="this.close()">Solve</button>
+                name="matrixTextInput" [(ngModel)]="this.matrixInputModel.wholeMatrix"></textarea><br><br>
+      <button type="submit" (click)="this.postMatrixAsText()">Solve</button>
     </form>
-    <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form">
+    <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form" autocomplete="off">
       <div class="dimensions-input">
         <label for="rows">Rows: </label>
         <input type="text" id="rows" name="rows" [(ngModel)]="this.matrixInputModel.rows">
         <label for="cols">Columns: </label>
         <input type="text" id="cols" name="cols" [(ngModel)]="this.matrixInputModel.cols">
       </div>
-      <div class="player-matrix-container" *ngIf="this.matrixInputModel.rows>1 && this.matrixInputModel.cols>1">
-
+      <div class="player-matrix-container" *ngIf="this.convertToNumber(this.matrixInputModel.rows)>1 && this.convertToNumber(this.matrixInputModel.rows)>1">
         <div class="player-matrix">
           P1 Matrix
           <table cellspacing="0" cellpadding="0">
-            <tr *ngFor="let row of this.createArray(this.matrixInputModel.rows); index as i">
-              <td *ngFor="let column of this.createArray(this.matrixInputModel.cols); index as j">
-                <input type="text" style="width:20px; height:20px">
+            <tr *ngFor="let row of this.createP1Matrix(); index as i">
+              <td *ngFor="let column of this.p1Matrix[0]; index as j">
+                <input type="text" [(ngModel)]="this.p1Matrix[i][j]" name="cellP1" autocomplete="new-password">
               </td>
             </tr>
           </table>
@@ -40,16 +39,16 @@
 
         <div class="player-matrix">
           P2 Matrix
-          <table cellspacing="0" cellpadding="0">
-            <tr *ngFor="let row of this.createArray(this.matrixInputModel.rows); index as i">
-              <td *ngFor="let column of this.createArray(this.matrixInputModel.cols); index as j">
-                <input type="text" style="width:20px; height:20px">
+          <table cellspacing="0" cellpadding="0" >
+            <tr *ngFor="let row of this.createP2Matrix(); index as i">
+              <td *ngFor="let column of this.p2Matrix[0]; index as j">
+                <input type="text" [(ngModel)]="this.p2Matrix[i][j]" name="cellP2" autocomplete="new-password">
               </td>
             </tr>
           </table>
         </div>
       </div>
-      <button type="submit" onsubmit="this.close()">Solve</button>
+      <button type="submit" (click)="this.postMatrixAsPlayersInput()">Solve</button>
     </form>
 
   </div>

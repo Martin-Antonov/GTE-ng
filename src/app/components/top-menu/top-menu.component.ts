@@ -39,4 +39,12 @@ export class TopMenuComponent implements OnInit {
   toggleStrategicForm() {
     this.uis.strategicFormActive = !this.uis.strategicFormActive;
   }
+
+  toggleMatrixInput() {
+    this.uis.matrixInputActive = !this.uis.matrixInputActive;
+  }
+
+  toggleSolver() {
+    this.uis.solverActive = !this.uis.solverActive;
+  }
 }

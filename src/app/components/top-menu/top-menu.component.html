@@ -16,11 +16,12 @@
                      [tooltipText]="this.tooltips.redo"></app-square-button>
   <app-players-box></app-players-box>
   <app-text-button [text]="'Strategic Form'" (click)="this.toggleStrategicForm()" [isActive]="this.uis.strategicFormActive"></app-text-button>
-  <app-text-button [text]="'Matrix Input'"></app-text-button>
-  <app-text-button [text]="'Solver'"></app-text-button>
+  <app-text-button [text]="'Matrix Input'" (click)="this.toggleMatrixInput()" [isActive]="this.uis.matrixInputActive"></app-text-button>
+  <app-text-button [text]="'Solver'" (click)="this.toggleSolver()" [isActive]="this.uis.solverActive"></app-text-button>
 
   <app-strategic-form *ngIf="this.uis.strategicFormActive"></app-strategic-form>
-  <app-matrix-input></app-matrix-input>
+  <app-matrix-input *ngIf="this.uis.matrixInputActive"></app-matrix-input>
+  <app-solver *ngIf="this.uis.solverActive"></app-solver>
 </ng-container>
 
 

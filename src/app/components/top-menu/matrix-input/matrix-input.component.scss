@@ -98,6 +98,15 @@
             border-right: 3px solid black;
             border-radius: 10px;
             padding: 5px 15px;
+            tr{
+              td{
+                input{
+                  width:20px;
+                  height:20px;
+                  text-align:center;
+                }
+              }
+            }
           }
         }
       }

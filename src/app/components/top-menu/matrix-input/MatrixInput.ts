@@ -1,7 +1,7 @@
 export class MatrixInput {
   constructor(
     public wholeMatrix: string,
-    public rows: number,
-    public cols: number
+    public rows: string,
+    public cols: string
   ) {}
 }

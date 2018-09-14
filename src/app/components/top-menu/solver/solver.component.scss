@@ -1,0 +1,25 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+.solver-container {
+  @include window(600px, 800px);
+  top: 5%;
+  left: 12%;
+  .top-handle {
+    @include window-handle();
+    app-clickable-x {
+      float: right;
+    }
+    .solver-title {
+      @include window-title();
+    }
+  }
+
+  .solver-content {
+    @include window-content();
+    overflow: scroll;
+    p {
+      white-space: pre;
+    }
+  }
+}

@@ -19,6 +19,8 @@ import {TooltipsService} from './services/tooltips/tooltips.service';
 import {UiSettingsService} from './services/ui-settings/ui-settings.service';
 import { MatrixInputComponent } from './components/top-menu/matrix-input/matrix-input.component';
 import {FormsModule} from '@angular/forms';
+import {SolverService} from './services/solver/solver.service';
+import { SolverComponent } from './components/top-menu/solver/solver.component';
 
 
 
@@ -37,11 +39,12 @@ import {FormsModule} from '@angular/forms';
     StrategicFormComponent,
     ClickableXComponent,
     MatrixInputComponent,
+    SolverComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,
   ],
-  providers: [UserActionControllerService, TooltipsService, UiSettingsService],
+  providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
