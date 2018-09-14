@@ -18,20 +18,21 @@
                 name="matrixTextInput" [(ngModel)]="this.matrixInputModel.wholeMatrix"></textarea><br><br>
       <button type="submit" (click)="this.postMatrixAsText()">Solve</button>
     </form>
-    <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form" autocomplete="off">
+    <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form"
+          autocomplete="off">
       <div class="dimensions-input">
         <label for="rows">Rows: </label>
         <input type="text" id="rows" name="rows" [(ngModel)]="this.matrixInputModel.rows">
         <label for="cols">Columns: </label>
         <input type="text" id="cols" name="cols" [(ngModel)]="this.matrixInputModel.cols">
       </div>
-      <div class="player-matrix-container" *ngIf="this.convertToNumber(this.matrixInputModel.rows)>1 && this.convertToNumber(this.matrixInputModel.rows)>1">
+      <div class="player-matrix-container" *ngIf="this.checkRowsColsCondition()">
         <div class="player-matrix">
           P1 Matrix
-          <table cellspacing="0" cellpadding="0">
-            <tr *ngFor="let row of this.createP1Matrix(); index as i">
-              <td *ngFor="let column of this.p1Matrix[0]; index as j">
-                <input type="text" [(ngModel)]="this.p1Matrix[i][j]" name="cellP1" autocomplete="new-password">
+          <table cellspacing="0" cellpadding="0" #p1Table>
+            <tr *ngFor="let row of this.createRowsArray(); index as i;">
+              <td *ngFor="let column of this.createColsArray(); index as j">
+                <input type="text" autocomplete="new-password">
               </td>
             </tr>
           </table>
@@ -39,10 +40,10 @@
 
         <div class="player-matrix">
           P2 Matrix
-          <table cellspacing="0" cellpadding="0" >
-            <tr *ngFor="let row of this.createP2Matrix(); index as i">
-              <td *ngFor="let column of this.p2Matrix[0]; index as j">
-                <input type="text" [(ngModel)]="this.p2Matrix[i][j]" name="cellP2" autocomplete="new-password">
+          <table cellspacing="0" cellpadding="0" #p2Table>
+            <tr *ngFor="let row of this.createRowsArray(); index as i">
+              <td *ngFor="let column of this.createColsArray(); index as j">
+                <input type="text" autocomplete="new-password">
               </td>
             </tr>
           </table>

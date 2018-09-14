@@ -16,9 +16,8 @@ export class MatrixInputComponent implements OnInit {
   fromMatricesActive: boolean;
 
   matrixInputModel: MatrixInput;
-  p1Matrix: Array<Array<string>>;
-  p2Matrix: Array<Array<string>>;
-
+  @ViewChild('p1Table') p1T;
+  @ViewChild('p2Table') p2T;
 
   constructor(public uis: UiSettingsService, private solver: SolverService) {
   }
@@ -30,18 +29,12 @@ export class MatrixInputComponent implements OnInit {
     this.matrixInputModel = new MatrixInput('', '0', '0');
   }
 
-  createP1Matrix(): Array<Array<string>> {
-    this.p1Matrix = new Array(parseInt(this.matrixInputModel.rows, 10)).fill(
-      new Array(parseInt(this.matrixInputModel.cols, 10)).fill('')
-    );
+  createRowsArray(): Array<Array<string>> {
     return new Array(this.convertToNumber(this.matrixInputModel.rows));
   }
 
-  createP2Matrix(): Array<Array<string>> {
-    this.p2Matrix = new Array(parseInt(this.matrixInputModel.rows, 10)).fill(
-      new Array(parseInt(this.matrixInputModel.cols, 10)).fill('')
-    );
-    return new Array(this.convertToNumber(this.matrixInputModel.rows));
+  createColsArray(): Array<Array<string>> {
+    return new Array(this.convertToNumber(this.matrixInputModel.cols));
   }
 
   activateFromText() {
@@ -63,11 +56,20 @@ export class MatrixInputComponent implements OnInit {
     this.uis.solverActive = true;
   }
 
+  checkRowsColsCondition(): boolean {
+    if (this.convertToNumber(this.matrixInputModel.rows) > 1 && this.convertToNumber(this.matrixInputModel.cols) > 1) {
+      return true;
+    }
+    return false;
+  }
+
+
   convertToNumber(value: string) {
     return Number(value);
   }
 
   postMatrixAsPlayersInput() {
-    console.table(this.p1Matrix);
+    console.log(this.p1T);
+    // console.log(this.p1T.element.nativeElement.table.children[0].);
   }
 }
