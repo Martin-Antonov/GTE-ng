@@ -51,11 +51,6 @@ export class MatrixInputComponent implements OnInit {
     this.uis.matrixInputActive = false;
   }
 
-  postMatrixAsText() {
-    this.solver.postMatrixAsText(this.matrixInputModel.wholeMatrix);
-    this.uis.solverActive = true;
-  }
-
   checkRowsColsCondition(): boolean {
     if (this.convertToNumber(this.matrixInputModel.rows) > 1 && this.convertToNumber(this.matrixInputModel.cols) > 1) {
       return true;
@@ -69,7 +64,36 @@ export class MatrixInputComponent implements OnInit {
   }
 
   postMatrixAsPlayersInput() {
+    let m1 = '';
+    let m2 = '';
     console.log(this.p1T);
-    // console.log(this.p1T.element.nativeElement.table.children[0].);
+    console.log(this.p1T.nativeElement.children[0].children);
+    for (let i = 0; i < this.p1T.nativeElement.children[0].children.length; i++) {
+      const childElement = this.p1T.nativeElement.children[0].children[i];
+      for (let j = 0; j < childElement.children.length; j++) {
+        const child = childElement.children[j];
+        m1 += child.children[0].value + ' ';
+      }
+      m1 += '\n';
+    }
+
+    for (let i = 0; i < this.p2T.nativeElement.children[0].children.length; i++) {
+      const childElement = this.p2T.nativeElement.children[0].children[i];
+      for (let j = 0; j < childElement.children.length; j++) {
+        const child = childElement.children[j];
+        m2 += child.children[0].value + ' ';
+      }
+      m2 += '\n';
+    }
+
+    let result = this.matrixInputModel.rows + ' ' + this.matrixInputModel.cols + '\n\n' + m1 + '\n' + m2;
+
+    this.solver.postMatrixAsText(result);
+    this.uis.solverActive = true;
+  }
+
+  postMatrixAsText() {
+    this.solver.postMatrixAsText(this.matrixInputModel.wholeMatrix);
+    this.uis.solverActive = true;
   }
 }
