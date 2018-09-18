@@ -2,6 +2,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {GTE} from './gte/GTE';
 import {UserActionControllerService} from '../services/user-action-controller/user-action-controller.service';
+import {TreesFileService} from '../services/trees-file/trees-file.service';
 
 @Component({
   selector: 'app-gte-core',
@@ -13,7 +14,8 @@ export class GteCoreComponent implements OnInit {
 
   constructor(
     private userActionControllerService: UserActionControllerService,
-    private el: ElementRef) {
+    private el: ElementRef,
+    private tfs: TreesFileService) {
   }
 
   ngOnInit() {
@@ -26,7 +28,9 @@ export class GteCoreComponent implements OnInit {
     let interval = setInterval(() => {
       if (this.game && this.game.state && this.game.state.states.MainScene && this.game.state.states.MainScene.userActionController) {
         this.userActionControllerService.setUAC(this.game.state.states.MainScene.userActionController);
+        this.tfs.initiateFirstTree();
         clearInterval(interval);
+
       }
     }, 100);
   }

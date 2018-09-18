@@ -97,8 +97,6 @@ export class KeyboardController {
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.DOWN);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.LEFT);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.RIGHT);
-
-
   }
 
   /**A method which assigns action to each key via the UserActionController*/
@@ -195,7 +193,7 @@ export class KeyboardController {
     // Enter value in label
     this.enterKey.onDown.add(() => {
       // if (this.userActionController.treeController.labelInput.active) {
-        this.userActionController.changeLabel();
+      //   this.userActionController.changeLabel();
       // }
     });
 

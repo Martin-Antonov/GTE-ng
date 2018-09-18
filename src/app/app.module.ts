@@ -21,6 +21,8 @@ import { MatrixInputComponent } from './components/top-menu/matrix-input/matrix-
 import {FormsModule} from '@angular/forms';
 import {SolverService} from './services/solver/solver.service';
 import { SolverComponent } from './components/top-menu/solver/solver.component';
+import { LabelInputComponent } from './components/misc/label-input/label-input.component';
+import {TreesFileService} from './services/trees-file/trees-file.service';
 
 
 
@@ -40,11 +42,12 @@ import { SolverComponent } from './components/top-menu/solver/solver.component';
     ClickableXComponent,
     MatrixInputComponent,
     SolverComponent,
+    LabelInputComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,
   ],
-  providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService],
+  providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

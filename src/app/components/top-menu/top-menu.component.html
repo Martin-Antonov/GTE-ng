@@ -1,7 +1,7 @@
 <div class="image-wrapper"><img [src]="this.logoSrc" alt="logo-image"></div>
 
 <ng-container *ngIf="this.userActionController && this.tooltips">
-  <app-square-button [imageKey]="'new-tree.png'" (click)="someFunction()"
+  <app-square-button [imageKey]="'new-tree.png'" (click)="createNewTree()"
                      [tooltipText]="this.tooltips.new_tree"></app-square-button>
   <app-square-button [imageKey]="'save.png'" (click)="someFunction()"
                      [tooltipText]="this.tooltips.save_tree"></app-square-button>
@@ -10,10 +10,10 @@
   <app-square-button [imageKey]="'save-image.png'" (click)="someFunction()"
                      [tooltipText]="this.tooltips.save_image"></app-square-button>
   <app-square-button [imageKey]="'undo.png'" (click)="this.userActionController.undoRedoHandler(true)"
-                     style="margin-left:2em" [tooltipText]="this.tooltips.undo"></app-square-button>
+                     style="margin-left:2em" [tooltipText]="this.tooltips.undo" [ngClass]="{'inactive':this.isUndoActive()}"></app-square-button>
   <app-square-button [imageKey]="'redo.png'"
                      (click)="this.userActionController.undoRedoHandler(false)"
-                     [tooltipText]="this.tooltips.redo"></app-square-button>
+                     [tooltipText]="this.tooltips.redo" [ngClass]="{'inactive':this.isRedoActive()}"></app-square-button>
   <app-players-box></app-players-box>
   <app-text-button [text]="'Strategic Form'" (click)="this.toggleStrategicForm()" [isActive]="this.uis.strategicFormActive"></app-text-button>
   <app-text-button [text]="'Matrix Input'" (click)="this.toggleMatrixInput()" [isActive]="this.uis.matrixInputActive"></app-text-button>

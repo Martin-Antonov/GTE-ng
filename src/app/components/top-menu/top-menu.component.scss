@@ -23,5 +23,6 @@
       @include removeSelection();
     }
   }
+  @include buttonInactive();
 }
 

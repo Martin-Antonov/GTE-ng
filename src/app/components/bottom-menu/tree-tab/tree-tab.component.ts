@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-tree-tab',
@@ -8,10 +8,21 @@ import {Component, Input, OnInit} from '@angular/core';
 export class TreeTabComponent implements OnInit {
 
   @Input() treeName: string;
+  @Input() isSelected: string;
+  @Output() close = new EventEmitter();
+  @Output() select = new EventEmitter();
   constructor() {
   }
 
   ngOnInit() {
+  }
+
+  closeTab(){
+    this.close.emit();
+  }
+
+  selectTab(){
+    this.select.emit();
   }
 
 }

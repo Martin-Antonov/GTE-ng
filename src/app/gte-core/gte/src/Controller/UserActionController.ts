@@ -2,7 +2,6 @@
 
 import {TreeController} from './TreeController';
 import {StrategicForm} from '../Model/StrategicForm';
-import {StrategicFormView} from '../View/StrategicFormView';
 import {UndoRedoController} from './UndoRedoController';
 import {NodeView} from '../View/NodeView';
 import {SelectionRectangle} from '../Utils/SelectionRectangle';
@@ -14,19 +13,17 @@ import {Move} from '../Model/Move';
 import {Node, NodeType} from '../Model/Node';
 import {TreeView} from '../View/TreeView';
 import {ISet} from '../Model/ISet';
+import {LabelInputHandler} from '../Utils/LabelInputHandler';
 
 export class UserActionController {
   game: Phaser.Game;
 
   treeController: TreeController;
-  // TODO: Create a strategic form controller
   strategicForm: StrategicForm;
-  strategicFormView: StrategicFormView;
   undoRedoController: UndoRedoController;
 
   // Used for going to the next node on tab pressed
-  private nodesBFSOrder: Array<Node>;
-  private leavesDFSOrder: Array<Node>;
+  labelInput: LabelInputHandler;
 
   selectedNodes: Array<NodeView>;
   selectionRectangle: SelectionRectangle;
@@ -35,7 +32,6 @@ export class UserActionController {
   cutInformationSet: ISetView;
   treeParser: TreeParser;
   errorPopUp: ErrorPopUp;
-  solvedSignal: Phaser.Signal;
 
   constructor(game: Phaser.Game, treeController: TreeController) {
     this.game = game;
@@ -44,11 +40,10 @@ export class UserActionController {
     this.undoRedoController = new UndoRedoController(this.treeController);
     this.selectedNodes = [];
 
+    this.labelInput = new LabelInputHandler(this.game, this.treeController)
+
     this.selectionRectangle = new SelectionRectangle(this.game);
     this.errorPopUp = new ErrorPopUp(this.game);
-    this.nodesBFSOrder = [];
-    this.leavesDFSOrder = [];
-    this.solvedSignal = new Phaser.Signal();
 
     this.createBackgroundForInputReset();
     this.createCutSprite();
@@ -443,137 +438,19 @@ export class UserActionController {
   /**If the label input is active, go to the next label
    * If next is false, we go to the previous label*/
   activateLabelField(next: boolean) {
-    // if (this.treeController.labelInput.active) {
-    //   if (this.treeController.labelInput.shouldRecalculateOrder) {
-    //     this.nodesBFSOrder = this.treeController.tree.BFSOnTree();
-    //     this.leavesDFSOrder = this.treeController.tree.getLeaves();
-    //   }
-    //   // If we are currently looking at moves
-    //   if (this.treeController.labelInput.currentlySelected instanceof MoveView) {
-    //     const index = this.nodesBFSOrder.indexOf((<MoveView>this.treeController.labelInput.currentlySelected).move.to);
-    //
-    //     // Calculate the next index in the BFS order to go to. If the last node, go to the next after the root, i.e. index 1
-    //     let nextIndex;
-    //     if (next) {
-    //       nextIndex = this.nodesBFSOrder.length !== index + 1 ? index + 1 : 1;
-    //     }
-    //     else {
-    //       nextIndex = index === 1 ? this.nodesBFSOrder.length - 1 : index - 1;
-    //     }
-    //     // Activate the next move
-    //     const nextMove = this.treeController.treeView.findMoveView(this.nodesBFSOrder[nextIndex].parentMove);
-    //     nextMove.label.events.onInputDown.dispatch(nextMove.label);
-    //   }
-    //   // If we are currently looking at nodes
-    //   else if (this.treeController.labelInput.currentlySelected instanceof NodeView) {
-    //     // If owner label
-    //     if ((<NodeView>this.treeController.labelInput.currentlySelected).ownerLabel.alpha === 1) {
-    //       const index = this.nodesBFSOrder.indexOf((<NodeView>this.treeController.labelInput.currentlySelected).node);
-    //       const nextIndex = this.calculateNodeLabelIndex(next, index);
-    //       const nextNode = this.treeController.treeView.findNodeView(this.nodesBFSOrder[nextIndex]);
-    //       nextNode.ownerLabel.events.onInputDown.dispatch(nextNode.ownerLabel);
-    //     }
-    //     // If payoffs label
-    //     else {
-    //       const index = this.leavesDFSOrder.indexOf((<NodeView>this.treeController.labelInput.currentlySelected).node);
-    //       let nextIndex;
-    //       if (next) {
-    //         nextIndex = this.leavesDFSOrder.length !== index + 1 ? index + 1 : 0;
-    //       }
-    //       else {
-    //         nextIndex = index === 0 ? this.leavesDFSOrder.length - 1 : index - 1;
-    //       }
-    //       const nextNode = this.treeController.treeView.findNodeView(this.leavesDFSOrder[nextIndex]);
-    //       nextNode.payoffsLabel.events.onInputDown.dispatch(nextNode.payoffsLabel);
-    //     }
-    //   }
-    // }
+    this.labelInput.show(next);
   }
 
   /**If the input field is on and we press enter, change the label*/
-  changeLabel() {
-    // if (this.treeController.labelInput.active) {
-    //   // If we are looking at moves
-    //   if (this.treeController.labelInput.currentlySelected instanceof MoveView) {
-    //     const moveV = (<MoveView>this.treeController.labelInput.currentlySelected);
-    //     this.treeController.tree.changeMoveLabel(moveV.move, this.treeController.labelInput.inputField.val());
-    //     this.treeController.treeView.moves.forEach(m => {
-    //       m.updateLabel(this.treeController.treeViewProperties.fractionOn);
-    //     });
-    //   }
-    //   // If we are looking at nodes
-    //   else if (this.treeController.labelInput.currentlySelected instanceof NodeView) {
-    //     const nodeV = (<NodeView>this.treeController.labelInput.currentlySelected);
-    //     if (nodeV.ownerLabel.alpha === 1) {
-    //       nodeV.node.player.label = this.treeController.labelInput.inputField.val();
-    //       this.treeController.treeView.nodes.forEach(n => {
-    //         if (n.node.player) {
-    //           n.ownerLabel.setText(n.node.player.label, true);
-    //         }
-    //       });
-    //
-    //     }
-    //     else {
-    //       nodeV.node.payoffs.saveFromString(this.treeController.labelInput.inputField.val());
-    //       this.treeController.treeView.nodes.forEach(n => {
-    //         n.resetLabelText(this.treeController.treeViewProperties.zeroSumOn);
-    //       });
-    //       if (this.treeController.tree.players.length === 3) {
-    //         try {
-    //           this.createStrategicForm();
-    //         }
-    //         catch (err) {
-    //           // Handle error
-    //         }
-    //       }
-    //     }
-    //
-    //   }
-    //   this.activateLabelField(true);
-    //   this.undoRedoController.saveNewTree();
-    // }
+  changeLabel(newLabel: string) {
+    this.labelInput.changeLabel(newLabel);
+    this.checkCreateStrategicForm();
+    this.undoRedoController.saveNewTree();
   }
 
   /**Hides the input*/
   hideInputLabel() {
-    // if (this.treeController.labelInput.active) {
-    //   this.treeController.labelInput.hide();
-    // }
-  }
-
-  /**A helper method which calculates the next possible index of a labeled node*/
-  private calculateNodeLabelIndex(next: boolean, current: number) {
-    const nodeIndex = current;
-    if (next) {
-      for (let i = current + 1; i < this.nodesBFSOrder.length; i++) {
-        if (this.nodesBFSOrder[i].player && this.nodesBFSOrder[i].player !== this.treeController.tree.players[0]) {
-          return i;
-        }
-      }
-      // If we have not found such an element in the next, keep search from the beginning
-      for (let i = 0; i < current; i++) {
-        if (this.nodesBFSOrder[i].player && this.nodesBFSOrder[i].player !== this.treeController.tree.players[0]) {
-          return i;
-        }
-      }
-    }
-    // If we want the previous
-    else {
-      for (let i = current - 1; i >= 0; i--) {
-        if (this.nodesBFSOrder[i].player && this.nodesBFSOrder[i].player !== this.treeController.tree.players[0]) {
-          return i;
-        }
-      }
-      // If we have not found such an element in the next, keep search from the beginning
-      if (nodeIndex === current) {
-        for (let i = this.nodesBFSOrder.length - 1; i > current; i--) {
-          if (this.nodesBFSOrder[i].player && this.nodesBFSOrder[i].player !== this.treeController.tree.players[0]) {
-            return i;
-          }
-        }
-      }
-    }
-    return current;
+    this.labelInput.hide();
   }
 
   /**Moves a node manually and does not move the children*/
@@ -600,45 +477,6 @@ export class UserActionController {
     if (this.strategicForm) {
       this.strategicForm.destroy();
       this.strategicForm = null;
-    }
-  }
-
-  // TODO: Remove this
-  solveGame() {
-    console.log('hanged');
-    this.checkCreateStrategicForm();
-
-    if (this.strategicForm) {
-      console.log(this.strategicForm.payoffsMatrix);
-      const rows = this.strategicForm.payoffsMatrix.length;
-      const cols = this.strategicForm.payoffsMatrix[0].length;
-
-      let m1 = '';
-      let m2 = '';
-      for (let i = 0; i < this.strategicForm.payoffsMatrix.length; i++) {
-        for (let j = 0; j < this.strategicForm.payoffsMatrix[i].length; j++) {
-          m1 += this.strategicForm.payoffsMatrix[i][j].outcomes[0] + ' ';
-          m2 += this.strategicForm.payoffsMatrix[i][j].outcomes[0] + ' ';
-        }
-        m1 += '\n';
-        m2 += '\n';
-      }
-
-      const objToSend = rows + ' ' + cols + '\n\n' + m1 + '\n' + m2;
-
-      const data = new FormData();
-      data.append('game_text', objToSend);
-      const xhr = new XMLHttpRequest();
-
-      xhr.addEventListener('readystatechange', () => {
-        if (xhr.readyState === 4) {
-          this.solvedSignal.dispatch(xhr.responseText);
-        }
-      });
-
-
-      xhr.open('POST', 'http://test.api.logos.bg/api/solve/');
-      xhr.send(data);
     }
   }
 }

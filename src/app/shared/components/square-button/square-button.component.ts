@@ -12,7 +12,7 @@ export class SquareButtonComponent implements OnInit {
   @Input() secondImageKey?: string;
   @Input() tooltipText?: string;
 
-  private shouldShowAnimation: boolean;
+  shouldShowAnimation: boolean;
 
   pathToImage: string;
 

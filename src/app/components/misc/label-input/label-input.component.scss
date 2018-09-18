@@ -1,0 +1,32 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 30px;
+  z-index: 99999999;
+  text-align: center;
+  background: $grey3;
+  color: $grey-text;
+  border-radius: 5px;
+  border: none;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2pt $grey-text;
+  }
+}
+
+.click-exit {
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background: rgba(50, 50, 50, 0.3);
+  z-index: 99999998;
+}
+

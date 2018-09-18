@@ -2,32 +2,39 @@
 @import "../../../shared/mixins";
 
 :host {
-
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
   height: 100%;
-  width: 10%;
-  background: $grey2;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin-left: 5px;
-  box-shadow: 3px 0 3px -2px black;
-  @include removeSelection();
-
-  .tree-name-container {
+  float: left;
+  .tab-container {
     position: relative;
     display: flex;
-    height: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
-    color: $grey-text;
-    font-size: 0.8em;
-    font-weight: lighter;
-  }
+    height: 100%;
+    width: 180px;
+    background: $grey2;
+    box-shadow: 3px 0 3px -2px black;
+    margin-right: 5px;
+    padding: 0 5px;
 
-  .middle-element {
-    margin: auto;
+    @include removeSelection();
+
+    .tree-name-container {
+      position: relative;
+      display: flex;
+      height: 60%;
+      align-items: center;
+      color: $grey-text;
+      font-size: 0.8em;
+      font-weight: lighter;
+      padding: 0 5px;
+    }
+
+    .middle-element {
+      margin: auto;
+    }
+  }
+  .selected {
+    background-color: $grey3;
   }
 }

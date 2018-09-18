@@ -24,9 +24,7 @@ export class TreeController {
 
   // An array used to list all nodes that need to be deleted
   private nodesToDelete: Array<Node>;
-
-  hoverSignal: Phaser.Signal;
-
+  labelInputSignal: Phaser.Signal;
 
   constructor(game: Phaser.Game) {
     this.game = game;
@@ -34,7 +32,7 @@ export class TreeController {
     this.nodesToDelete = [];
     this.createInitialTree();
     this.attachHandlersToNodes();
-    this.hoverSignal = new Phaser.Signal();
+    this.labelInputSignal = new Phaser.Signal();
   }
 
   /**A method which creates the initial 3-node tree in the scene*/
@@ -83,22 +81,18 @@ export class TreeController {
       this.handleInputOutNode(n);
     });
 
-    // arguments[0] is transferred via a signal from Nodeview
-    n.ownerLabel.events.onInputDown.add(function () {
-      const nodeLabel = arguments[0];
-      this.handleInputDownNodeLabel(nodeLabel, n);
+    n.ownerLabel.events.onInputDown.add(() => {
+      this.labelInputSignal.dispatch(n);
     }, this);
 
-    n.payoffsLabel.events.onInputDown.add(function () {
-      const nodeLabel = arguments[0];
-      this.handleInputDownNodePayoffs(nodeLabel, n);
+    n.payoffsLabel.events.onInputDown.add(() => {
+      this.labelInputSignal.dispatch(n);
     }, this);
 
     if (n.node.parentMove) {
       const move = this.treeView.findMoveView(n.node.parentMove);
-      move.label.events.onInputDown.add(function () {
-        const moveLabel = arguments[0];
-        this.handleInputDownMoveLabel(moveLabel, move);
+      move.label.events.onInputDown.add(() => {
+        this.labelInputSignal.dispatch(move);
       }, this);
     }
   }
@@ -113,48 +107,22 @@ export class TreeController {
 
   /**Handler for the signal HOVER on a Node*/
   private handleInputOverNode(nodeV: NodeView) {
-    if (!this.game.input.activePointer.isDown && nodeV.node.iSet === null) {
-      this.hoverSignal.dispatch(nodeV);
-    }
+
   }
 
   /**Handler for the signal HOVER_OUT on a Node*/
   private handleInputOutNode(nodeV?: NodeView) {
-    // ADD Hover Out logic here
+
   }
 
   /**Handler for the signal CLICK on a Node*/
   private handleInputDownNode(nodeV: NodeView) {
-    if (!this.game.input.activePointer.isDown) {
-      this.hoverSignal.dispatch(nodeV);
-    }
+
   }
 
   /**Handler for the signal HOVER on an ISet*/
   private handleInputOverISet(iSetV: ISetView) {
-    if (!this.game.input.activePointer.isDown) {
-      this.hoverSignal.dispatch(iSetV);
-    }
-  }
 
-  /**Handler for the signal CLICK on a Move Label*/
-  private handleInputDownMoveLabel(label: Phaser.Text, move: MoveView) {
-    if (label.alpha !== 0) {
-      // this.labelInput.show(label, move);
-    }
-  }
-
-  /**Handler for the signal CLICK on a Node Label*/
-  private handleInputDownNodeLabel(label: Phaser.Text, node: NodeView) {
-    if (label.alpha !== 0) {
-      // this.labelInput.show(label, node);
-    }
-  }
-
-  private handleInputDownNodePayoffs(label: Phaser.Text, node: NodeView) {
-    if (label.alpha !== 0) {
-      // this.labelInput.show(label, node);
-    }
   }
 
   // endregion
@@ -373,7 +341,7 @@ export class TreeController {
     }
   }
 
-  reloadTreeFromJSON(newTree: Tree, treeCoordinates: Array<{ x: number, y: number }>) {
+  reloadTreeFromJSON(newTree: Tree, treeCoordinates?: Array<{ x: number, y: number }>) {
     // 1. Delete the current Tree and ISets in tree controller
     this.deleteNodeHandler([this.treeView.nodes[0]]);
     this.treeView.nodes[0].destroy();

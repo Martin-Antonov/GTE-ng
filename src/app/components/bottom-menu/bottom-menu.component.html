@@ -1,7 +1,7 @@
-<app-tree-tab [treeName]="'MyTree 1'" style="margin-left:2%;"></app-tree-tab>
-<app-tree-tab [treeName]="'MyTree 2'" ></app-tree-tab>
-<app-tree-tab [treeName]="'MyTree 3'" ></app-tree-tab>
-<app-tree-tab [treeName]="'MyTree 4'" ></app-tree-tab>
-<app-tree-tab [treeName]="'MyTree 5'" ></app-tree-tab>
+<ng-container *ngIf="this.tfs && this.tfs.treeTabs">
+  <ng-container *ngFor="let tab of this.tfs.treeTabs;index as i">
+    <app-tree-tab [treeName]="tab.fileName" (select)="changeTree(i)" [isSelected]="this.isTabActive(i)" (close)="this.closeTab(i)"></app-tree-tab>
+  </ng-container>
+</ng-container>
 <div class="middle-element"></div>
 <div class="copyright">Copyright or some other message</div>

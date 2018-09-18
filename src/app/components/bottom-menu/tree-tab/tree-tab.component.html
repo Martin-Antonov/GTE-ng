@@ -1,4 +1,7 @@
-<div class="tree-name-container">{{this.treeName}}</div>
-<div class="middle-element"></div>
-<app-clickable-x></app-clickable-x>
+<div class="tab-container" [ngClass]="{'selected':this.isSelected}" (click)="this.selectTab()">
+  <div contenteditable="true" class="tree-name-container">{{this.treeName}}</div>
+  <div class="middle-element"></div>
+  <app-clickable-x (click)="this.closeTab()"></app-clickable-x>
+</div>
+
 

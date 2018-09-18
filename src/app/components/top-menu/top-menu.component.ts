@@ -4,6 +4,7 @@ import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../services/ui-settings/ui-settings.service';
+import {TreesFileService} from '../../services/trees-file/trees-file.service';
 
 @Component({
   selector: 'app-top-menu',
@@ -18,7 +19,7 @@ export class TopMenuComponent implements OnInit {
 
   strategicFormActive: boolean;
 
-  constructor(private uac: UserActionControllerService, public tts: TooltipsService, public uis: UiSettingsService) {
+  constructor(private uac: UserActionControllerService, public tts: TooltipsService, public uis: UiSettingsService, private tfs: TreesFileService) {
   }
 
   ngOnInit() {
@@ -46,5 +47,18 @@ export class TopMenuComponent implements OnInit {
 
   toggleSolver() {
     this.uis.solverActive = !this.uis.solverActive;
+  }
+
+  isUndoActive() {
+    return this.userActionController.undoRedoController.currentTreeIndex === 0;
+  }
+
+  isRedoActive() {
+    return this.userActionController.undoRedoController.currentTreeIndex ===
+      this.userActionController.undoRedoController.treesList.length - 1;
+  }
+
+  createNewTree() {
+    this.tfs.addNewTree();
   }
 }
