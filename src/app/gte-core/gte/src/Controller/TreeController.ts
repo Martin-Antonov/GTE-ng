@@ -216,9 +216,7 @@ export class TreeController {
 
     if (playerID > this.tree.players.length - 1) {
       this.tree.addPlayer(new Player(playerID, playerID.toString(), PLAYER_COLORS[playerID - 1]));
-      // $('#player-number').html((this.tree.players.length - 1).toString());
-      // $('#zero-sum-wrapper').css('opacity', 0.3);
-      this.treeView.showOrHideLabels(true);
+      this.treeView.showOrHideLabels();
     }
   }
 
@@ -358,7 +356,7 @@ export class TreeController {
       n.resetLabelText(this.treeViewProperties.zeroSumOn);
     });
 
-    this.treeView.showOrHideLabels(true);
+    this.treeView.showOrHideLabels();
     this.attachHandlersToNodes();
     this.treeView.iSets.forEach((iSet) => {
       this.attachHandlersToISet(iSet);

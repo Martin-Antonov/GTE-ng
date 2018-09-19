@@ -1,5 +1,7 @@
 <div class="tab-container" [ngClass]="{'selected':this.isSelected}" (click)="this.selectTab()">
-  <div contenteditable="true" class="tree-name-container">{{this.treeName}}</div>
+  <div contenteditable="true" (input)="this.tfs.treeTabs[this.index].fileName = $event.target.innerText"
+       class="tree-name-container">{{this.tfs.treeTabs[this.index].fileName}}
+  </div>
   <div class="middle-element"></div>
   <app-clickable-x (click)="this.closeTab()"></app-clickable-x>
 </div>

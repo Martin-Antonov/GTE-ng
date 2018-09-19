@@ -40,7 +40,7 @@ export class UserActionController {
     this.undoRedoController = new UndoRedoController(this.treeController);
     this.selectedNodes = [];
 
-    this.labelInput = new LabelInputHandler(this.game, this.treeController)
+    this.labelInput = new LabelInputHandler(this.game, this.treeController);
 
     this.selectionRectangle = new SelectionRectangle(this.game);
     this.errorPopUp = new ErrorPopUp(this.game);
@@ -108,90 +108,6 @@ export class UserActionController {
     this.deleteNodeHandler(this.treeController.treeView.nodes[0]);
     this.addNodesHandler(this.treeController.treeView.nodes[0]);
     this.checkCreateStrategicForm();
-  }
-
-  /**Saves a tree to a txt file*/
-  saveTreeToFile() {
-    // const text = this.treeParser.stringify(this.treeController.tree);
-    // const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
-    // saveAs(blob, GTE_DEFAULT_FILE_NAME + '.txt');
-  }
-
-  /**Toggles the open file menu to chose a txt file with a tree*/
-  toggleOpenFile() {
-    const input = event.target;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result;
-      this.loadTreeFromFile(text);
-    };
-
-    reader.readAsText((<any>input).files[0]);
-  }
-
-  /**A method which loads the tree from a selected file*/
-  private loadTreeFromFile(text: string) {
-    try {
-      this.treeController.deleteNodeHandler([this.treeController.treeView.nodes[0]]);
-      this.treeController.treeView.nodes[0].destroy();
-      this.treeController.treeView.iSets.forEach((iSet: ISetView) => {
-        iSet.destroy();
-      });
-
-
-      const tree = this.treeParser.parse(text);
-      // temporary fix for labels
-      const labels = [];
-      tree.moves.forEach((m: Move) => {
-        if (m.from.type === NodeType.OWNED) {
-          labels.push(m.label);
-        }
-        else {
-          labels.push(null);
-        }
-      });
-      if (tree.nodes.length >= 3) {
-        this.treeController.tree = tree;
-        this.treeController.treeView =
-          new TreeView(this.treeController.game, this.treeController.tree, this.treeController.treeViewProperties);
-
-        // temporary fix oontinued
-        for (let i = 0; i < this.treeController.tree.moves.length; i++) {
-          const move = this.treeController.tree.moves[i];
-          if (move.from.type === NodeType.OWNED) {
-            this.treeController.tree.moves[i].label = labels[i];
-          }
-        }
-        this.emptySelectedNodes();
-        this.treeController.treeView.nodes.forEach(n => {
-          n.resetNodeDrawing();
-          n.resetLabelText(this.treeController.treeViewProperties.zeroSumOn);
-        });
-        this.treeController.treeView.showOrHideLabels(false);
-        this.treeController.attachHandlersToNodes();
-        this.treeController.treeView.iSets.forEach(iSetV => {
-          this.treeController.attachHandlersToISet(iSetV);
-        });
-      }
-    }
-    catch (err) {
-      this.errorPopUp.show('Error in reading file. ');
-      this.treeController.createInitialTree();
-    }
-    this.checkCreateStrategicForm();
-  }
-
-  /**A method which saves the tree to a png file*/
-  saveTreeToImage() {
-    this.game.world.getByName('hoverMenu').alpha = 0;
-    // setTimeout(() => {
-    //     let cnvs = $('#phaser-div').find('canvas');
-    //     (<any>cnvs[0]).toBlob(function (blob) {
-    //         saveAs(blob, GTE_DEFAULT_FILE_NAME + '.png');
-    //     });
-    // }, 100
-    // );
   }
 
   /**A method for deselecting nodes.*/

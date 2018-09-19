@@ -101,114 +101,72 @@ export class KeyboardController {
 
   /**A method which assigns action to each key via the UserActionController*/
   attachHandlersToKeys() {
-    // Children and new file
+    // Children
     this.nKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        if (!this.controlKey.isDown && !this.altKey.isDown) {
-          this.userActionController.addNodesHandler();
-        }
-        else if (!this.controlKey.isDown && this.altKey.isDown) {
-          this.userActionController.createNewTree();
-        }
-      // }
+      if (!this.controlKey.isDown && !this.altKey.isDown) {
+        this.userActionController.addNodesHandler();
+      }
     });
     // Delete nodes
     this.deleteKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        this.userActionController.deleteNodeHandler();
+      this.userActionController.deleteNodeHandler();
       // }
     });
     this.dKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        this.userActionController.deleteNodeHandler();
-      // }
+      this.userActionController.deleteNodeHandler();
     });
 
     // Assigning players
     this.playersKeys.forEach((k) => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        let playerID = this.playersKeys.indexOf(k) + 1;
-        k.onDown.add(() => {
-          this.userActionController.assignPlayerToNodeHandler(playerID);
-        });
-      // }
+      let playerID = this.playersKeys.indexOf(k) + 1;
+      k.onDown.add(() => {
+        this.userActionController.assignPlayerToNodeHandler(playerID);
+      });
     });
     this.zeroKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        this.userActionController.assignChancePlayerToNodeHandler();
-      // }
+      this.userActionController.assignChancePlayerToNodeHandler();
     });
 
     // Create an information set
     this.iKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        if (!this.controlKey.isDown && !this.altKey.isDown) {
-          this.userActionController.createISetHandler();
-        }
-        else if (!this.controlKey.isDown && this.altKey.isDown) {
-          this.userActionController.saveTreeToImage();
-        }
-      // }
+      if (!this.controlKey.isDown && !this.altKey.isDown) {
+        this.userActionController.createISetHandler();
+      }
     });
 
     // Undo and redo
     this.zKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        if (this.controlKey.isDown && !this.shiftKey.isDown) {
-          this.userActionController.undoRedoHandler(true);
-        }
-        if (this.controlKey.isDown && this.shiftKey.isDown) {
-          this.userActionController.undoRedoHandler(false);
-        }
-      // }
+      if (this.controlKey.isDown && !this.shiftKey.isDown) {
+        this.userActionController.undoRedoHandler(true);
+      }
+      if (this.controlKey.isDown && this.shiftKey.isDown) {
+        this.userActionController.undoRedoHandler(false);
+      }
     });
 
     // Remove information set
     this.uKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        this.userActionController.removeISetsByNodesHandler();
-      // }
+      this.userActionController.removeISetsByNodesHandler();
     });
 
+    // Cut information set
     this.cKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-      // Cut information set
       this.userActionController.initiateCutSpriteHandler();
-
-      // }
     });
 
     // Change to the next label
     this.tabKey.onDown.add(() => {
-      // if (this.userActionController.treeController.labelInput.active) {
-        if (this.shiftKey.isDown) {
-          this.userActionController.activateLabelField(false);
-        }
-        else {
-          this.userActionController.activateLabelField(true);
-        }
-      // }
-    });
-
-    // Enter value in label
-    this.enterKey.onDown.add(() => {
-      // if (this.userActionController.treeController.labelInput.active) {
-      //   this.userActionController.changeLabel();
-      // }
+      if (this.shiftKey.isDown) {
+        this.userActionController.activateLabelField(false);
+      }
+      else {
+        this.userActionController.activateLabelField(true);
+      }
     });
 
     // Exit label
     this.escapeKey.onDown.add(() => {
-      // if (this.userActionController.treeController.labelInput.active) {
-        this.userActionController.hideInputLabel();
-      // }
-    });
-
-    // Save to File
-    this.sKey.onDown.add(() => {
-      if (!this.controlKey.isDown && this.altKey.isDown) {
-        this.userActionController.saveTreeToFile();
-      }
+      this.userActionController.hideInputLabel();
     });
 
 
@@ -231,44 +189,36 @@ export class KeyboardController {
 
 
     this.upKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        let verticalDistance = this.userActionController.treeController.treeViewProperties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
+      let verticalDistance = this.userActionController.treeController.treeViewProperties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
 
-        if (!this.controlKey.isDown) {
-          this.userActionController.moveNodeManually(0, -1, verticalDistance);
-        }
-      // }
+      if (!this.controlKey.isDown) {
+        this.userActionController.moveNodeManually(0, -1, verticalDistance);
+      }
     });
 
     this.downKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        let verticalDistance = this.userActionController.treeController.treeViewProperties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
+      let verticalDistance = this.userActionController.treeController.treeViewProperties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
 
-        if (!this.controlKey.isDown) {
-          this.userActionController.moveNodeManually(0, 1, verticalDistance);
-        }
-      // }
+      if (!this.controlKey.isDown) {
+        this.userActionController.moveNodeManually(0, 1, verticalDistance);
+      }
     });
 
     this.leftKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        let horizontalDistance = this.userActionController.treeController.treeViewProperties.treeWidth /
-          this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
+      let horizontalDistance = this.userActionController.treeController.treeViewProperties.treeWidth /
+        this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
 
-        if (!this.controlKey.isDown) {
-          this.userActionController.moveNodeManually(-1, 0, horizontalDistance);
-        }
-      // }
+      if (!this.controlKey.isDown) {
+        this.userActionController.moveNodeManually(-1, 0, horizontalDistance);
+      }
     });
     this.rightKey.onDown.add(() => {
-      // if (!this.userActionController.treeController.labelInput.active) {
-        let horizontalDistance = this.userActionController.treeController.treeViewProperties.treeWidth /
-          this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
+      let horizontalDistance = this.userActionController.treeController.treeViewProperties.treeWidth /
+        this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
 
-        if (!this.controlKey.isDown) {
-          this.userActionController.moveNodeManually(1, 0, horizontalDistance);
-        }
-      // }
+      if (!this.controlKey.isDown) {
+        this.userActionController.moveNodeManually(1, 0, horizontalDistance);
+      }
     });
 
     this.upKey.onHoldCallback = function () {

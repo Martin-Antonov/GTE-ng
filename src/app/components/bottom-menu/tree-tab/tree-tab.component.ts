@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {TreesFileService} from '../../../services/trees-file/trees-file.service';
 
 @Component({
   selector: 'app-tree-tab',
@@ -7,11 +8,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class TreeTabComponent implements OnInit {
 
-  @Input() treeName: string;
+  @Input() index: number;
   @Input() isSelected: string;
   @Output() close = new EventEmitter();
   @Output() select = new EventEmitter();
-  constructor() {
+  constructor(public tfs: TreesFileService) {
   }
 
   ngOnInit() {

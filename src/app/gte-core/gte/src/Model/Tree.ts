@@ -199,7 +199,6 @@ export class Tree {
         return this.players[i];
       }
     }
-    console.log('Player not found! ');
   }
 
   /**Checks if selected nodes have the same player assigned*/

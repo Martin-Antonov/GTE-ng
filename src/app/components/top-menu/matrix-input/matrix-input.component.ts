@@ -66,8 +66,6 @@ export class MatrixInputComponent implements OnInit {
   postMatrixAsPlayersInput() {
     let m1 = '';
     let m2 = '';
-    console.log(this.p1T);
-    console.log(this.p1T.nativeElement.children[0].children);
     for (let i = 0; i < this.p1T.nativeElement.children[0].children.length; i++) {
       const childElement = this.p1T.nativeElement.children[0].children[i];
       for (let j = 0; j < childElement.children.length; j++) {

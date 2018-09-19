@@ -23,6 +23,9 @@
       @include removeSelection();
     }
   }
+  input {
+    display: none;
+  }
   @include buttonInactive();
 }
 

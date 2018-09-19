@@ -72,7 +72,7 @@ export class TreeView {
 
     this.drawISets();
     this.resetNodeLabels();
-    this.showOrHideLabels(true);
+    this.showOrHideLabels();
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves);
     }
@@ -144,9 +144,9 @@ export class TreeView {
   }
 
   /** A method which decides whether to show the labels or not*/
-  showOrHideLabels(shouldResetLabels: boolean) {
+  showOrHideLabels() {
     if (this.tree.checkAllNodesLabeled()) {
-      if (shouldResetLabels) {
+      if (this.shouldResetLabels()) {
         this.tree.resetLabels();
       }
       this.moves.forEach(m => {
@@ -175,6 +175,16 @@ export class TreeView {
         }
       });
     }
+  }
+
+  private shouldResetLabels() {
+    for (let i = 0; i < this.tree.moves.length; i++) {
+      const move = this.tree.moves[i];
+      if (!move.label && !move.probability) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**Re-centers the tree on the screen*/

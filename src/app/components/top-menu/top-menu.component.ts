@@ -61,4 +61,16 @@ export class TopMenuComponent implements OnInit {
   createNewTree() {
     this.tfs.addNewTree();
   }
+
+  saveTreeToFile(){
+    this.tfs.saveTreeToFile();
+  }
+
+  loadTreeFromFile(){
+    this.tfs.loadTreeFromFile();
+  }
+
+  saveToImage(){
+    this.tfs.saveToImage();
+  }
 }

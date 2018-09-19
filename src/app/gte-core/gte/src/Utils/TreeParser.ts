@@ -45,7 +45,7 @@ export class TreeParser {
         label: null,
         probability: null
       };
-
+      
       if (m.label) {
         move.label = m.label;
       }

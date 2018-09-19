@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {UserActionControllerService} from '../user-action-controller/user-action-controller.service';
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
 import {TreeFile} from './TreeFile';
+import {saveAs} from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -44,9 +45,11 @@ export class TreesFileService {
       this.saveCurrentTree();
       this.userActionController.emptySelectedNodes();
       this.userActionController.treeController.reloadTreeFromJSON(
-        this.userActionController.undoRedoController.treeParser.parse(this.treeTabs[index].currentTree)
+        this.userActionController.undoRedoController.treeParser.parse(this.treeTabs[index].currentTree),
+        this.treeTabs[index].coordsList[this.treeTabs[index].currentCoordinatesIndex]
       );
       this.currentTabIndex = index;
+      this.userActionController.checkCreateStrategicForm();
     }
   }
 
@@ -90,7 +93,43 @@ export class TreesFileService {
         currentTreeCoordinates.push({x: coords.x, y: coords.y});
 
       });
-      currentFile.coordsList.push(currentTreeCoordinates);
+      currentFile.coordsList[undoRedoController.treeCoordinatesList.indexOf(treeCoords)] = currentTreeCoordinates;
     });
+    // Save the Coordinates
+    currentFile.currentCoordinatesIndex = undoRedoController.currentTreeIndex;
+  }
+
+  saveTreeToFile() {
+    this.saveCurrentTree();
+    let text = JSON.stringify(this.treeTabs[this.currentTabIndex]);
+    let blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.txt');
+  }
+
+  loadTreeFromFile() {
+    let input = event.target;
+
+    let reader = new FileReader();
+    reader.onload = () => {
+      let text = reader.result;
+      this.newTreeFromFile(text);
+    };
+
+    reader.readAsText((<any>input).files[0]);
+  }
+
+  private newTreeFromFile(text: string) {
+    let newTree = JSON.parse(text);
+    this.treeTabs.push(newTree);
+    this.changeToTree(this.treeTabs.length - 1);
+  }
+
+  saveToImage() {
+    setTimeout(() => {
+      let cnvs = document.getElementsByTagName('canvas');
+      (<any>cnvs[0]).toBlob(function (blob) {
+        saveAs(blob, 'GTE_Tree' + '.png');
+      });
+    }, 100);
   }
 }

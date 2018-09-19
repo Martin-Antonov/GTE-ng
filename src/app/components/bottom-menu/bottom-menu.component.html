@@ -1,6 +1,6 @@
 <ng-container *ngIf="this.tfs && this.tfs.treeTabs">
   <ng-container *ngFor="let tab of this.tfs.treeTabs;index as i">
-    <app-tree-tab [treeName]="tab.fileName" (select)="changeTree(i)" [isSelected]="this.isTabActive(i)" (close)="this.closeTab(i)"></app-tree-tab>
+    <app-tree-tab [index]="i" (select)="changeTree(i)" [isSelected]="this.isTabActive(i)" (close)="this.closeTab(i)"></app-tree-tab>
   </ng-container>
 </ng-container>
 <div class="middle-element"></div>
