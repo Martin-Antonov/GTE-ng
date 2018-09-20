@@ -67,11 +67,15 @@ export class Node {
     if (this.children.length > 0) {
       if (this.iSet && this.iSet.nodes) {
         this.iSet.player = player;
-        this.iSet.nodes.forEach(n => {
+        for (let i = 0; i < this.iSet.nodes.length; i++) {
+          let n = this.iSet.nodes[i];
           n.type = NodeType.OWNED;
           n.player = player;
-          n.childrenMoves.forEach(c => c.convertToLabeled());
-        });
+          for (let j = 0; j < n.childrenMoves.length; j++) {
+            let m = n.childrenMoves[j];
+            m.convertToLabeled(this.iSet.nodes[0].childrenMoves[j].label);
+          }
+        }
       }
       else {
         this.type = NodeType.OWNED;

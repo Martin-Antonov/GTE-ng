@@ -101,7 +101,7 @@ export class KeyboardController {
 
   /**A method which assigns action to each key via the UserActionController*/
   attachHandlersToKeys() {
-    // Children
+    // Add Children
     this.nKey.onDown.add(() => {
       if (!this.controlKey.isDown && !this.altKey.isDown) {
         this.userActionController.addNodesHandler();

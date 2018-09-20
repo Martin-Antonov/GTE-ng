@@ -204,6 +204,7 @@ export class UserActionController {
   createISetHandler() {
     if (this.selectedNodes.length > 1) {
       try {
+        debugger;
         this.treeController.createISet(this.selectedNodes);
       }
       catch (err) {

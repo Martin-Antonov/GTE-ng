@@ -348,7 +348,6 @@ export class TreeController {
     });
 
     // 2. Change it with the corresponding one in treelist
-    // this.tree = this.treesList[this.currentTreeIndex].clone();
     this.tree = newTree;
     this.treeView = new TreeView(this.game, this.tree, this.treeViewProperties);
     this.treeView.nodes.forEach(n => {
