@@ -54,13 +54,14 @@ export class TreesFileService {
   }
 
   closeFile(index: number) {
+    this.saveCurrentTree();
     if (this.treeTabs.length === 1) {
       return;
     }
 
     this.treeTabs.splice(index, 1);
     if (index !== 0) {
-      this.currentTabIndex--;
+      this.currentTabIndex = index - 1;
     }
     else {
       this.currentTabIndex = this.treeTabs.length - 1;

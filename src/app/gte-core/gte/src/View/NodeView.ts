@@ -185,7 +185,8 @@ export class NodeView extends Phaser.Sprite {
       this.payoffsLabel.clearColors();
       for (let i = 0; i < labelsArray.length; i++) {
         this.payoffsLabel.text += labelsArray[i] + '\n';
-        this.payoffsLabel.addColor(Phaser.Color.getWebRGB(PLAYER_COLORS[i]), (this.payoffsLabel.text.length - labelsArray[i].length - i - 1));
+        this.payoffsLabel.addColor(Phaser.Color.getWebRGB(PLAYER_COLORS[i]),
+          (this.payoffsLabel.text.length - labelsArray[i].length - i - 1));
       }
       this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
       this.payoffsLabel.alpha = 1;

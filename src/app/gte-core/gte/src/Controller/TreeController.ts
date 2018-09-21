@@ -82,17 +82,23 @@ export class TreeController {
     });
 
     n.ownerLabel.events.onInputDown.add(() => {
-      this.labelInputSignal.dispatch(n);
+      if (n.ownerLabel.alpha === 1) {
+        this.labelInputSignal.dispatch(n);
+      }
     }, this);
 
     n.payoffsLabel.events.onInputDown.add(() => {
-      this.labelInputSignal.dispatch(n);
+      if (n.payoffsLabel.alpha === 1) {
+        this.labelInputSignal.dispatch(n);
+      }
     }, this);
 
     if (n.node.parentMove) {
       const move = this.treeView.findMoveView(n.node.parentMove);
       move.label.events.onInputDown.add(() => {
-        this.labelInputSignal.dispatch(move);
+        if (move.label.alpha === 1) {
+          this.labelInputSignal.dispatch(move);
+        }
       }, this);
     }
   }

@@ -26,7 +26,6 @@ export class LabelInputHandler {
     this.treeController = treeController;
     this.selectTextSignal = new Phaser.Signal();
     this.treeController.labelInputSignal.add(function () {
-        // console.log('clicked');
         let sprite: Phaser.Sprite = arguments[0];
         this.activate(sprite);
       }, this
@@ -169,6 +168,7 @@ export class LabelInputHandler {
         return nodeV.node.payoffs.toString();
       }
     }
+    return null;
   }
 
   private setLabelCoords() {
