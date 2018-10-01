@@ -2,7 +2,7 @@
   
 Game Theory Explorer is  a software tool, which creates and analyses non-cooperative games in extensive and strategic form.  The official website of the project is [Game Theory Explorer](http://test.logos.bg) and you can test the latest stable version [here](http://app.test.logos.bg).
 
-![alt text](https://lh5.googleusercontent.com/B6rwV0wmt2QYVEIdVZA8FEZpE8MENnzZebVglVnOXA00dGU9aXkWaBRbp9on_ODiRCb0Cx4WOKNRhX6zH0r7=w1920-h969)
+<img src="https://drive.google.com/uc?export=view&id=1RTnbbuGT48xb0d_6AaJk3o-xz7ee2skv" style="width: 500px; max-width: 100%; height: auto" title="Click for the larger version." />
   
 ## Getting Started  
   
