@@ -110,9 +110,9 @@ export class TreeController {
 
   /**The iSet specific method for attaching handlers*/
   attachHandlersToISet(iSet: ISetView) {
-    iSet.events.onInputOver.add(function () {
+    iSet.events.onInputUp.add(function () {
       let iSet = <ISetView>arguments[0];
-      this.handleInputOverISet(iSet);
+      this.handleInputUpISet(iSet);
     }, this);
   }
 
@@ -139,12 +139,23 @@ export class TreeController {
     else {
       this.addNodeHandler([nodeV]);
     }
-
   }
 
   /**Handler for the signal HOVER on an ISet*/
-  private handleInputOverISet(iSetV: ISetView) {
-
+  private handleInputUpISet(iSetV: ISetView) {
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT)) {
+      let nodesToDelete = [];
+      iSetV.nodes.forEach((nV: NodeView) => {
+        nodesToDelete.push(
+          this.treeView.findNodeView(
+            nV.node.children[nV.node.children.length - 1]
+          ));
+      });
+      this.deleteNodeHandler(nodesToDelete);
+    }
+    else {
+      this.addNodeHandler(iSetV.nodes);
+    }
   }
 
   // endregion
