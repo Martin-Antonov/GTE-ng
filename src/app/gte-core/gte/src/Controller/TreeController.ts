@@ -31,7 +31,6 @@ export class TreeController {
     this.setCircleBitmapData(1);
     this.nodesToDelete = [];
     this.createInitialTree();
-    this.attachHandlersToNodes();
     this.labelInputSignal = new Phaser.Signal();
   }
 
@@ -45,7 +44,10 @@ export class TreeController {
 
     this.treeViewProperties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT, this.game.width * INITIAL_TREE_WIDTH);
     this.treeView = new TreeView(this.game, this.tree, this.treeViewProperties);
+
+    this.attachHandlersToNode(this.treeView.nodes[0]);
     this.addNodeHandler([this.treeView.nodes[0]]);
+
     this.resetTree(true, true);
   }
 
@@ -79,6 +81,9 @@ export class TreeController {
     });
     n.events.onInputOut.add(() => {
       this.handleInputOutNode(n);
+    });
+    n.events.onInputUp.add(() => {
+      this.handleInputUpNode(n);
     });
 
     n.ownerLabel.events.onInputDown.add(() => {
@@ -123,6 +128,17 @@ export class TreeController {
 
   /**Handler for the signal CLICK on a Node*/
   private handleInputDownNode(nodeV: NodeView) {
+
+  }
+
+  /**Handler for the signal CLICK on a node*/
+  private handleInputUpNode(nodeV?: NodeView) {
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT)) {
+      this.deleteNodeHandler([nodeV]);
+    }
+    else {
+      this.addNodeHandler([nodeV]);
+    }
 
   }
 

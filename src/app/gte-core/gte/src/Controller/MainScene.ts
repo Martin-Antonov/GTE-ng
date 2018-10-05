@@ -108,7 +108,6 @@ export class MainScene extends Phaser.State {
     //     this.game.debug.text("n: "+this.treeController.treeView.nodes.length + " o: "+
     // this.treeController.treeView.treeTweenManager.oldCoordinates.length, 20,40, "#ff0000", "20px Arial");
     // }
-
   }
 }
 

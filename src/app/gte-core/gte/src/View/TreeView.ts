@@ -169,6 +169,7 @@ export class TreeView {
       this.nodes.forEach(n => {
         n.resetLabelText(this.properties.zeroSumOn);
         n.payoffsLabel.alpha = 0;
+        n.payoffsLabel.input.enabled = false;
         if (n.node.type === NodeType.LEAF) {
           n.node.convertToDefault();
           n.resetNodeDrawing();

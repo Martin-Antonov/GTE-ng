@@ -2,7 +2,7 @@
 @import "../../../shared/mixins";
 
 .solver-container {
-  @include window(600px, 800px);
+  @include window(600px, 600px);
   top: 5%;
   left: 12%;
   .top-handle {
@@ -19,7 +19,17 @@
     @include window-content();
     overflow: scroll;
     p {
+      position:relative;
+      top:10px;
+      left:10px;
+      width:100%;
+      height:100%;
       white-space: pre;
+      font-family: $open-sans;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
     }
   }
 }

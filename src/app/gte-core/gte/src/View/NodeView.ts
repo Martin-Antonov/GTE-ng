@@ -42,8 +42,6 @@ export class NodeView extends Phaser.Sprite {
     this.createSprites();
     this.createLabels();
     this.input.priorityID = 1;
-    this.ownerLabel.input.priorityID = 199;
-    this.payoffsLabel.input.priorityID = 199;
 
     this.game.add.existing(this);
   }
@@ -89,6 +87,7 @@ export class NodeView extends Phaser.Sprite {
     this.ownerLabel.anchor.set(0.5, 0.5);
     this.ownerLabel.inputEnabled = true;
     // this.ownerLabel.fontWeight = 100;
+    this.ownerLabel.input.priorityID = 199;
 
     this.payoffsLabel = this.game.add.text(this.x, this.y + this.width, '', null);
     this.payoffsLabel.position = this.position;
@@ -98,6 +97,7 @@ export class NodeView extends Phaser.Sprite {
     this.payoffsLabel.inputEnabled = true;
     this.payoffsLabel.lineSpacing = -10;
     this.payoffsLabel.align = 'right';
+    this.payoffsLabel.input.priorityID = 199;
   }
 
   private updateLabelPosition() {
@@ -190,6 +190,7 @@ export class NodeView extends Phaser.Sprite {
       }
       this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
       this.payoffsLabel.alpha = 1;
+      this.payoffsLabel.input.enabled = true;
     }
     else {
       this.payoffsLabel.alpha = 0;
