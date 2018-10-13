@@ -15,7 +15,7 @@ export class SolverComponent implements OnInit {
   ngOnInit() {
   }
 
-  closeWindow() {
+  close() {
     this.uis.solverActive = false;
   }
 }

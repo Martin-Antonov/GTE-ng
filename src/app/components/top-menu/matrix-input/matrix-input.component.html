@@ -1,8 +1,8 @@
 <div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, w, s" [handle]="dragHandle"
      [rzMinHeight]="300" [rzMinWidth]="300">
   <div #dragHandle class="top-handle">
-    <span class="matrix-input-title">Matrix Input</span>
-    <app-clickable-x (click)="this.closeWindow()"></app-clickable-x>
+    <span class="matrix-input-title" >Matrix Input</span>
+    <app-clickable-x (click)="this.close()"></app-clickable-x>
   </div>
   <div class="matrix-input-content">
     <div class="matrix-input-options">

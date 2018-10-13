@@ -2,7 +2,7 @@
      [rzMinWidth]="300" [rzMinHeight]="300">
   <div #dragHandle class="top-handle">
     <span class="solver-title">Solution</span>
-    <app-clickable-x (click)="this.closeWindow()"></app-clickable-x>
+    <app-clickable-x (click)="this.close()"></app-clickable-x>
   </div>
   <div class="solver-content">
     <p *ngIf="this.solver.matrixResult; else not_available">{{this.solver.matrixResult}}</p>
