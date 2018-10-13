@@ -46,7 +46,7 @@ export class TreesFileService {
       this.userActionController.emptySelectedNodes();
       this.userActionController.treeController.reloadTreeFromJSON(
         this.userActionController.undoRedoController.treeParser.parse(this.treeTabs[index].currentTree),
-        this.treeTabs[index].coordsList[this.treeTabs[index].currentCoordinatesIndex]
+        this.treeTabs[index].coordsList
       );
       this.currentTabIndex = index;
       this.userActionController.checkCreateStrategicForm();
@@ -76,28 +76,17 @@ export class TreesFileService {
     let currentFile = this.treeTabs[this.currentTabIndex];
     let undoRedoController = this.userActionController.undoRedoController;
     currentFile.coordsList = [];
-    currentFile.treesList = [];
 
     // Stringify and save current tree
     currentFile.currentTree = undoRedoController.treeParser
       .stringify(undoRedoController.treeController.tree);
 
-    // Save all trees in the undo redo controller
-    undoRedoController.treesList.forEach(tree => {
-      currentFile.treesList.push(undoRedoController.treeParser.stringify(tree));
-    });
-
-    // Save the coordinates for each tree in the undo redo controller
-    undoRedoController.treeCoordinatesList.forEach(treeCoords => {
-      let currentTreeCoordinates = [];
-      treeCoords.forEach(coords => {
-        currentTreeCoordinates.push({x: coords.x, y: coords.y});
-
+    // Save the coordinates if any
+    if (undoRedoController.treeCoordinatesList[undoRedoController.currentTreeIndex]) {
+      undoRedoController.treeCoordinatesList[undoRedoController.currentTreeIndex].forEach(coords => {
+        currentFile.coordsList.push({x: coords.x, y: coords.y});
       });
-      currentFile.coordsList[undoRedoController.treeCoordinatesList.indexOf(treeCoords)] = currentTreeCoordinates;
-    });
-    // Save the Coordinates
-    currentFile.currentCoordinatesIndex = undoRedoController.currentTreeIndex;
+    }
   }
 
   saveTreeToFile() {

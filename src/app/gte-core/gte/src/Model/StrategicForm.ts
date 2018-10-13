@@ -58,7 +58,7 @@ export class StrategicForm {
         }
       }
     });
-
+    debugger;
     this.p1Strategies = [];
     this.p2Strategies = [];
     this.generateStrategies(p1InfoSets);

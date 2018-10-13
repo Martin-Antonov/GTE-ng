@@ -1,4 +1,5 @@
-<div class="strat-form-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle">
+<div class="strat-form-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, w, s" [handle]="dragHandle"
+     [rzMinWidth]="300" [rzMinHeight]="300">
   <div #dragHandle class="top-handle">
     <span class="strat-form-title">Strategic Form</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>
@@ -31,7 +32,9 @@
         </tr>
       </table>
     </div>
-    <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm" (click)="postFromStrategicForm()">Solve</div>
+    <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm"
+         (click)="postFromStrategicForm()">Solve
+    </div>
     <ng-template #not_available> Strategic form not available...</ng-template>
   </div>
 

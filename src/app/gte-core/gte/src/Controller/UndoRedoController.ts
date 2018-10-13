@@ -18,6 +18,10 @@ export class UndoRedoController {
     this.currentTreeIndex = 0;
     this.treeParser = new TreeParser();
     this.treesList.push(this.treeParser.parse(this.treeParser.stringify(this.treeController.tree)));
+
+    this.treeController.treeChangedSignal.add(() => {
+      this.saveNewTree();
+    });
   }
 
   /**Undo-Redo method */

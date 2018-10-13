@@ -1,10 +1,7 @@
 export class TreeFile {
   fileName: string;
   currentTree: string;
-  treesList: Array<string>;
-  coordsList: Array<Array<{ x: number, y: number }>>;
-  currentCoordinatesIndex: number;
-
+  coordsList: Array<{ x: number, y: number }>;
   constructor(fileName: string) {
     this.fileName = fileName;
   }

@@ -8,7 +8,6 @@ import {Player} from '../Model/Player';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH, NODE_RADIUS, PLAYER_COLORS} from '../Utils/Constants';
 import {NodeView} from '../View/NodeView';
 import {ISetView} from '../View/ISetView';
-import {MoveView} from '../View/MoveView';
 import {ISet} from '../Model/ISet';
 import {Node} from '../Model/Node';
 
@@ -24,7 +23,10 @@ export class TreeController {
 
   // An array used to list all nodes that need to be deleted
   private nodesToDelete: Array<Node>;
+  // A signal for the external HTML input label to be activated
   labelInputSignal: Phaser.Signal;
+  // A signal for the external UndoRedoController to save the current tree
+  treeChangedSignal: Phaser.Signal;
 
   constructor(game: Phaser.Game) {
     this.game = game;
@@ -32,6 +34,7 @@ export class TreeController {
     this.nodesToDelete = [];
     this.createInitialTree();
     this.labelInputSignal = new Phaser.Signal();
+    this.treeChangedSignal = new Phaser.Signal();
   }
 
   /**A method which creates the initial 3-node tree in the scene*/
@@ -110,9 +113,9 @@ export class TreeController {
 
   /**The iSet specific method for attaching handlers*/
   attachHandlersToISet(iSet: ISetView) {
-    iSet.events.onInputUp.add(function () {
+    iSet.events.onInputDown.add(function () {
       let iSet = <ISetView>arguments[0];
-      this.handleInputUpISet(iSet);
+      this.handleInputDownISet(iSet);
     }, this);
   }
 
@@ -128,21 +131,22 @@ export class TreeController {
 
   /**Handler for the signal CLICK on a Node*/
   private handleInputDownNode(nodeV: NodeView) {
-
-  }
-
-  /**Handler for the signal CLICK on a node*/
-  private handleInputUpNode(nodeV?: NodeView) {
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT)) {
       this.deleteNodeHandler([nodeV]);
     }
     else {
       this.addNodeHandler([nodeV]);
     }
+    this.treeChangedSignal.dispatch();
+  }
+
+  /**Handler for the signal CLICK on a node*/
+  private handleInputUpNode(nodeV?: NodeView) {
+
   }
 
   /**Handler for the signal HOVER on an ISet*/
-  private handleInputUpISet(iSetV: ISetView) {
+  private handleInputDownISet(iSetV: ISetView) {
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT)) {
       let nodesToDelete = [];
       iSetV.nodes.forEach((nV: NodeView) => {
@@ -156,6 +160,7 @@ export class TreeController {
     else {
       this.addNodeHandler(iSetV.nodes);
     }
+    this.treeChangedSignal.dispatch();
   }
 
   // endregion
@@ -395,7 +400,7 @@ export class TreeController {
     });
 
     if (treeCoordinates) {
-      for (let i = 0; i < this.treeView.nodes.length; i++) {
+      for (let i = 0; i < treeCoordinates.length; i++) {
         this.treeView.nodes[i].position.x = treeCoordinates[i].x;
         this.treeView.nodes[i].position.y = treeCoordinates[i].y;
       }

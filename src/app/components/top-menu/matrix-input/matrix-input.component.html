@@ -1,4 +1,5 @@
-<div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle">
+<div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, w, s" [handle]="dragHandle"
+     [rzMinHeight]="300" [rzMinWidth]="300">
   <div #dragHandle class="top-handle">
     <span class="matrix-input-title">Matrix Input</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>
@@ -21,10 +22,12 @@
     <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form"
           autocomplete="off">
       <div class="dimensions-input">
-        <label for="rows">Rows: </label>
-        <input type="text" id="rows" name="rows" [(ngModel)]="this.matrixInputModel.rows">
-        <label for="cols">Columns: </label>
-        <input type="text" id="cols" name="cols" [(ngModel)]="this.matrixInputModel.cols">
+        <label for="rows">Rows (2-20): </label>
+        <input type="text" id="rows" name="rows" [ngClass]="{'invalid':!this.checkRowsColsCondition()}"
+               [(ngModel)]="this.matrixInputModel.rows">
+        <label for="cols">Columns (2-20): </label>
+        <input type="text" id="cols" name="cols" [ngClass]="{'invalid':!this.checkRowsColsCondition()}"
+               [(ngModel)]="this.matrixInputModel.cols">
       </div>
       <div class="player-matrix-container" *ngIf="this.checkRowsColsCondition()">
         <div class="player-matrix">
@@ -32,7 +35,7 @@
           <table cellspacing="0" cellpadding="0" #p1Table>
             <tr *ngFor="let row of this.createRowsArray(); index as i;">
               <td *ngFor="let column of this.createColsArray(); index as j">
-                <input type="text" autocomplete="new-password">
+                <input type="text" autocomplete="new-password" [ngClass]="{'invalid':!this.checkRowsColsCondition()}">
               </td>
             </tr>
           </table>
@@ -43,7 +46,8 @@
           <table cellspacing="0" cellpadding="0" #p2Table>
             <tr *ngFor="let row of this.createRowsArray(); index as i">
               <td *ngFor="let column of this.createColsArray(); index as j">
-                <input type="text" autocomplete="new-password">
+                <input type="text" autocomplete="new-password" #cell
+                       [ngClass]="{'invalid':this.checkDecimalNumber(cell)}">
               </td>
             </tr>
           </table>

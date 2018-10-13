@@ -1,4 +1,5 @@
-<div class="solver-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw" [handle]="dragHandle">
+<div class="solver-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, s, w" [handle]="dragHandle"
+     [rzMinWidth]="300" [rzMinHeight]="300">
   <div #dragHandle class="top-handle">
     <span class="solver-title">Solution</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>
@@ -6,7 +7,7 @@
   <div class="solver-content">
     <p *ngIf="this.solver.matrixResult; else not_available">{{this.solver.matrixResult}}</p>
     <ng-template #not_available>
-      <div>No solutions to be shown. Please use the matrix input tab or the strategic form tab. </div>
+      <div>No solutions to be shown. Please use the matrix input tab or the strategic form tab.</div>
     </ng-template>
   </div>
   <div class="bottom-field">
