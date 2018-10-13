@@ -2,11 +2,10 @@
      [rzMinHeight]="300" [rzMinWidth]="300">
   <div #dragHandle class="top-handle">
     <span class="matrix-input-title">Matrix Input</span>
-    <app-clickable-x (click)="this.close()"></app-clickable-x>
+    <app-clickable-x (click)="this.closeWindow()"></app-clickable-x>
   </div>
   <div class="matrix-input-content">
     <div class="matrix-input-options">
-
       <div (click)="activateFromText()" [ngClass]="{'selected':this.fromTextActive}">From Text</div>
       <div (click)="activatePlayerMatrix()" class="middle-option" [ngClass]="{'selected':this.fromMatricesActive}">
         Player Matrices

@@ -47,7 +47,8 @@ export class MatrixInputComponent implements OnInit {
     this.fromMatricesActive = true;
   }
 
-  close() {
+  closeWindow() {
+    console.log('mameto ti gnusno');
     this.uis.matrixInputActive = false;
   }
 

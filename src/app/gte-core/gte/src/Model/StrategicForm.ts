@@ -58,7 +58,6 @@ export class StrategicForm {
         }
       }
     });
-    debugger;
     this.p1Strategies = [];
     this.p2Strategies = [];
     this.generateStrategies(p1InfoSets);
@@ -118,19 +117,38 @@ export class StrategicForm {
     // We perform a check of whether the node is reachable from the previously played moves by the player
     let isReachable = false;
     if (index !== 0) {
-      let nonNullIndex = this.findFirstNonNullIndex(strategy, index);
+      // ------------------ TO BE DELETED --------------------
+      // let nonNullIndex = this.findFirstNonNullIndex(strategy, index);
+      // let nodesToCheckReachability = [];
+      // let lastEarlierMove: Move = strategy[nonNullIndex];
+      //
+      // if (lastEarlierMove.from.iSet === null) {
+      //   nodesToCheckReachability = [lastEarlierMove.to];
+      // }
+      // else {
+      //   let earlierMoveIndex = lastEarlierMove.from.childrenMoves.indexOf(lastEarlierMove);
+      //   for (let i = 0; i < lastEarlierMove.from.iSet.nodes.length; i++) {
+      //     nodesToCheckReachability.push(lastEarlierMove.from.iSet.nodes[i].childrenMoves[earlierMoveIndex].to);
+      //   }
+      // }
+      // ------------------------------------------------------
       let nodesToCheckReachability = [];
-      let lastEarlierMove: Move = strategy[nonNullIndex];
-
-      if (lastEarlierMove.from.iSet === null) {
-        nodesToCheckReachability = [lastEarlierMove.to];
-      }
-      else {
-        let earlierMoveIndex = lastEarlierMove.from.childrenMoves.indexOf(lastEarlierMove);
-        for (let i = 0; i < lastEarlierMove.from.iSet.nodes.length; i++) {
-          nodesToCheckReachability.push(lastEarlierMove.from.iSet.nodes[i].childrenMoves[earlierMoveIndex].to);
+      strategy.forEach((move: Move) => {
+        if (move !== null) {
+          if (move.from.iSet === null) {
+            nodesToCheckReachability.push(move.to);
+          }
+          else {
+            move.from.iSet.nodes.forEach((n: Node) => {
+              n.childrenMoves.forEach((m: Move) => {
+                if (m.label === move.label) {
+                  nodesToCheckReachability.push(m.to);
+                }
+              });
+            });
+          }
         }
-      }
+      });
 
       isReachable = this.isReachable(currentISet, nodesToCheckReachability);
     }
