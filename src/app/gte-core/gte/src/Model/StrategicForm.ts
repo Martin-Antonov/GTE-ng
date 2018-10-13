@@ -39,7 +39,7 @@ export class StrategicForm {
     let p1InfoSets = [];
     let p2InfoSets = [];
 
-    // Get all P1 and P2 information sets and singletons separated from the DFS order.
+    // Get all P1 and P2 information sets and singletons from the BFS order
     nodes.forEach(n => {
       if (n.player === this.tree.players[1]) {
         if (n.iSet && p1InfoSets.indexOf(n.iSet) === -1) {
