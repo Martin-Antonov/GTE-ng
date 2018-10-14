@@ -30,7 +30,6 @@ export class GteCoreComponent implements OnInit {
         this.userActionControllerService.setUAC(this.game.state.states.MainScene.userActionController);
         this.tfs.initiateFirstTree();
         clearInterval(interval);
-
       }
     }, 100);
   }

@@ -34,11 +34,11 @@ export class TopMenuComponent implements OnInit {
     this.strategicFormActive = false;
   }
 
-  someFunction() {
-  }
-
   toggleStrategicForm() {
     this.uis.strategicFormActive = !this.uis.strategicFormActive;
+    if (!this.uis.strategicFormActive) {
+      this.uis.strategicFormDocked = false;
+    }
   }
 
   toggleMatrixInput() {
@@ -62,15 +62,15 @@ export class TopMenuComponent implements OnInit {
     this.tfs.addNewTree();
   }
 
-  saveTreeToFile(){
+  saveTreeToFile() {
     this.tfs.saveTreeToFile();
   }
 
-  loadTreeFromFile(){
+  loadTreeFromFile() {
     this.tfs.loadTreeFromFile();
   }
 
-  saveToImage(){
+  saveToImage() {
     this.tfs.saveToImage();
   }
 }

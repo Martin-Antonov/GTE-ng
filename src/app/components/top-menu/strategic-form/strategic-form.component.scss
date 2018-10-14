@@ -117,8 +117,8 @@
       height: 30px;
       text-align: center;
       line-height: 30px;
-      background:$grey2;
-      color:$grey-text;
+      background: $grey2;
+      color: $grey-text;
       @include clickableButton();
     }
   }

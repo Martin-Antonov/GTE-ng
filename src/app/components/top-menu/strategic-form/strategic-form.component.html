@@ -1,4 +1,4 @@
-<div class="strat-form-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, w, s" [handle]="dragHandle"
+<div class="strat-form-container" #block="ngResizable" ngDraggable ngResizable rzHandles="all" [handle]="dragHandle"
      [rzMinWidth]="300" [rzMinHeight]="300">
   <div #dragHandle class="top-handle">
     <span class="strat-form-title">Strategic Form</span>

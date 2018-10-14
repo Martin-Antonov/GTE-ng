@@ -14,6 +14,7 @@
   }
   app-right-menu {
     grid-area: g-right;
+    z-index: 1000;
   }
   app-top-menu {
     grid-area: g-top;

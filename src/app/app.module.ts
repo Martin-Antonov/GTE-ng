@@ -23,8 +23,7 @@ import {SolverService} from './services/solver/solver.service';
 import { SolverComponent } from './components/top-menu/solver/solver.component';
 import { LabelInputComponent } from './components/misc/label-input/label-input.component';
 import {TreesFileService} from './services/trees-file/trees-file.service';
-
-
+import { StrategicFormTableComponent } from './shared/components/strategic-form-table/strategic-form-table.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +42,7 @@ import {TreesFileService} from './services/trees-file/trees-file.service';
     MatrixInputComponent,
     SolverComponent,
     LabelInputComponent,
+    StrategicFormTableComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,

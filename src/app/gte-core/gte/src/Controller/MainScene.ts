@@ -29,27 +29,12 @@ export class MainScene extends Phaser.State {
     this.treeController = new TreeController(this.game);
     this.userActionController = new UserActionController(this.game, this.treeController);
     this.keyboardController = new KeyboardController(this.game, this.userActionController);
-    this.resizeLocked = false;
-    this.gameResize();
+    this.onWindowResize();
   }
 
-  private gameResize() {
+  onWindowResize() {
     window.onresize = () => {
-      if (!this.resizeLocked) {
-        this.resizeLocked = true;
-        this.game.time.events.add(100, () => {
-          let element = document.getElementById('phaser-div');
-          let boundingRect = element.getBoundingClientRect();
-          let width = boundingRect.width;
-          let height = boundingRect.height;
-          this.game.scale.setGameSize(width, height);
-          this.treeController.treeViewProperties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
-            this.game.width * INITIAL_TREE_WIDTH);
-          this.treeController.treeView.properties = this.treeController.treeViewProperties;
-          this.treeController.resetTree(true, false);
-          this.resizeLocked = false;
-        });
-      }
+      this.userActionController.gameResize();
     };
   }
 

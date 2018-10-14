@@ -8,12 +8,13 @@ import {SelectionRectangle} from '../Utils/SelectionRectangle';
 import {ISetView} from '../View/ISetView';
 import {TreeParser} from '../Utils/TreeParser';
 import {ErrorPopUp} from '../Utils/ErrorPopUp';
-import {CUT_SPRITE_TINT, ISET_LINE_WIDTH} from '../Utils/Constants';
+import {CUT_SPRITE_TINT, INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH, ISET_LINE_WIDTH} from '../Utils/Constants';
 import {Move} from '../Model/Move';
 import {Node, NodeType} from '../Model/Node';
 import {TreeView} from '../View/TreeView';
 import {ISet} from '../Model/ISet';
 import {LabelInputHandler} from '../Utils/LabelInputHandler';
+import {TreeViewProperties} from '../View/TreeViewProperties';
 
 export class UserActionController {
   game: Phaser.Game;
@@ -33,6 +34,8 @@ export class UserActionController {
   treeParser: TreeParser;
   errorPopUp: ErrorPopUp;
 
+  private resizeLocked: boolean;
+
   constructor(game: Phaser.Game, treeController: TreeController) {
     this.game = game;
     this.treeController = treeController;
@@ -44,6 +47,7 @@ export class UserActionController {
 
     this.selectionRectangle = new SelectionRectangle(this.game);
     this.errorPopUp = new ErrorPopUp(this.game);
+    this.resizeLocked = false;
 
     this.createBackgroundForInputReset();
     this.createCutSprite();
@@ -393,6 +397,24 @@ export class UserActionController {
     if (this.strategicForm) {
       this.strategicForm.destroy();
       this.strategicForm = null;
+    }
+  }
+
+  gameResize() {
+    if (!this.resizeLocked) {
+      this.resizeLocked = true;
+      this.game.time.events.add(100, () => {
+        let element = document.getElementById('phaser-div');
+        let boundingRect = element.getBoundingClientRect();
+        let width = boundingRect.width;
+        let height = boundingRect.height;
+        this.game.scale.setGameSize(width, height);
+        this.treeController.treeViewProperties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
+          this.game.width * INITIAL_TREE_WIDTH);
+        this.treeController.treeView.properties = this.treeController.treeViewProperties;
+        this.treeController.resetTree(true, false);
+        this.resizeLocked = false;
+      });
     }
   }
 }

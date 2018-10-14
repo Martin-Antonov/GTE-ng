@@ -1,8 +1,9 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
+import {AngularResizableDirective} from 'angular2-draggable';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class StrategicFormComponent implements OnInit {
 
   constructor(private uac: UserActionControllerService, private uis: UiSettingsService, private solver: SolverService) {
   }
+
 
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
@@ -33,6 +35,7 @@ export class StrategicFormComponent implements OnInit {
 
   close() {
     this.uis.strategicFormActive = false;
+    this.uis.strategicFormDocked = false;
   }
 
   postFromStrategicForm() {
