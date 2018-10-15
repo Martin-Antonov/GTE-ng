@@ -11,6 +11,7 @@ export class SquareButtonComponent implements OnInit {
   @Input() imageKey: string;
   @Input() secondImageKey?: string;
   @Input() tooltipText?: string;
+  @Input() inactive?: boolean;
 
   shouldShowAnimation: boolean;
 

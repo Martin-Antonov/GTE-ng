@@ -7,7 +7,6 @@ export class UiSettingsService {
   strategicFormActive: boolean;
   matrixInputActive: boolean;
   solverActive: boolean;
-  strategicFormDocked: boolean;
 
   constructor() {
   }
@@ -16,6 +15,5 @@ export class UiSettingsService {
     this.strategicFormActive = false;
     this.matrixInputActive = false;
     this.solverActive = false;
-    this.strategicFormDocked = false;
   }
 }

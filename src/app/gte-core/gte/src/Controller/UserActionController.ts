@@ -133,7 +133,7 @@ export class UserActionController {
     else if (this.selectedNodes.length > 0) {
       this.treeController.addNodeHandler(this.selectedNodes);
     }
-    this.destroyStrategicForm();
+    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 

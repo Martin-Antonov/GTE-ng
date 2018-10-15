@@ -37,7 +37,6 @@ export class TopMenuComponent implements OnInit {
   toggleStrategicForm() {
     this.uis.strategicFormActive = !this.uis.strategicFormActive;
     if (!this.uis.strategicFormActive) {
-      this.uis.strategicFormDocked = false;
     }
   }
 

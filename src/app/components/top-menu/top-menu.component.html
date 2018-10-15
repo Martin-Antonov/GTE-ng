@@ -12,11 +12,11 @@
                      [tooltipText]="this.tooltips.save_image"></app-square-button>
   <app-square-button [imageKey]="'undo.png'" (click)="this.userActionController.undoRedoHandler(true)"
                      style="margin-left:2em" [tooltipText]="this.tooltips.undo"
-                     [ngClass]="{'inactive':this.isUndoActive()}"></app-square-button>
+                     [inactive]="this.isUndoActive()"></app-square-button>
   <app-square-button [imageKey]="'redo.png'"
                      (click)="this.userActionController.undoRedoHandler(false)"
                      [tooltipText]="this.tooltips.redo"
-                     [ngClass]="{'inactive':this.isRedoActive()}"></app-square-button>
+                     [inactive]="this.isRedoActive()"></app-square-button>
   <app-players-box></app-players-box>
   <app-text-button [text]="'Strategic Form'" (click)="this.toggleStrategicForm()"
                    [isActive]="this.uis.strategicFormActive"></app-text-button>

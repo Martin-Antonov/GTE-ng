@@ -35,7 +35,6 @@ export class StrategicFormComponent implements OnInit {
 
   close() {
     this.uis.strategicFormActive = false;
-    this.uis.strategicFormDocked = false;
   }
 
   postFromStrategicForm() {
