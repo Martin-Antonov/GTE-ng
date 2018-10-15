@@ -1,9 +1,8 @@
 <div class="grid-wrapper">
-  <app-gte-core #game></app-gte-core>
+  <app-gte-core ngResizable rzHandles="e, se, s" (rzResizing)="this.resizeMiddleElement()" [rzMinWidth]="500" [rzMinHeight]="500"></app-gte-core>
   <app-top-menu></app-top-menu>
   <app-left-menu></app-left-menu>
-  <app-right-menu #rightMenu="ngResizable" ngResizable rzHandles="w" [rzMinWidth]="20"
-                  (rzResizing)="resizeMiddleElement(game, rightMenu)"></app-right-menu>
+  <app-right-menu></app-right-menu>
   <app-bottom-menu></app-bottom-menu>
   <app-label-input></app-label-input>
 </div>

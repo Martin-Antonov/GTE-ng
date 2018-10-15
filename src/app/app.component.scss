@@ -14,7 +14,7 @@
   }
   app-right-menu {
     grid-area: g-right;
-    z-index: 1000;
+    z-index: 11;
   }
   app-top-menu {
     grid-area: g-top;
@@ -24,6 +24,9 @@
   }
   app-gte-core {
     grid-area: g-middle;
+    .ng-resizable-diagonal{
+      border-bottom: 12px solid $grey1;
+    }
   }
 }
 

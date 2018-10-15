@@ -19,11 +19,7 @@ export class AppComponent {
     });
   }
 
-  resizeMiddleElement(game, rightMenu) {
-    // console.log(rightMenu);
-    let rightWidth = rightMenu.el.nativeElement.offsetWidth;
-    let middleOffset = rightWidth - 20;
-    game.el.nativeElement.style.width = 'calc(100% - ' + middleOffset + 'px)';
+  resizeMiddleElement() {
     this.userActionController.gameResize();
   }
 }

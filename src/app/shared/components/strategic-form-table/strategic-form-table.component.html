@@ -1,3 +1,28 @@
-<p>
-  strategic-form-table works!
-</p>
+<div class="strat-form-content" *ngIf="this.userActionController && this.userActionController.strategicForm">
+  <div class="table-container" [ngStyle]="{transform: this.stratFormScaleCSS}">
+    <div class="diagonal-line">
+      <div class="p1-label">{{this.userActionController.treeController.tree.players[1].label}}</div>
+      <div class="p2-label">{{this.userActionController.treeController.tree.players[2].label}}</div>
+    </div>
+    <div class="row-strategies">
+      <div class="row-strat" *ngFor="let strategy of this.userActionController.strategicForm.rows">{{strategy}}</div>
+    </div>
+    <div class="col-strategies">
+      <div class="col-strat" *ngFor="let strategy of this.userActionController.strategicForm.cols">{{strategy}}</div>
+    </div>
+    <table cellspacing="0" cellpadding="0">
+      <tr *ngFor="let row of this.userActionController.strategicForm.rows; index as i">
+        <td *ngFor="let column of this.userActionController.strategicForm.cols; index as j">
+          <div class="payoffs-wrapper">
+            <div class="p1-payoff">
+              {{this.userActionController.strategicForm.payoffsMatrix[i][j].outcomes[0].toString() }}
+            </div>
+            <div class="p2-payoff">
+              {{this.userActionController.strategicForm.payoffsMatrix[i][j].outcomes[1].toString() }}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
