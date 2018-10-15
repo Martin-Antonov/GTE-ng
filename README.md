@@ -25,7 +25,7 @@ Run `> ng build` to build the project. The build artifacts will be stored in the
 To get more help on the Angular CLI use `ng help` or check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 ##  Documentation
-You can read more information regarding the overall architecture of the project [here](http://test.logos.bg/docs).
+You can read more information regarding the overall architecture of the project [here](https://github.com/Martin-Antonov/GTE-Website/tree/master/docs/general.md).
 
 ## Contributors & Additional Information
 Please check the About page on the official website [here](http://test.logos.bg/about).
