@@ -25,6 +25,10 @@ export class KeyboardController {
   uKey: Phaser.Key;
   cKey: Phaser.Key;
   sKey: Phaser.Key;
+  rKey: Phaser.Key;
+  yKey: Phaser.Key;
+  numPlusKey: Phaser.Key;
+  numMinusKey: Phaser.Key;
   tabKey: Phaser.Key;
   enterKey: Phaser.Key;
   escapeKey: Phaser.Key;
@@ -41,7 +45,6 @@ export class KeyboardController {
 
     this.addKeys();
     this.attachHandlersToKeys();
-    // this.deselectNodesHandler();
   }
 
   /**Assigning all keys to the corresponding properties in the class*/
@@ -52,12 +55,16 @@ export class KeyboardController {
     this.nKey = this.game.input.keyboard.addKey(Phaser.Keyboard.N);
     this.zeroKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ZERO);
     this.iKey = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
+    this.numPlusKey = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_ADD);
+    this.numMinusKey = this.game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_SUBTRACT);
     this.testButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.zKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
     this.dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
     this.uKey = this.game.input.keyboard.addKey(Phaser.Keyboard.U);
     this.cKey = this.game.input.keyboard.addKey(Phaser.Keyboard.C);
     this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    this.rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
+    this.yKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Y);
     this.tabKey = this.game.input.keyboard.addKey(Phaser.Keyboard.TAB);
     this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     this.escapeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -80,7 +87,11 @@ export class KeyboardController {
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.Z);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.D);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.U);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.R);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.Y);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.NUMPAD_ADD);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.NUMPAD_SUBTRACT);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ZERO);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ONE);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TWO);
@@ -107,12 +118,19 @@ export class KeyboardController {
         this.userActionController.addNodesHandler();
       }
     });
+    this.numPlusKey.onDown.add(() => {
+      if (!this.controlKey.isDown && !this.altKey.isDown) {
+        this.userActionController.addNodesHandler();
+      }
+    });
     // Delete nodes
     this.deleteKey.onDown.add(() => {
       this.userActionController.deleteNodeHandler();
-      // }
     });
     this.dKey.onDown.add(() => {
+      this.userActionController.deleteNodeHandler();
+    });
+    this.numMinusKey.onDown.add(() => {
       this.userActionController.deleteNodeHandler();
     });
 
@@ -144,8 +162,21 @@ export class KeyboardController {
       }
     });
 
-    // Remove information set
     this.uKey.onDown.add(() => {
+      this.userActionController.undoRedoHandler(true);
+    });
+
+    this.rKey.onDown.add(() => {
+      this.userActionController.undoRedoHandler(false);
+    });
+
+    this.yKey.onDown.add(() => {
+      if (this.controlKey.isDown) {
+        this.userActionController.undoRedoHandler(false);
+      }
+    });
+    // Remove information set
+    this.sKey.onDown.add(() => {
       this.userActionController.removeISetsByNodesHandler();
     });
 
