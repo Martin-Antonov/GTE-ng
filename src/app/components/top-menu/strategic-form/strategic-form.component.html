@@ -1,5 +1,6 @@
 <div class="strat-form-container" #block="ngResizable" ngDraggable ngResizable rzHandles="all" [handle]="dragHandle"
-     [rzMinWidth]="300" [rzMinHeight]="300">
+     [rzMinWidth]="300" [rzMinHeight]="300" [rzMaxHeight]="800" [rzMaxWidth]="1500"
+     [inBounds]="true" [bounds]="this.getBody()" rzContainment="#body-id">
   <div #dragHandle class="top-handle">
     <span class="strat-form-title">Strategic Form</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>

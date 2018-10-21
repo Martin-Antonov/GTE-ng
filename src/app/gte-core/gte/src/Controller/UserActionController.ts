@@ -8,13 +8,11 @@ import {SelectionRectangle} from '../Utils/SelectionRectangle';
 import {ISetView} from '../View/ISetView';
 import {TreeParser} from '../Utils/TreeParser';
 import {ErrorPopUp} from '../Utils/ErrorPopUp';
-import {CUT_SPRITE_TINT, INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH, ISET_LINE_WIDTH} from '../Utils/Constants';
-import {Move} from '../Model/Move';
-import {Node, NodeType} from '../Model/Node';
-import {TreeView} from '../View/TreeView';
+import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
 import {ISet} from '../Model/ISet';
 import {LabelInputHandler} from '../Utils/LabelInputHandler';
 import {TreeViewProperties} from '../View/TreeViewProperties';
+import {CutSpriteHandler} from '../Utils/CutSpriteHandler';
 
 export class UserActionController {
   game: Phaser.Game;
@@ -25,12 +23,12 @@ export class UserActionController {
 
   // Used for going to the next node on tab pressed
   labelInput: LabelInputHandler;
+  cutSpriteHandler: CutSpriteHandler;
 
   selectedNodes: Array<NodeView>;
   selectionRectangle: SelectionRectangle;
   backgroundInputSprite: Phaser.Sprite;
-  cutSprite: Phaser.Sprite;
-  cutInformationSet: ISetView;
+
   treeParser: TreeParser;
   errorPopUp: ErrorPopUp;
 
@@ -44,13 +42,18 @@ export class UserActionController {
     this.selectedNodes = [];
 
     this.labelInput = new LabelInputHandler(this.game, this.treeController);
+    this.cutSpriteHandler = new CutSpriteHandler(this.game);
 
     this.selectionRectangle = new SelectionRectangle(this.game);
     this.errorPopUp = new ErrorPopUp(this.game);
     this.resizeLocked = false;
 
+    this.treeController.treeChangedSignal.add(() => {
+      this.checkCreateStrategicForm();
+      this.undoRedoController.saveNewTree();
+    });
+
     this.createBackgroundForInputReset();
-    this.createCutSprite();
   }
 
   /**The update method is built-into Phaser and is called 60 times a second.
@@ -72,7 +75,7 @@ export class UserActionController {
       });
     }
 
-    this.updateCutSpriteHandler();
+    this.cutSpriteHandler.update();
   }
 
   /** Empties the selected nodes in a better way*/
@@ -80,16 +83,6 @@ export class UserActionController {
     while (this.selectedNodes.length !== 0) {
       this.selectedNodes.pop();
     }
-  }
-
-  /**This sprite is created for the cut functionality of an independent set*/
-  private createCutSprite() {
-    this.cutSprite = this.game.add.sprite(0, 0, 'scissors');
-    this.cutSprite.anchor.set(0.5, 0.5);
-    this.cutSprite.alpha = 0;
-    this.cutSprite.tint = CUT_SPRITE_TINT;
-    this.cutSprite.width = this.game.height * ISET_LINE_WIDTH;
-    this.cutSprite.height = this.game.height * ISET_LINE_WIDTH;
   }
 
   /**This sprite resets the input and node selection if someone clicks on a sprite which does not have input*/
@@ -269,21 +262,21 @@ export class UserActionController {
   /**Starts the 'Cut' state for an Information set*/
   initiateCutSpriteHandler(iSetV?: ISetView) {
     if (iSetV) {
-      this.cutInformationSet = iSetV;
+      this.cutSpriteHandler.cutInformationSet = iSetV;
     }
     else {
       let distinctISetsSelected = this.treeController.getDistinctISetsFromNodes(this.selectedNodes);
       if (distinctISetsSelected.length === 1) {
-        this.cutInformationSet = this.treeController.treeView.findISetView(distinctISetsSelected[0]);
+        this.cutSpriteHandler.cutInformationSet = this.treeController.treeView.findISetView(distinctISetsSelected[0]);
       }
     }
-    if (!this.cutInformationSet) {
+    if (!this.cutSpriteHandler.cutInformationSet) {
       return;
     }
 
-    this.cutSprite.bringToTop();
+    this.cutSpriteHandler.cutSprite.bringToTop();
     this.deselectNodesHandler();
-    this.game.add.tween(this.cutSprite).to({alpha: 1}, 300, Phaser.Easing.Default, true);
+    this.game.add.tween(this.cutSpriteHandler.cutSprite).to({alpha: 1}, 300, Phaser.Easing.Default, true);
     this.game.input.keyboard.enabled = false;
     this.treeController.treeView.nodes.forEach(n => {
       n.inputEnabled = false;
@@ -293,6 +286,8 @@ export class UserActionController {
     });
 
     this.game.input.onDown.addOnce(() => {
+      this.cutSpriteHandler.cutSprite.alpha = 0;
+
       this.treeController.treeView.nodes.forEach(n => {
         n.inputEnabled = true;
       });
@@ -300,59 +295,16 @@ export class UserActionController {
         iSet.inputEnabled = true;
       });
       this.game.input.keyboard.enabled = true;
-      this.cutSprite.alpha = 0;
 
-      this.treeController.cutInformationSet(this.cutInformationSet, this.cutSprite.x, this.cutSprite.y);
+      this.treeController.cutInformationSet(this.cutSpriteHandler.cutInformationSet,
+        this.cutSpriteHandler.cutSprite.x, this.cutSpriteHandler.cutSprite.y);
+      this.cutSpriteHandler.cutInformationSet = null;
+
+      this.checkCreateStrategicForm();
       this.treeController.resetTree(true, true);
       this.undoRedoController.saveNewTree();
     }, this);
 
-  }
-
-  /**Updates the position of the cut sprite once every frame, when the cut functionality is on*/
-  updateCutSpriteHandler() {
-    if (this.cutSprite.alpha > 0) {
-      let mouseXPosition = this.game.input.mousePointer.x;
-      let finalPosition = new Phaser.Point();
-      let nodeWidth = this.cutInformationSet.nodes[0].width * 0.5;
-
-      // Limit from the left for X coordinate
-      if (mouseXPosition - nodeWidth < this.cutInformationSet.nodes[0].x) {
-        finalPosition.x = this.cutInformationSet.nodes[0].x + nodeWidth;
-      }
-      // Limit from the right for X coordinate
-      else if (mouseXPosition + nodeWidth > this.cutInformationSet.nodes[this.cutInformationSet.nodes.length - 1].x) {
-        finalPosition.x = this.cutInformationSet.nodes[this.cutInformationSet.nodes.length - 1].x - nodeWidth;
-      }
-      // Or just follow the mouse (X coordinate)
-      else {
-        finalPosition.x = mouseXPosition;
-      }
-
-      let closestLeftNodeIndex;
-
-      // Find the two consecutive nodes where the sprite is
-      for (let i = 0; i < this.cutInformationSet.nodes.length - 1; i++) {
-        if (finalPosition.x >= this.cutInformationSet.nodes[i].x && finalPosition.x <= this.cutInformationSet.nodes[i + 1].x) {
-          closestLeftNodeIndex = i;
-        }
-      }
-
-      // set the y difference to be proportional to the x difference
-      const closestLeftNodePosition = this.cutInformationSet.nodes[closestLeftNodeIndex].position;
-      const closestRightNodePosition = this.cutInformationSet.nodes[closestLeftNodeIndex + 1].position;
-      const proportionInX = (finalPosition.x - closestLeftNodePosition.x) /
-        (closestRightNodePosition.x - closestLeftNodePosition.x);
-      // console.log(proportionInX);
-      finalPosition.y = closestLeftNodePosition.y + proportionInX * (closestRightNodePosition.y - closestLeftNodePosition.y);
-
-      this.cutSprite.position.x = finalPosition.x;
-      this.cutSprite.position.y = finalPosition.y;
-
-      finalPosition = null;
-      mouseXPosition = null;
-      nodeWidth = null;
-    }
   }
 
   /**If the label input is active, go to the next label

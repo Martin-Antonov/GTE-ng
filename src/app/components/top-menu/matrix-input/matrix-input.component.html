@@ -1,5 +1,6 @@
 <div class="matrix-input-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, w, s" [handle]="dragHandle"
-     [rzMinHeight]="300" [rzMinWidth]="300">
+     [rzMinWidth]="300" [rzMinHeight]="300" [rzMaxHeight]="800" [rzMaxWidth]="1500"
+     [inBounds]="true" [bounds]="this.getBody()" rzContainment="#body-id">
   <div #dragHandle class="top-handle">
     <span class="matrix-input-title" >Matrix Input</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>

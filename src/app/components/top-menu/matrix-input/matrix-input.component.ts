@@ -100,4 +100,8 @@ export class MatrixInputComponent implements OnInit {
     this.solver.postMatrixAsText(this.matrixInputModel.wholeMatrix);
     this.uis.solverActive = true;
   }
+
+  getBody() {
+    return document.getElementsByTagName('BODY')[0];
+  }
 }

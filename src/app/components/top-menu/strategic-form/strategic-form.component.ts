@@ -57,4 +57,8 @@ export class StrategicFormComponent implements OnInit {
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
   }
+
+  getBody(){
+    return document.getElementsByTagName('BODY')[0];
+  }
 }

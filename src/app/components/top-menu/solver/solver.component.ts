@@ -18,4 +18,8 @@ export class SolverComponent implements OnInit {
   close() {
     this.uis.solverActive = false;
   }
+
+  getBody(){
+    return document.getElementsByTagName('BODY')[0];
+  }
 }

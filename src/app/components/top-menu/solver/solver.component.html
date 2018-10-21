@@ -1,5 +1,6 @@
-<div class="solver-container" ngDraggable ngResizable rzHandles="ne, nw, se, sw, n, e, s, w" [handle]="dragHandle"
-     [rzMinWidth]="300" [rzMinHeight]="300">
+<div class="solver-container" ngDraggable ngResizable rzHandles="all" [handle]="dragHandle"
+     [rzMinWidth]="300" [rzMinHeight]="300" [rzMaxHeight]="800" [rzMaxWidth]="1500"
+     [inBounds]="true" [bounds]="this.getBody()" rzContainment="#body-id">
   <div #dragHandle class="top-handle">
     <span class="solver-title">Solution</span>
     <app-clickable-x (click)="this.close()"></app-clickable-x>
