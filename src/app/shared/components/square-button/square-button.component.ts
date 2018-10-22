@@ -26,14 +26,7 @@ export class SquareButtonComponent implements OnInit {
   }
 
   @HostListener('click') onClick() {
-    if (this.secondImageKey) {
-      if (this.pathToImage.length === this.PATH_TO_ASSETS.length + this.imageKey.length) {
-        this.pathToImage = this.PATH_TO_ASSETS + this.secondImageKey;
-      }
-      else {
-        this.pathToImage = this.PATH_TO_ASSETS + this.imageKey;
-      }
-    }
+    this.clickHandler();
   }
 
   @HostListener('mouseenter') onMouseEnter() {
@@ -43,9 +36,19 @@ export class SquareButtonComponent implements OnInit {
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-
     if (this.tooltipText) {
       this.shouldShowAnimation = false;
+    }
+  }
+
+  clickHandler(){
+    if (this.secondImageKey) {
+      if (this.pathToImage.length === this.PATH_TO_ASSETS.length + this.imageKey.length) {
+        this.pathToImage = this.PATH_TO_ASSETS + this.secondImageKey;
+      }
+      else {
+        this.pathToImage = this.PATH_TO_ASSETS + this.imageKey;
+      }
     }
   }
 }

@@ -3,4 +3,7 @@
 
 :host {
   background: $grey3;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
 }

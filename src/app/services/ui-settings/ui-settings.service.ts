@@ -7,6 +7,10 @@ export class UiSettingsService {
   strategicFormActive: boolean;
   matrixInputActive: boolean;
   solverActive: boolean;
+  settingsActive: boolean;
+  shortcutsActive: boolean;
+  consoleActive: boolean;
+  tutorialActive: boolean;
 
   constructor() {
   }
@@ -15,5 +19,9 @@ export class UiSettingsService {
     this.strategicFormActive = false;
     this.matrixInputActive = false;
     this.solverActive = false;
+    this.settingsActive = false;
+    this.shortcutsActive = false;
+    this.consoleActive = false;
+    this.tutorialActive = false;
   }
 }

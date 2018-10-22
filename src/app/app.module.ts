@@ -24,6 +24,7 @@ import { SolverComponent } from './components/top-menu/solver/solver.component';
 import { LabelInputComponent } from './components/misc/label-input/label-input.component';
 import {TreesFileService} from './services/trees-file/trees-file.service';
 import { StrategicFormTableComponent } from './shared/components/strategic-form-table/strategic-form-table.component';
+import { ShortcutsComponent } from './components/right-menu/shortcuts/shortcuts.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { StrategicFormTableComponent } from './shared/components/strategic-form-
     SolverComponent,
     LabelInputComponent,
     StrategicFormTableComponent,
+    ShortcutsComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,

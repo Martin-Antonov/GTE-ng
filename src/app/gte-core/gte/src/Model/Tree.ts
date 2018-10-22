@@ -63,6 +63,7 @@ export class Tree {
     }
 
     child = child || new Node();
+    child.payoffs.setPlayersCount(this.players.length - 1);
     node.addChild(child);
     this.nodes.push(child);
     this.moves.push(child.parentMove);
@@ -122,7 +123,7 @@ export class Tree {
         });
       }
 
-      else{
+      else {
         allNodesFromISets.push(n);
       }
     });

@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
-import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {UiSettingsService} from '../../services/ui-settings/ui-settings.service';
 
 @Component({
   selector: 'app-right-menu',
@@ -8,19 +7,11 @@ import {UserActionController} from '../../gte-core/gte/src/Controller/UserAction
   styleUrls: ['./right-menu.component.scss']
 })
 export class RightMenuComponent implements OnInit {
-  userActionController: UserActionController;
 
-  constructor(private uac: UserActionControllerService) {
-    this.uac.userActionController.subscribe(value => {
-      this.userActionController = value;
-    });
+
+  constructor(public uis: UiSettingsService) {
   }
 
   ngOnInit() {
   }
-
-  close(){
-
-  }
-
 }

@@ -169,7 +169,6 @@ export class TreeController {
   /**Adding child or children to a node*/
   addNodeHandler(nodesV: Array<NodeView>) {
     nodesV.forEach((nodeV: NodeView) => {
-      this.handleInputOutNode(nodeV);
       if (nodeV.node.children.length === 0) {
         const child1 = this.treeView.addChildToNode(nodeV);
         const child2 = this.treeView.addChildToNode(nodeV);
