@@ -19,8 +19,8 @@ export class Tree {
   moves: Array<Move>;
   iSets: Array<ISet>;
   players: Array<Player>;
+  labelSetter: LabelSetter;
   private dfsNodes: Array<Node>;
-  private labelSetter: LabelSetter;
 
   constructor() {
     this.nodes = [];
@@ -53,6 +53,11 @@ export class Tree {
 
       this.nodes.splice(this.nodes.indexOf(node), 1);
       node.destroy();
+      this.nodes.forEach((n) => {
+        if (n.children.length === 0) {
+          n.convertToLeaf();
+        }
+      });
     }
   }
 
@@ -65,8 +70,16 @@ export class Tree {
     child = child || new Node();
     child.payoffs.setPlayersCount(this.players.length - 1);
     node.addChild(child);
+
+
     this.nodes.push(child);
     this.moves.push(child.parentMove);
+    this.nodes.forEach(n => {
+      if (n.children.length === 0) {
+        n.convertToLeaf();
+      }
+    });
+
   }
 
   // endregion
@@ -283,19 +296,13 @@ export class Tree {
         return false;
       }
     }
+    this.labelSetter.initiallyAssigned = true;
     return true;
-  }
-
-  /**A method which deletes the move labels*/
-  removeMoveLabels() {
-    this.moves.forEach(m => {
-      m.label = '';
-    });
   }
 
   /**A method which recalculates the move labels*/
   resetLabels() {
-    this.labelSetter.calculateLabels(this.BFSOnTree(), this.players);
+    this.labelSetter.calculateLabels(this.BFSOnTree(), this.moves);
     this.resetChanceProbabilities();
   }
 
@@ -331,6 +338,7 @@ export class Tree {
     }
     else {
       move.label = text;
+      move.manuallyAssigned = true;
       if (move.from.iSet !== null) {
         let index = move.from.childrenMoves.indexOf(move);
         move.from.iSet.nodes.forEach(n => {

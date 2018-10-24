@@ -17,14 +17,16 @@ import {ClickableXComponent} from './shared/components/clickable-x/clickable-x.c
 import {UserActionControllerService} from './services/user-action-controller/user-action-controller.service';
 import {TooltipsService} from './services/tooltips/tooltips.service';
 import {UiSettingsService} from './services/ui-settings/ui-settings.service';
-import { MatrixInputComponent } from './components/top-menu/matrix-input/matrix-input.component';
+import {MatrixInputComponent} from './components/top-menu/matrix-input/matrix-input.component';
 import {FormsModule} from '@angular/forms';
 import {SolverService} from './services/solver/solver.service';
-import { SolverComponent } from './components/top-menu/solver/solver.component';
-import { LabelInputComponent } from './components/misc/label-input/label-input.component';
+import {SolverComponent} from './components/top-menu/solver/solver.component';
+import {LabelInputComponent} from './components/misc/label-input/label-input.component';
 import {TreesFileService} from './services/trees-file/trees-file.service';
-import { StrategicFormTableComponent } from './shared/components/strategic-form-table/strategic-form-table.component';
-import { ShortcutsComponent } from './components/right-menu/shortcuts/shortcuts.component';
+import {StrategicFormTableComponent} from './shared/components/strategic-form-table/strategic-form-table.component';
+import {ShortcutsComponent} from './components/right-menu/shortcuts/shortcuts.component';
+import {ShortcutsService} from './services/shortcuts/shortcuts.service';
+import { SettingsComponent } from './components/right-menu/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -45,11 +47,12 @@ import { ShortcutsComponent } from './components/right-menu/shortcuts/shortcuts.
     LabelInputComponent,
     StrategicFormTableComponent,
     ShortcutsComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,
   ],
-  providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService],
+  providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService, ShortcutsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -146,7 +146,7 @@ export class LabelInputHandler {
         else {
           nodeV.node.payoffs.saveFromString(newLabel);
           this.treeController.treeView.nodes.forEach(n => {
-            n.resetLabelText(this.treeController.treeViewProperties.zeroSumOn);
+            n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           });
         }
       }

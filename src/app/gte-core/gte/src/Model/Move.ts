@@ -9,11 +9,13 @@ export class Move {
   to: Node;
   label: string;
   probability: number;
+  manuallyAssigned: boolean;
 
   constructor(from?: Node, to?: Node) {
     this.from = from;
     this.to = to;
     this.label = '';
+    this.manuallyAssigned = false;
   }
 
   /**Converts the Move to a labeled Move */

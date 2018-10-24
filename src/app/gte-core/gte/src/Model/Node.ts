@@ -95,7 +95,7 @@ export class Node {
   }
 
   /**Converts the current Node to a chance Node, setting the player to the chancePlayer and assigning probabilities to children moves*/
-  convertToChance(chancePlayer: Player, probabilities?: Array<number>,) {
+  convertToChance(chancePlayer: Player, probabilities?: Array<number>) {
     if (this.children.length > 0 && this.iSet === null) {
       this.type = NodeType.CHANCE;
 

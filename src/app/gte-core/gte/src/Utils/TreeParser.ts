@@ -43,9 +43,10 @@ export class TreeParser {
         fromIndex: null,
         toIndex: null,
         label: null,
-        probability: null
+        probability: null,
+        manuallyAssigned: null
       };
-      
+
       if (m.label) {
         move.label = m.label;
       }
@@ -54,6 +55,7 @@ export class TreeParser {
       }
       move.fromIndex = tree.nodes.indexOf(m.from);
       move.toIndex = tree.nodes.indexOf(m.to);
+      move.manuallyAssigned = m.manuallyAssigned;
 
       strippedTree.moves.push(move);
     });
@@ -114,9 +116,9 @@ export class TreeParser {
       let move = new Move();
       move.label = m.label;
       move.probability = m.probability;
+      move.manuallyAssigned = m.manuallyAssigned;
       move.from = clonedTree.nodes[m.fromIndex];
       move.to = clonedTree.nodes[m.toIndex];
-
 
       move.from.children.push(move.to);
       move.to.parent = move.from;

@@ -1,35 +1,49 @@
-import {Player} from './Player';
 import {Node, NodeType} from './Node';
+import {Move} from './Move';
 
 export class LabelSetter {
-  player1Labels: Array<string>;
-  player2Labels: Array<string>;
+  labels: Array<Array<string>>;
+  initiallyAssigned: boolean;
 
   constructor() {
-    this.player1Labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    this.player2Labels = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    this.labels = [];
+    this.labels[0] = 'ABCDEFGHIJK'.split('');
+    this.labels[1] = 'abcdefghijklmno'.split('');
+    this.labels[2] = 'LMNOPQRSTUVWXYZ'.split('');
+    this.labels[3] = 'pqrstuvwxyz'.split('');
+    this.initiallyAssigned = false;
   }
 
   /** Calculates and sets the labels for moves in a BFS order*/
-  calculateLabels(bfsNodes: Array<Node>, players: Array<Player>) {
-    let p1Labels = this.player1Labels.slice(0);
-    let p2Labels = this.player2Labels.slice(0);
-
+  calculateLabels(bfsNodes: Array<Node>, moves: Array<Move>) {
+    bfsNodes.forEach(n => {
+      if (n.parentMove && !n.parentMove.manuallyAssigned) {
+        n.parentMove.label = '';
+      }
+    });
     bfsNodes.forEach(n => {
       if (n.type === NodeType.OWNED) {
         // reference the labels depending on the player
-        let labels = n.player === players[1] ? p1Labels : p2Labels;
+        let labelsForPlayer = this.labels[n.player.id - 1];
         // If it is not in an information set, give the moves labels
         if (n.iSet === null) {
-          n.children.forEach(n => {
-            n.parentMove.convertToLabeled(labels.shift());
+          n.children.forEach(c => {
+            // Assign new label only if not manually assigned
+            if (!c.parentMove.manuallyAssigned) {
+              let label = this.getFirstUnassignedLabel(labelsForPlayer, moves, n.player.id);
+              c.parentMove.convertToLabeled(label);
+            }
           });
         }
-        // If it is an information set and it is the n such node in the set, give labels
+        // If it is an information set and it is the 1st such node in the set, give labels
         // to all moves in the information set
         else if (n === n.iSet.nodes[0]) {
-          n.children.forEach(n => {
-            n.parentMove.convertToLabeled(labels.shift());
+          n.children.forEach(c => {
+            // Assign new move label only if not manually assigned
+            if (!c.parentMove.manuallyAssigned) {
+              let label = this.getFirstUnassignedLabel(labelsForPlayer, moves, n.player.id);
+              c.parentMove.convertToLabeled(label);
+            }
           });
 
           for (let i = 1; i < n.iSet.nodes.length; i++) {
@@ -41,6 +55,20 @@ export class LabelSetter {
         }
       }
     });
+  }
+
+  getFirstUnassignedLabel(labelsForPlayer: Array<string>, moves: Array<Move>, playerID: number) {
+    let allMoveLabelsByCurrentPlayer = [];
+    moves.forEach(m => {
+      if (m.from.type === NodeType.OWNED && m.from.player.id === playerID) {
+        allMoveLabelsByCurrentPlayer.push(m.label);
+      }
+    });
+    for (let i = 0; i < labelsForPlayer.length; i++) {
+      if (allMoveLabelsByCurrentPlayer.indexOf(labelsForPlayer[i]) === -1) {
+        return labelsForPlayer[i];
+      }
+    }
   }
 }
 

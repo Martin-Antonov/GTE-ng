@@ -253,7 +253,7 @@ export class TreeController {
 
     if (playerID > this.tree.players.length - 1) {
       this.tree.addPlayer(new Player(playerID, playerID.toString(), PLAYER_COLORS[playerID - 1]));
-      this.treeView.showOrHideLabels();
+      this.treeView.resetNodesAndMovesDisplay();
     }
   }
 
@@ -388,11 +388,9 @@ export class TreeController {
     this.tree = newTree;
     this.treeView = new TreeView(this.game, this.tree, this.treeViewProperties);
     this.treeView.nodes.forEach(n => {
-      n.resetNodeDrawing();
-      n.resetLabelText(this.treeViewProperties.zeroSumOn);
+      n.resetNodeDrawing(this.tree.checkAllNodesLabeled(), this.treeView.properties.zeroSumOn);
     });
 
-    this.treeView.showOrHideLabels();
     this.attachHandlersToNodes();
     this.treeView.iSets.forEach((iSet) => {
       this.attachHandlersToISet(iSet);

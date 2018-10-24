@@ -1,0 +1,91 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+.settings-container {
+  @include window(500px, 600px);
+  top: 5%;
+  right: 4%;
+  .top-handle {
+    @include window-handle();
+    .settings-title {
+      @include window-title();
+    }
+    app-clickable-x {
+      float: right;
+    }
+  }
+  .settings-content {
+    @include window-content();
+    .tree-dimensions {
+      margin-bottom: 20px;
+      label {
+        font-size: 0.8em;
+        color: $grey3
+      }
+      span {
+        position:relative;
+        left:46%;
+        transform:translateX(-46%);
+        margin-top:3px;
+        color: $grey3;
+      }
+      input {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        border-radius: 10px;
+        background: $grey4;
+        outline: none;
+        padding: 0;
+        margin: 0;
+        &::-webkit-slider-thumb {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: $grey2;
+          cursor: pointer;
+          transition: background .15s ease-in-out;
+          &:hover {
+            background: cornflowerblue;
+          }
+          &:active::-webkit-slider-thumb {
+            background: cornflowerblue;
+          }
+        }
+        &::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border: 0;
+          border-radius: 50%;
+          background: $grey2;
+          cursor: pointer;
+          transition: background .15s ease-in-out;
+
+          &:hover {
+            background: cornflowerblue;
+          }
+        }
+
+        &:active::-moz-range-thumb {
+          background: cornflowerblue;
+        }
+      }
+    }
+    .player-preferred-lists {
+      label {
+        font-size: 0.8em;
+        color: $grey3;
+      }
+      input{
+        margin-bottom:5px;
+        margin-left:5px;
+        border-radius:2px;
+        color:$grey4;
+      }
+    }
+  }
+  .bottom-field {
+    @include window-bottom();
+  }
+}

@@ -7,7 +7,6 @@ import {NodeView} from '../View/NodeView';
 import {SelectionRectangle} from '../Utils/SelectionRectangle';
 import {ISetView} from '../View/ISetView';
 import {TreeParser} from '../Utils/TreeParser';
-import {ErrorPopUp} from '../Utils/ErrorPopUp';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
 import {ISet} from '../Model/ISet';
 import {LabelInputHandler} from '../Utils/LabelInputHandler';
@@ -30,7 +29,6 @@ export class UserActionController {
   backgroundInputSprite: Phaser.Sprite;
 
   treeParser: TreeParser;
-  errorPopUp: ErrorPopUp;
 
   private resizeLocked: boolean;
 
@@ -45,7 +43,6 @@ export class UserActionController {
     this.cutSpriteHandler = new CutSpriteHandler(this.game);
 
     this.selectionRectangle = new SelectionRectangle(this.game);
-    this.errorPopUp = new ErrorPopUp(this.game);
     this.resizeLocked = false;
 
     this.treeController.treeChangedSignal.add(() => {
@@ -63,13 +60,13 @@ export class UserActionController {
       this.treeController.treeView.nodes.forEach((n: NodeView) => {
         if (this.selectionRectangle.overlap(n) && this.selectedNodes.indexOf(n) === -1) {
           n.isSelected = true;
-          n.resetNodeDrawing();
+          n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.push(n);
         }
         if (!this.selectionRectangle.overlap(n) && this.selectedNodes.indexOf(n) !== -1 &&
           !this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT)) {
           n.isSelected = false;
-          n.resetNodeDrawing();
+          n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.splice(this.selectedNodes.indexOf(n), 1);
         }
       });
@@ -112,7 +109,7 @@ export class UserActionController {
     if (this.selectedNodes.length > 0) {
       this.selectedNodes.forEach(n => {
         n.isSelected = false;
-        n.resetNodeDrawing();
+        n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
       });
       this.emptySelectedNodes();
     }
@@ -204,7 +201,7 @@ export class UserActionController {
         this.treeController.createISet(this.selectedNodes);
       }
       catch (err) {
-        this.errorPopUp.show(err.message);
+        // TODO: Error checking
         return;
       }
     }
@@ -329,7 +326,7 @@ export class UserActionController {
   moveNodeManually(directionX: number, directionY: number, distance: number) {
     this.selectedNodes.forEach(node => {
       node.position.add(directionX * distance, directionY * distance);
-      node.resetNodeDrawing();
+      node.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
     });
     this.treeController.treeView.moves.forEach(m => {
       m.updateMovePosition();

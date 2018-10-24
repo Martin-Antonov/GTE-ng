@@ -15,7 +15,7 @@ export class TreeTweenManager {
     this.game = game;
   }
 
-  startTweens(nodes: Array<NodeView>, moves: Array<MoveView>) {
+  startTweens(nodes: Array<NodeView>, moves: Array<MoveView>, allNodesLabeled: boolean, zerosumOn: boolean) {
     for (let i = 0; i < this.oldCoordinates.length; i++) {
       let clonedCoords = this.oldCoordinates[i];
       let nodeV = nodes[i];
@@ -25,7 +25,7 @@ export class TreeTweenManager {
       }, TREE_TWEEN_DURATION, Phaser.Easing.Quartic.Out, true)
         .onUpdateCallback(() => {
           nodes.forEach(n => {
-            n.resetNodeDrawing();
+            n.resetNodeDrawing(allNodesLabeled, zerosumOn);
           });
           moves.forEach(m => {
             m.updateMovePosition();

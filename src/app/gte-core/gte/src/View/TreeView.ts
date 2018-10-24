@@ -71,10 +71,9 @@ export class TreeView {
     }
 
     this.drawISets();
-    this.resetNodeLabels();
-    this.showOrHideLabels();
+    this.resetNodesAndMovesDisplay();
     if (startAnimations) {
-      this.treeTweenManager.startTweens(this.nodes, this.moves);
+      this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties.zeroSumOn);
     }
     else {
       this.updateMoves();
@@ -128,14 +127,6 @@ export class TreeView {
     });
   }
 
-  /** Resets the drawing of each node, depending on the node type*/
-  resetNodeLabels() {
-    this.nodes.forEach((nV: NodeView) => {
-      nV.resetNodeDrawing();
-      nV.resetLabelText(this.properties.zeroSumOn);
-    });
-  }
-
   /**ISets need to be redrawn at each step*/
   drawISets() {
     this.iSets.forEach(is => {
@@ -143,49 +134,20 @@ export class TreeView {
     });
   }
 
-  /** A method which decides whether to show the labels or not*/
-  showOrHideLabels() {
-    if (this.tree.checkAllNodesLabeled()) {
-      if (this.shouldResetLabels()) {
-        this.tree.resetLabels();
-      }
-      this.moves.forEach(m => {
+  /** A method which resets the nodes and moves drawing*/
+  resetNodesAndMovesDisplay() {
+    let areAllNodesLabeled = this.tree.checkAllNodesLabeled();
+    this.nodes.forEach(n => {
+      n.resetNodeDrawing(areAllNodesLabeled, this.properties.zeroSumOn);
+    });
+
+    if (this.tree.labelSetter.initiallyAssigned) {
+      this.tree.resetLabels();
+      this.moves.forEach((m: MoveView) => {
         m.label.alpha = 1;
         m.updateLabel(this.properties.fractionOn);
       });
-      this.nodes.forEach(n => {
-        if (n.node.children.length === 0) {
-          n.node.convertToLeaf();
-          n.resetNodeDrawing();
-          n.resetLabelText(this.properties.zeroSumOn);
-        }
-      });
     }
-    else {
-      this.tree.removeMoveLabels();
-      this.moves.forEach(m => {
-        m.label.alpha = 0;
-      });
-      this.nodes.forEach(n => {
-        n.resetLabelText(this.properties.zeroSumOn);
-        n.payoffsLabel.alpha = 0;
-        n.payoffsLabel.input.enabled = false;
-        if (n.node.type === NodeType.LEAF) {
-          n.node.convertToDefault();
-          n.resetNodeDrawing();
-        }
-      });
-    }
-  }
-
-  private shouldResetLabels() {
-    for (let i = 0; i < this.tree.moves.length; i++) {
-      const move = this.tree.moves[i];
-      if (!move.label && !move.probability) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**Re-centers the tree on the screen*/

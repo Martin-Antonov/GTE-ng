@@ -15,7 +15,7 @@ export class NodeView extends Phaser.Sprite {
   payoffsLabel: Phaser.Text;
   isSelected: boolean;
   level: number;
-  private circle: Phaser.Sprite;
+  circle: Phaser.Sprite;
   private square: Phaser.Sprite;
   private previewSelected: Phaser.Sprite;
   // Horizontal offset: -1 for left, 1 for right;
@@ -112,89 +112,93 @@ export class NodeView extends Phaser.Sprite {
   }
 
   /** A method which converts the node, depending on whether it is a chance, owned or default.*/
-  resetNodeDrawing() {
-    // this.setLabelText();
-    // Selected and not Chance
-    if (this.isSelected && this.node.type !== NodeType.CHANCE) {
-      this.circle.alpha = 1;
-      this.circle.tint = NODE_SELECTED_COLOR;
-      this.square.alpha = 0;
-      this.previewSelected.alpha = 0.3;
-    }
-    // Selected and Chance
-    else if (this.isSelected && this.node.type === NodeType.CHANCE) {
-      this.circle.alpha = 0;
-      this.square.alpha = 1;
-      this.square.tint = NODE_SELECTED_COLOR;
-      this.previewSelected.alpha = 0.3;
-    }
-    // Not Selected, owned and not Chance
-    else if (this.node.player && this.node.type !== NodeType.CHANCE) {
+  resetNodeDrawing(areLeavesActive: boolean, zeroSumOn: boolean) {
+    // If Owned
+    if (this.node.type === NodeType.OWNED) {
       this.circle.tint = this.node.player.color;
       this.circle.alpha = 1;
-      this.square.alpha = 0;
-      this.previewSelected.alpha = 0;
+      if (this.node.iSet) {
+        this.ownerLabel.alpha = 0;
+      }
+      else {
+        this.ownerLabel.alpha = 1;
+        this.ownerLabel.setText(this.node.player.label, true);
+        let colorRGB = Phaser.Color.getRGB(this.node.player.color);
+        this.ownerLabel.fill = Phaser.Color.RGBtoString(colorRGB.r, colorRGB.g, colorRGB.b);
+        this.ownerLabel.scale.set(1);
+      }
     }
-    // Not selected, owned and chance
-    else if (this.node.player && this.node.type === NodeType.CHANCE) {
-      this.square.tint = 0x000000;
+    else {
+      this.circle.alpha = 0;
+    }
+
+    // If Chance
+    if (this.node.type === NodeType.CHANCE) {
       this.square.alpha = 1;
-      this.circle.alpha = 0;
-      this.previewSelected.alpha = 0;
-    }
-    // If leaf
-    else if (this.node.type === NodeType.LEAF) {
-      this.circle.alpha = 0;
-      this.square.alpha = 0;
-      this.previewSelected.alpha = 0;
-    }
-    // All other cases
-    else {
-      this.circle.tint = 0x000000;
-      this.square.alpha = 0;
-      this.circle.alpha = 1;
-      this.previewSelected.alpha = 0;
-    }
-    this.updateLabelPosition();
-  }
-
-  /** A method which sets the label text as the player label*/
-  resetLabelText(zeroSumOn: boolean) {
-    if (this.node.player && !this.node.iSet) {
-      this.ownerLabel.alpha = 1;
-      this.ownerLabel.setText(this.node.player.label, true);
-      let colorRGB = Phaser.Color.getRGB(this.node.player.color);
-      this.ownerLabel.fill = Phaser.Color.RGBtoString(colorRGB.r, colorRGB.g, colorRGB.b);
-      this.ownerLabel.scale.set(1);
-    }
-    else {
-      this.ownerLabel.alpha = 0;
-    }
-
-    if (this.node.player && this.node.type === NodeType.CHANCE) {
       this.ownerLabel.scale.set(0.5);
+      this.ownerLabel.alpha = 1;
+      this.ownerLabel.setText('chance', true);
+      this.ownerLabel.fill = '#000000';
+    }
+    else {
+      this.square.alpha = 0;
     }
 
-    if (this.node.children.length === 0) {
+    // If Leaf
+    if (this.node.type === NodeType.LEAF) {
+      this.ownerLabel.alpha = 0;
       if (zeroSumOn) {
         this.node.payoffs.convertToZeroSum();
       }
-      let payoffsString = this.node.payoffs.toString();
-      let labelsArray = payoffsString.split(' ');
-      this.payoffsLabel.text = '';
-      this.payoffsLabel.clearColors();
-      for (let i = 0; i < labelsArray.length; i++) {
-        this.payoffsLabel.text += labelsArray[i] + '\n';
-        this.payoffsLabel.addColor(Phaser.Color.getWebRGB(PLAYER_COLORS[i]),
-          (this.payoffsLabel.text.length - labelsArray[i].length - i - 1));
+      if (areLeavesActive) {
+        this.circle.alpha = 0;
+        this.payoffsLabel.alpha = 1;
+        let payoffsString = this.node.payoffs.toString();
+        let labelsArray = payoffsString.split(' ');
+        this.payoffsLabel.text = '';
+        this.payoffsLabel.clearColors();
+        for (let i = 0; i < labelsArray.length; i++) {
+          this.payoffsLabel.text += labelsArray[i] + '\n';
+          this.payoffsLabel.addColor(Phaser.Color.getWebRGB(PLAYER_COLORS[i]),
+            (this.payoffsLabel.text.length - labelsArray[i].length - i - 1));
+        }
+        this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
+        this.payoffsLabel.alpha = 1;
+        this.payoffsLabel.input.enabled = true;
       }
-      this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
-      this.payoffsLabel.alpha = 1;
-      this.payoffsLabel.input.enabled = true;
+      else {
+        this.circle.alpha = 1;
+        this.payoffsLabel.alpha = 0;
+      }
     }
-    else {
+
+    // If Default
+    if (this.node.type === NodeType.DEFAULT) {
+      this.circle.alpha = 1;
+      this.circle.tint = 0x000000;
+      this.square.alpha = 0;
+      this.ownerLabel.alpha = 0;
       this.payoffsLabel.alpha = 0;
     }
+
+    // If Selected
+    if (this.isSelected) {
+      this.previewSelected.alpha = 0.3;
+      this.circle.tint = NODE_SELECTED_COLOR;
+      this.square.tint = NODE_SELECTED_COLOR;
+    }
+    else {
+      this.previewSelected.alpha = 0;
+      this.square.tint = 0x000000;
+      if (this.node.player) {
+        this.circle.tint = this.node.player.color;
+      }
+      else {
+        this.circle.tint = 0x000000;
+      }
+    }
+
+    this.updateLabelPosition();
   }
 
   /** The destroy method of the node which prevents memory-leaks*/

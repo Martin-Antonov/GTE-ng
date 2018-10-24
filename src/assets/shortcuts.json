@@ -1,0 +1,16 @@
+[
+  { "command":"N / Num+", "explanation":"Add children to a set of nodes" },
+  { "command":"D / Del / Num-", "explanation":"Delete a set of nodes" },
+  { "command":"0-4", "explanation":"Assign player to a set of nodes (0 for chance)"},
+  { "command":"Ctrl+Z / U", "explanation":"Undo action" },
+  { "command":"Ctrl+Shift+Z / Ctrl+Y / R", "explanation":"Redo action" },
+  { "command":"I", "explanation":"Add information set to a set of nodes" },
+  { "command":"S", "explanation":"Dissolve an information set for of nodes" },
+  { "command":"C", "explanation":"Cut information set" },
+  { "command":"arrow keys", "explanation":"Reposition selected nodes (fixed distance)" },
+  { "command":"Ctrl+arrow keys", "explanation":"Reposition selected nodes (1px distance)" },
+  { "command":"Tab", "explanation":"Move to the next label (players, moves or payoffs)" },
+  { "command":"Shift+Tab", "explanation":"Move the previous label (players, moves or payoffs)" },
+  { "command":"Enter", "explanation":"Assign label for a player, move or payoffs" },
+  { "command":"Esc / Mouse Click", "explanation":"Exit label assignment mode"}
+]

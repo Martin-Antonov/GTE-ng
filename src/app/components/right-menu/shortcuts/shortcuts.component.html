@@ -1,3 +1,18 @@
-<p>
-  shortcuts works!
-</p>
+<ng-container *ngIf="this.shortcuts">
+  <div class="shortcuts-container" ngDraggable [handle]="dragHandle"
+       [inBounds]="true" [bounds]="this.getBody()">
+    <div #dragHandle class="top-handle">
+      <span class="shortcuts-title">Shortcuts</span>
+      <app-clickable-x (click)="this.close()"></app-clickable-x>
+    </div>
+    <div class="shortcuts-content">
+      <ul class="shortcuts-list">
+        <li *ngFor="let shortcut of this.shortcuts">
+          <span class="command">{{shortcut.command}}</span><span class="explanation">{{shortcut.explanation}}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="bottom-field">
+    </div>
+  </div>
+</ng-container>
