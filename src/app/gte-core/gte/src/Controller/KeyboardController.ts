@@ -253,25 +253,25 @@ export class KeyboardController {
     });
 
     this.upKey.onHoldCallback = function () {
-      if (this.controlKey.isDown && !this.userActionController.treeController.labelInput.active) {
+      if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.moveNodeManually(0, -1, 1);
       }
     };
 
     this.downKey.onHoldCallback = function () {
-      if (this.controlKey.isDown && !this.userActionController.treeController.labelInput.active) {
+      if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.moveNodeManually(0, 1, 1);
       }
     };
 
     this.leftKey.onHoldCallback = function () {
-      if (this.controlKey.isDown && !this.userActionController.treeController.labelInput.active) {
+      if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.moveNodeManually(-1, 0, 1);
       }
     };
 
     this.rightKey.onHoldCallback = function () {
-      if (this.controlKey.isDown && !this.userActionController.treeController.labelInput.active) {
+      if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.moveNodeManually(1, 0, 1);
       }
     };

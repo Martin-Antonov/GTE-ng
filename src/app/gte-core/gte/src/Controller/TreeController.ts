@@ -203,7 +203,6 @@ export class TreeController {
           this.deleteNode(n);
         });
         this.nodesToDelete = [];
-        node.convertToDefault();
       }
     });
     this.tree.cleanISets();

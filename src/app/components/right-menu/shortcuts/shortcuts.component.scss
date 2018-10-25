@@ -36,3 +36,12 @@
     @include window-bottom();
   }
 }
+
+.video {
+  position: absolute;
+  top: 150px;
+  left: -355px;
+  width: 350px;
+  height: 450px;
+  border: 4px solid $grey3;
+}

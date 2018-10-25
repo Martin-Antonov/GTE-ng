@@ -78,6 +78,15 @@ export class Tree {
       if (n.children.length === 0) {
         n.convertToLeaf();
       }
+
+      if (n.children.length !== 0 && n.type === NodeType.LEAF) {
+        if (n.player) {
+          n.convertToLabeled(n.player);
+        }
+        else{
+          n.convertToDefault();
+        }
+      }
     });
 
   }

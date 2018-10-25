@@ -11,12 +11,15 @@ import {ShortcutsService} from '../../../services/shortcuts/shortcuts.service';
 export class ShortcutsComponent implements OnInit {
 
   @Input() shortcutsButton: SquareButtonComponent;
-  shortcuts: Array<{ command: string, explanation: string }>;
+  shortcuts: Array<{ command: string, explanation: string, videoURL: string }>;
+  currentlyHoveredIndex: number;
+
 
   constructor(private uis: UiSettingsService, private ss: ShortcutsService) {
     this.ss.getShortcuts().subscribe((value) => {
       this.shortcuts = value;
     });
+    this.currentlyHoveredIndex = -1;
   }
 
   ngOnInit() {

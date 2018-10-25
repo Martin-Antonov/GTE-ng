@@ -201,7 +201,7 @@ export class UserActionController {
         this.treeController.createISet(this.selectedNodes);
       }
       catch (err) {
-        // TODO: Error checking
+
         return;
       }
     }

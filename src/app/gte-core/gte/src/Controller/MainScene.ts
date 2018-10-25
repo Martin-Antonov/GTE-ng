@@ -16,8 +16,6 @@ export class MainScene extends Phaser.State {
   userActionController: UserActionController;
   // The Keyboard Controller handles input and sends signals and executes methods from the treeController
   keyboardController: KeyboardController;
-  // For resizing the game
-  resizeLocked: boolean;
 
   preload() {
     this.game.load.image('scissors', 'assets/images/Scissors.png');
@@ -101,7 +99,7 @@ export class MainScene extends Phaser.State {
     //   for (let i = 0; i < this.treeController.treeView.nodes.length; i++) {
     //     const nodeV = this.treeController.treeView.nodes[i];
     //     this.game.debug.text('state: ' + nodeV.node.type,
-    //       20, (i + 1) * 30, '#ff0000', '20px Arial');
+    //       nodeV.x, nodeV.y, '#ff0000', '20px Arial');
     //   }
     // }
   }

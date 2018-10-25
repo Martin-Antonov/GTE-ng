@@ -11,7 +11,7 @@ export class ShortcutsService {
   constructor(private http: HttpClient) {
   }
 
-  getShortcuts(): Observable<Array<{ command: string, explanation: string }>> {
-    return this.http.get<Array<{ command: string, explanation: string }>>('./assets/shortcuts.json');
+  getShortcuts(): Observable<Array<{ command: string, explanation: string, videoURL: string }>> {
+    return this.http.get<Array<{ command: string, explanation: string, videoURL }>>('./assets/shortcuts.json');
   }
 }

@@ -7,12 +7,16 @@
     </div>
     <div class="shortcuts-content">
       <ul class="shortcuts-list">
-        <li *ngFor="let shortcut of this.shortcuts">
-          <span class="command">{{shortcut.command}}</span><span class="explanation">{{shortcut.explanation}}</span>
+        <li *ngFor="let shortcut of this.shortcuts; index as i ">
+          <span class="command" (mouseenter)="this.currentlyHoveredIndex=i;"
+                (mouseleave)="this.currentlyHoveredIndex=-1">{{shortcut.command}}</span>
+          <span class="explanation">{{shortcut.explanation}}</span>
         </li>
       </ul>
     </div>
     <div class="bottom-field">
     </div>
+    <video *ngIf="this.currentlyHoveredIndex!==-1 && this.shortcuts[this.currentlyHoveredIndex].videoURL" class="video"
+           [src]="this.shortcuts[this.currentlyHoveredIndex].videoURL" autoplay loop></video>
   </div>
 </ng-container>
