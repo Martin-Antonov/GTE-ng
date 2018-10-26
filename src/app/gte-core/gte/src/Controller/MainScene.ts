@@ -28,6 +28,7 @@ export class MainScene extends Phaser.State {
     this.userActionController = new UserActionController(this.game, this.treeController);
     this.keyboardController = new KeyboardController(this.game, this.userActionController);
     this.onWindowResize();
+    this.game.input.mspointer.capture = false;
   }
 
   onWindowResize() {

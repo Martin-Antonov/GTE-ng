@@ -47,7 +47,7 @@ export class SelectionRectangle extends Phaser.Sprite {
 
   /** The method which resizes the rectangle as we drag*/
   onDrag() {
-    if (this.game.input.activePointer.isDown && this.active) {
+    if (this.game.input.activePointer.isDown && this.active && this.alpha !== 0) {
       this.height = this.game.input.activePointer.y - this.start.y;
       this.width = this.game.input.activePointer.x - this.start.x;
     }

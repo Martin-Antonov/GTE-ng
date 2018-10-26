@@ -29,6 +29,7 @@ import {ShortcutsService} from './services/shortcuts/shortcuts.service';
 import { SettingsComponent } from './components/right-menu/settings/settings.component';
 import { ErrorLogComponent } from './shared/components/error-log/error-log.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     ErrorLogComponent,
   ],
   imports: [
-    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule
+    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule, ClickOutsideModule
   ],
   providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService, ShortcutsService],
   bootstrap: [AppComponent]
