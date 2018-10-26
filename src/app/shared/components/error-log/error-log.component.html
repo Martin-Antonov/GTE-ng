@@ -1,0 +1,5 @@
+<div [@openClose]="this.shouldShowError? 'open':'closed'" class="error-container">
+  <div class="error-message"><span>{{this.error}}</span></div>
+  <img [src]="this.errorTriangleURL" alt="error image">
+  <div class="close-button" (click)="this.shouldShowError=false">x</div>
+</div>

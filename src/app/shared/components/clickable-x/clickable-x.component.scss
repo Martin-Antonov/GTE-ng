@@ -12,7 +12,7 @@
   align-items: center;
   height: 20px;
   width: 20px;
-  z-index: 1000000;
+  z-index: 7;
   @include clickableButton();
   img {
     position: relative;

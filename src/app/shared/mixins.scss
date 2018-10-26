@@ -86,7 +86,7 @@
   width: calc(100% - 6px);
   height: calc(100% - 64px);
   margin: 0 3px;
-  z-index: 19;
+  z-index: 3;
   color: black;
   display: flex;
   align-items: center;
@@ -100,5 +100,12 @@
   height: 32px;
   width: 100%;
   padding-left: 5px;
-  z-index: -100;
+  z-index: 0;
+}
+
+@mixin error-bg{
+  background: #8a1b18; /* Old browsers */
+  background: -moz-linear-gradient(left, #8a1b18 0%, #801e1c 68%, #bf150e 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #8a1b18 0%,#801e1c 68%,#bf150e 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #8a1b18 0%,#801e1c 68%,#bf150e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }

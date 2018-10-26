@@ -23,6 +23,7 @@ export class UserActionController {
   // Used for going to the next node on tab pressed
   labelInput: LabelInputHandler;
   cutSpriteHandler: CutSpriteHandler;
+  errorSignal: Phaser.Signal;
 
   selectedNodes: Array<NodeView>;
   selectionRectangle: SelectionRectangle;
@@ -44,6 +45,8 @@ export class UserActionController {
 
     this.selectionRectangle = new SelectionRectangle(this.game);
     this.resizeLocked = false;
+
+    this.errorSignal = new Phaser.Signal();
 
     this.treeController.treeChangedSignal.add(() => {
       this.checkCreateStrategicForm();
@@ -201,7 +204,7 @@ export class UserActionController {
         this.treeController.createISet(this.selectedNodes);
       }
       catch (err) {
-
+        this.errorSignal.dispatch(err);
         return;
       }
     }

@@ -7,7 +7,7 @@ input {
   left: 50%;
   width: 60px;
   height: 30px;
-  z-index: 99999999;
+  z-index: 9;
   text-align: center;
   background: $grey3;
   color: $grey-text;
@@ -27,6 +27,6 @@ input {
   width: 100%;
   height: 100%;
   background: rgba(50, 50, 50, 0.3);
-  z-index: 99999998;
+  z-index: 8;
 }
 

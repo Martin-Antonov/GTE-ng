@@ -27,6 +27,8 @@ import {StrategicFormTableComponent} from './shared/components/strategic-form-ta
 import {ShortcutsComponent} from './components/right-menu/shortcuts/shortcuts.component';
 import {ShortcutsService} from './services/shortcuts/shortcuts.service';
 import { SettingsComponent } from './components/right-menu/settings/settings.component';
+import { ErrorLogComponent } from './shared/components/error-log/error-log.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -48,9 +50,10 @@ import { SettingsComponent } from './components/right-menu/settings/settings.com
     StrategicFormTableComponent,
     ShortcutsComponent,
     SettingsComponent,
+    ErrorLogComponent,
   ],
   imports: [
-    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule,
+    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule
   ],
   providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService, ShortcutsService],
   bootstrap: [AppComponent]
