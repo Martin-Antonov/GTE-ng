@@ -70,9 +70,7 @@ export class StrategicForm {
 
   /**A method which checks whether the conditions for generating a strategic form are kept*/
   private checkStrategicFormPossible() {
-    if (this.tree.players.length !== 3) {
-      throw new Error(STRATEGIC_PLAYERS_ERROR_TEXT);
-    }
+
     if (!this.tree.checkAllNodesLabeled()) {
       throw new Error(STRATEGIC_NOT_LABELED_ERROR_TEXT);
     }
@@ -117,21 +115,6 @@ export class StrategicForm {
     // We perform a check of whether the node is reachable from the previously played moves by the player
     let isReachable = false;
     if (index !== 0) {
-      // ------------------ TO BE DELETED --------------------
-      // let nonNullIndex = this.findFirstNonNullIndex(strategy, index);
-      // let nodesToCheckReachability = [];
-      // let lastEarlierMove: Move = strategy[nonNullIndex];
-      //
-      // if (lastEarlierMove.from.iSet === null) {
-      //   nodesToCheckReachability = [lastEarlierMove.to];
-      // }
-      // else {
-      //   let earlierMoveIndex = lastEarlierMove.from.childrenMoves.indexOf(lastEarlierMove);
-      //   for (let i = 0; i < lastEarlierMove.from.iSet.nodes.length; i++) {
-      //     nodesToCheckReachability.push(lastEarlierMove.from.iSet.nodes[i].childrenMoves[earlierMoveIndex].to);
-      //   }
-      // }
-      // ------------------------------------------------------
       let nodesToCheckReachability = [];
       strategy.forEach((move: Move) => {
         if (move !== null) {
@@ -256,7 +239,6 @@ export class StrategicForm {
         payoffsToAdd[i] = payoffsToAdd[i] * this.probabilityPerPath;
       }
 
-      // this.currentPathToString(leaf);
       let rowsLength = this.reachableRows.length;
       let colsLength = this.reachableCols.length;
       if (rowsLength === 0) {

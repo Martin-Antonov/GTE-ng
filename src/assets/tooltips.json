@@ -8,7 +8,7 @@
   "plus": "Add nodes   (N/Num+)",
   "minus": "Remove nodes   (D/Del/Num-)",
   "player": "Assign player to node   (1-4)",
-  "chance": "Assign chance node   (0/C)",
+  "chance": "Assign chance node   (0)",
   "link": "Create information set from nodes   (I)",
   "unlink": "Destroy information set from nodes   (S)",
   "cut": "Split/Cut information set   (C)",
