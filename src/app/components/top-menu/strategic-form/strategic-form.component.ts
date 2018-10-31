@@ -3,8 +3,6 @@ import {UserActionController} from '../../../gte-core/gte/src/Controller/UserAct
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
-import {AngularResizableDirective} from 'angular2-draggable';
-
 
 @Component({
   selector: 'app-strategic-form',
@@ -41,13 +39,13 @@ export class StrategicFormComponent implements OnInit {
     let result = '';
     let m1 = '';
     let m2 = '';
-    result += this.userActionController.strategicForm.rows.length + ' ' + this.userActionController.strategicForm.cols.length;
+    result += this.userActionController.strategicForm.p1rows.length + ' ' + this.userActionController.strategicForm.p2cols.length;
     for (let i = 0; i < this.userActionController.strategicForm.payoffsMatrix.length; i++) {
       const payoffsMatrix = this.userActionController.strategicForm.payoffsMatrix[i];
       for (let j = 0; j < payoffsMatrix.length; j++) {
         const payoffs = payoffsMatrix[j];
-        m1 += payoffs.outcomes[0] + ' ';
-        m2 += payoffs.outcomes[1] + ' ';
+        m1 += payoffs[0][0].outcomes[0] + ' ';
+        m2 += payoffs[0][0].outcomes[1] + ' ';
       }
       m1 += '\n';
       m2 += '\n';

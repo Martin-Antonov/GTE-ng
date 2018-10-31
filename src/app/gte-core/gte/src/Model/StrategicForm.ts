@@ -11,17 +11,28 @@ export class StrategicForm {
 
   p1Strategies: Array<Array<Move>>;
   p2Strategies: Array<Array<Move>>;
-  payoffsMatrix: Array<Array<Payoffs>>;
+  p3Strategies: Array<Array<Move>>;
+  p4Strategies: Array<Array<Move>>;
 
-  rows: Array<string>;
-  cols: Array<string>;
+  // 4 dimensional array of strategies - 1 for each player
+  payoffsMatrix: Array<Array<Array<Array<Payoffs>>>>;
 
+  p1rows: Array<string>;
+  p2cols: Array<string>;
+  p3rows: Array<string>;
+  p4cols: Array<string>;
   // Properties for the generation of payoffs matrix
   private movesToReachLeafP1: Array<Move>;
   private movesToReachLeafP2: Array<Move>;
+  private movesToReachLeafP3: Array<Move>;
+  private movesToReachLeafP4: Array<Move>;
+
   private probabilityPerPath: number;
-  private reachableRows: Array<number>;
-  private reachableCols: Array<number>;
+
+  private reachableP1Rows: Array<number>;
+  private reachableP2Cols: Array<number>;
+  private reachableP3Rows: Array<number>;
+  private reachableP4Cols: Array<number>;
 
   constructor(tree: Tree) {
     this.tree = tree;
@@ -38,6 +49,8 @@ export class StrategicForm {
     let nodes = this.tree.BFSOnTree();
     let p1InfoSets = [];
     let p2InfoSets = [];
+    let p3InfoSets = [];
+    let p4InfoSets = [];
 
     // Get all P1 and P2 information sets and singletons from the BFS order
     nodes.forEach(n => {
@@ -57,15 +70,39 @@ export class StrategicForm {
           p2InfoSets.push(n);
         }
       }
+      else if (n.player === this.tree.players[3]) {
+        if (n.iSet && p3InfoSets.indexOf(n.iSet) === -1) {
+          p3InfoSets.push(n.iSet);
+        }
+        else if (!n.iSet) {
+          p3InfoSets.push(n);
+        }
+      }
+      else if (n.player === this.tree.players[4]) {
+        if (n.iSet && p4InfoSets.indexOf(n.iSet) === -1) {
+          p4InfoSets.push(n.iSet);
+        }
+        else if (!n.iSet) {
+          p4InfoSets.push(n);
+        }
+      }
     });
     this.p1Strategies = [];
     this.p2Strategies = [];
+    this.p3Strategies = [];
+    this.p4Strategies = [];
+
     this.generateStrategies(p1InfoSets);
     this.generateStrategies(p2InfoSets);
+    this.generateStrategies(p3InfoSets);
+    this.generateStrategies(p4InfoSets);
     this.generatePayoffs();
 
-    this.rows = this.strategyToString(this.p1Strategies);
-    this.cols = this.strategyToString(this.p2Strategies);
+    this.p1rows = this.strategyToString(this.p1Strategies);
+    this.p2cols = this.strategyToString(this.p2Strategies);
+    this.p3rows = this.strategyToString(this.p3Strategies);
+    this.p4cols = this.strategyToString(this.p4Strategies);
+
   }
 
   /**A method which checks whether the conditions for generating a strategic form are kept*/
@@ -94,6 +131,12 @@ export class StrategicForm {
       }
       else if (iSets[0] && iSets[0].player === this.tree.players[2]) {
         this.p2Strategies.push(strategy.slice(0));
+      }
+      else if (iSets[0] && iSets[0].player === this.tree.players[3]) {
+        this.p3Strategies.push(strategy.slice(0));
+      }
+      else if (iSets[0] && iSets[0].player === this.tree.players[4]) {
+        this.p4Strategies.push(strategy.slice(0));
       }
       return;
     }
@@ -209,64 +252,105 @@ export class StrategicForm {
   // region Payoff matrices generation
   /**A method for generating the payoffs matrices, to be used in the View. Called after strat form is done*/
   generatePayoffs() {
-    let rows = this.p1Strategies.length;
-    let cols = this.p2Strategies.length;
-    if (rows === 0) {
-      rows++;
+    let p1rows = this.p1Strategies.length;
+    let p2cols = this.p2Strategies.length;
+    let p3rows = this.p3Strategies.length;
+    let p4cols = this.p4Strategies.length;
+    if (p1rows === 0) {
+      p1rows++;
     }
-    if (cols === 0) {
-      cols++;
+    if (p2cols === 0) {
+      p2cols++;
+    }
+    if (p3rows === 0) {
+      p3rows++;
+    }
+    if (p4cols === 0) {
+      p4cols++;
     }
     this.payoffsMatrix = [];
-    for (let i = 0; i < rows; i++) {
+    for (let i = 0; i < p1rows; i++) {
       this.payoffsMatrix[i] = [];
-      for (let j = 0; j < cols; j++) {
-        this.payoffsMatrix[i][j] = new Payoffs();
+      for (let j = 0; j < p2cols; j++) {
+        this.payoffsMatrix[i][j] = [];
+        for (let k = 0; k < p3rows; k++) {
+          this.payoffsMatrix[i][j][k] = [];
+          for (let l = 0; l < p4cols; l++) {
+            this.payoffsMatrix[i][j][k][l] = new Payoffs();
+          }
+        }
       }
     }
     let leaves = this.tree.getLeaves();
     leaves.forEach((leaf: Node) => {
       this.getMovesPathToRoot(leaf);
-      this.reachableRows = [];
-      this.reachableCols = [];
+      this.reachableP1Rows = [];
+      this.reachableP2Cols = [];
+      this.reachableP3Rows = [];
+      this.reachableP4Cols = [];
 
       // Vector - either a row or a column
-      this.getReachableVectors(this.reachableRows, this.p1Strategies, this.movesToReachLeafP1);
-      this.getReachableVectors(this.reachableCols, this.p2Strategies, this.movesToReachLeafP2);
+      this.getReachableVectors(this.reachableP1Rows, this.p1Strategies, this.movesToReachLeafP1);
+      this.getReachableVectors(this.reachableP2Cols, this.p2Strategies, this.movesToReachLeafP2);
+      this.getReachableVectors(this.reachableP3Rows, this.p3Strategies, this.movesToReachLeafP3);
+      this.getReachableVectors(this.reachableP4Cols, this.p4Strategies, this.movesToReachLeafP4);
+
 
       let payoffsToAdd = leaf.payoffs.outcomes.slice(0);
       for (let i = 0; i < payoffsToAdd.length; i++) {
         payoffsToAdd[i] = payoffsToAdd[i] * this.probabilityPerPath;
       }
 
-      let rowsLength = this.reachableRows.length;
-      let colsLength = this.reachableCols.length;
-      if (rowsLength === 0) {
-        rowsLength++;
+      let rowsP1Length = this.reachableP1Rows.length;
+      let colsP2Length = this.reachableP2Cols.length;
+      let rowsP3Length = this.reachableP3Rows.length;
+      let colsP4Length = this.reachableP4Cols.length;
+      if (rowsP1Length === 0) {
+        rowsP1Length++;
       }
-      if (colsLength === 0) {
-        colsLength++;
+      if (colsP2Length === 0) {
+        colsP2Length++;
       }
-      for (let i = 0; i < rowsLength; i++) {
-        for (let j = 0; j < colsLength; j++) {
-          if (this.reachableRows.length !== 0 && this.reachableCols.length !== 0) {
-            this.payoffsMatrix[this.reachableRows[i]][this.reachableCols[j]].add(payoffsToAdd);
-          }
-          else if (this.reachableRows.length !== 0 && this.reachableCols.length === 0) {
-            this.payoffsMatrix[this.reachableRows[i]][j].add(payoffsToAdd);
-          }
-          else if (this.reachableRows.length === 0 && this.reachableCols.length !== 0) {
-            this.payoffsMatrix[i][this.reachableCols[j]].add(payoffsToAdd);
-          }
-          else {
-            this.payoffsMatrix[i][j].add(payoffsToAdd);
+      if (rowsP3Length === 0) {
+        rowsP3Length++;
+      }
+      if (colsP4Length === 0) {
+        colsP4Length++;
+      }
+      // TODO: Check this?
+      for (let i = 0; i < rowsP1Length; i++) {
+        for (let j = 0; j < colsP2Length; j++) {
+          for (let k = 0; k < rowsP3Length; k++) {
+            for (let l = 0; l < colsP4Length; l++) {
+              // if (this.reachableP1Rows.length !== 0 && this.reachableP2Cols.length !== 0) {
+              //   this.payoffsMatrix[this.reachableP1Rows[i]][this.reachableP2Cols[j]].add(payoffsToAdd);
+              // }
+              // else if (this.reachableP1Rows.length !== 0 && this.reachableP2Cols.length === 0) {
+              //   this.payoffsMatrix[this.reachableP1Rows[i]][j].add(payoffsToAdd);
+              // }
+              // else if (this.reachableP1Rows.length === 0 && this.reachableP2Cols.length !== 0) {
+              //   this.payoffsMatrix[i][this.reachableP2Cols[j]].add(payoffsToAdd);
+              // }
+              // else {
+              //   this.payoffsMatrix[i][j].add(payoffsToAdd);
+              // }
+              let p1Index = this.reachableP1Rows.length !== 0 ? this.reachableP1Rows[i] : i;
+              let p2Index = this.reachableP2Cols.length !== 0 ? this.reachableP2Cols[j] : j;
+              let p3Index = this.reachableP3Rows.length !== 0 ? this.reachableP3Rows[k] : k;
+              let p4Index = this.reachableP4Cols.length !== 0 ? this.reachableP4Cols[l] : l;
+              this.payoffsMatrix[p1Index][p2Index][p3Index][p4Index].add(payoffsToAdd);
+            }
           }
         }
       }
     }, this);
     for (let i = 0; i < this.payoffsMatrix.length; i++) {
       for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
-        this.payoffsMatrix[i][j].round();
+        for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
+          for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
+            this.payoffsMatrix[i][j][k][l].round();
+          }
+        }
       }
     }
   }
@@ -275,6 +359,8 @@ export class StrategicForm {
   private getMovesPathToRoot(leaf: Node) {
     this.movesToReachLeafP1 = [];
     this.movesToReachLeafP2 = [];
+    this.movesToReachLeafP3 = [];
+    this.movesToReachLeafP4 = [];
     this.probabilityPerPath = 1;
     let current = leaf;
     while (current.parent) {
@@ -287,6 +373,12 @@ export class StrategicForm {
         }
         else if (current.parent.player === this.tree.players[2]) {
           this.movesToReachLeafP2.push(current.parentMove);
+        }
+        else if (current.parent.player === this.tree.players[3]) {
+          this.movesToReachLeafP3.push(current.parentMove);
+        }
+        else if (current.parent.player === this.tree.players[4]) {
+          this.movesToReachLeafP4.push(current.parentMove);
         }
       }
       current = current.parent;
@@ -339,7 +431,6 @@ export class StrategicForm {
 
   // endregion
 
-
   strategyToString(strategies: Array<Array<Move>>) {
     if (strategies.length === 0) {
       return [' '];
@@ -372,14 +463,16 @@ export class StrategicForm {
     this.movesToReachLeafP2.forEach(m => {
       result += m.label + ' ';
     });
-    result += '\nReachable Rows: ' + this.reachableRows.join(',');
-    result += '\nReachable Cols: ' + this.reachableCols.join(',');
+    result += '\nReachable Rows: ' + this.reachableP1Rows.join(',');
+    result += '\nReachable Cols: ' + this.reachableP2Cols.join(',');
     console.log(result);
   }
 
   destroy() {
     this.p1Strategies = null;
     this.p2Strategies = null;
+    this.p3Strategies = null;
+    this.p4Strategies = null;
   }
 }
 

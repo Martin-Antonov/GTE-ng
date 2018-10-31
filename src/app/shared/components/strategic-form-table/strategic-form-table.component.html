@@ -1,28 +1,62 @@
 <div class="strat-form-content" *ngIf="this.userActionController && this.userActionController.strategicForm">
-  <div class="table-container" [ngStyle]="{transform: this.stratFormScaleCSS}">
+  <div class="table-container" [ngStyle]="{transform: this.stratFormScaleCSS}"
+       [style.grid-template-rows]="this.getOuterGridRows()"
+       [style.grid-template-columns]="this.getOuterGridCols()" ngDraggable>
     <div class="diagonal-line">
       <div class="p1-label">{{this.userActionController.treeController.tree.players[1].label}}</div>
       <div class="p2-label">{{this.userActionController.treeController.tree.players[2].label}}</div>
+      <div *ngIf="this.isThereP3()" class="p3-label">{{this.userActionController.treeController.tree.players[3].label}}</div>
+      <div *ngIf="this.isThereP4()" class="p4-label">{{this.userActionController.treeController.tree.players[4].label}}</div>
     </div>
-    <div class="row-strategies">
-      <div class="row-strat" *ngFor="let strategy of this.userActionController.strategicForm.rows">{{strategy}}</div>
-    </div>
-    <div class="col-strategies">
-      <div class="col-strat" *ngFor="let strategy of this.userActionController.strategicForm.cols">{{strategy}}</div>
-    </div>
-    <table cellspacing="0" cellpadding="0">
-      <tr *ngFor="let row of this.userActionController.strategicForm.rows; index as i">
-        <td *ngFor="let column of this.userActionController.strategicForm.cols; index as j">
-          <div class="payoffs-wrapper">
-            <div class="p1-payoff">
-              {{this.userActionController.strategicForm.payoffsMatrix[i][j].outcomes[0].toString() }}
+    <ng-container *ngFor="let p4Col of this.userActionController.strategicForm.p4cols; index as l">
+      <div class="outer-cell" [style.grid-template-rows]="this.getInnerGridRows()"
+           [style.grid-template-columns]="this.getInnerGridCols()"
+           *ngFor="let p3Row of this.userActionController.strategicForm.p3rows; index as k">
+        <div *ngIf="this.isThereP3() && l===0" class="p3-row-strategy"
+             [ngStyle]="{top: (k*86*this.userActionController.strategicForm.p1Strategies.length)+70+'px'}">
+          {{this.userActionController.treeController.tree.players[3].label+": "+p3Row</div>
+        <div *ngIf="this.isThereP4() && k===0" class="p4-col-strategy"
+             [ngStyle]="{left: (l*86*this.userActionController.strategicForm.p2Strategies.length)+70+'px'}">
+          {{this.userActionController.treeController.tree.players[4].label+": "+p4Col</div>
+        <ng-container *ngFor="let p1Row of this.userActionController.strategicForm.p1rows; index as i">
+          <div class="inner-cell" *ngFor="let p2Col of this.userActionController.strategicForm.p2cols; index as j;">
+            <div *ngIf="l===0" class="p1-row-strategy" [ngStyle]="">{{p1Row}}</div>
+            <div *ngIf="k===0" class="p2-col-strategy">{{p2Col}}</div>
+            <div *ngIf="this.isThereP4()" class="p4-payoff">{{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[3]}}
             </div>
-            <div class="p2-payoff">
-              {{this.userActionController.strategicForm.payoffsMatrix[i][j].outcomes[1].toString() }}
+            <div *ngIf="this.isThereP3()" class="p3-payoff">{{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[2]}}
+            </div>
+            <div class="p2-payoff">{{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[1]}}
+            </div>
+            <div class="p1-payoff">{{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[0]}}
             </div>
           </div>
-        </td>
-      </tr>
-    </table>
+        </ng-container>
+      </div>
+    </ng-container>
+    <!--<div class="diagonal-line">-->
+    <!--<div class="p1-label">{{this.userActionController.treeController.tree.players[1].label}}</div>-->
+    <!--<div class="p2-label">{{this.userActionController.treeController.tree.players[2].label}}</div>-->
+    <!--</div>-->
+    <!--<div class="row-strategies">-->
+    <!--<div class="row-strat" *ngFor="let strategy of this.userActionController.strategicForm.p1rows">{{strategy}}</div>-->
+    <!--</div>-->
+    <!--<div class="col-strategies">-->
+    <!--<div class="col-strat" *ngFor="let strategy of this.userActionController.strategicForm.p2cols">{{strategy}}</div>-->
+    <!--</div>-->
+    <!--<table cellspacing="0" cellpadding="0">-->
+    <!--<tr *ngFor="let row of this.userActionController.strategicForm.p1rows; index as i">-->
+    <!--<td *ngFor="let column of this.userActionController.strategicForm.p2cols; index as j">-->
+    <!--<div class="payoffs-wrapper">-->
+    <!--<div class="p1-payoff">-->
+    <!--{{this.userActionController.strategicForm.payoffsMatrix[i][j][0][0].outcomes[0].toString() }}-->
+    <!--</div>-->
+    <!--<div class="p2-payoff">-->
+    <!--{{this.userActionController.strategicForm.payoffsMatrix[i][j][0][0].outcomes[1].toString() }}-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</table>-->
   </div>
 </div>
