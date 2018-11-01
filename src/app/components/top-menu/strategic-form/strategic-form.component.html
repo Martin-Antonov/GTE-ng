@@ -15,10 +15,10 @@
   </div>
   <div class="bottom-field">
     <div class="zoom-button">
-      <img [src]="'assets/images/zoom-out.png'" alt="zoom out button" (click)="this.changeScale(-0.3)">
+      <img [src]="'assets/images/zoom-out.png'" alt="zoom out button" (click)="this.downScale(1.2)">
     </div>
     <div class="zoom-button">
-      <img [src]="'assets/images/zoom-in.png'" alt="zoom in button" (click)="this.changeScale(0.3)">
+      <img [src]="'assets/images/zoom-in.png'" alt="zoom in button" (click)="this.upScale(1.2)">
     </div>
   </div>
 </div>

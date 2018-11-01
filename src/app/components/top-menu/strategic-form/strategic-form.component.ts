@@ -26,8 +26,13 @@ export class StrategicFormComponent implements OnInit {
     this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
   }
 
-  changeScale(increment: number) {
-    this.stratFormScale += increment;
+  upScale(increment: number) {
+    this.stratFormScale *= increment;
+    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+  }
+
+  downScale(increment: number) {
+    this.stratFormScale *= 1 / increment;
     this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
   }
 
@@ -56,7 +61,7 @@ export class StrategicFormComponent implements OnInit {
     this.uis.solverActive = true;
   }
 
-  getBody(){
+  getBody() {
     return document.getElementsByTagName('BODY')[0];
   }
 }

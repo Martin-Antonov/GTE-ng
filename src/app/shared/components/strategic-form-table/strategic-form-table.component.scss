@@ -4,171 +4,131 @@
 .strat-form-content {
   @include window-content();
   overflow: hidden;
-  .table-container {
-    display: grid;
-    grid-gap: 20px;
-    .outer-cell {
-      .p3-row-strategy {
-        position: absolute;
-        left: -65px;
-        font-weight: bold;
-        color: #00ff00;
-      }
-      .p4-col-strategy {
-        position: absolute;
-        top: -65px;
-        font-weight:bold;
-        color: #ff00ff;
-      }
+  .scale-container {
+    .table-container {
       display: grid;
-      border: 1px solid black;
-      .inner-cell {
-        border: 1px solid black;
-        width: 75px;
-        height: 75px;
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 4px;
-        .p1-payoff {
-          position: relative;
-          left: 2px;
-          color: red;
+      grid-gap: 20px;
+      .outer-cell {
+        .p3-row-strategy {
+          position: absolute;
+          left: -65px;
           font-weight: bold;
-          height: 25%;
-        }
-        .p2-payoff {
-          position: relative;
-          left: 33%;
-          transform: translateX(-33%);
-          color: blue;
-          font-weight: bold;
-          height: 25%;
-        }
-        .p3-payoff {
-          position: relative;
-          left: 66%;
-          transform: translateX(-66%);
           color: #00ff00;
-          font-weight: bold;
-          height: 25%;
         }
-        .p4-payoff {
-          position: relative;
-          left: 100%;
-          transform: translateX(-100%);
+        .p4-col-strategy {
+          position: absolute;
+          top: -65px;
+          font-weight: bold;
           color: #ff00ff;
+        }
+        display: grid;
+        border: 1px solid black;
+        .inner-cell {
+          border: 1px solid black;
+          width: 75px;
+          height: 75px;
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 4px;
+          .p1-row-strategy {
+            position: absolute;
+            left: -80px;
+            height: 76px;
+            width: 76px;
+            text-align: right;
+            font-weight: bold;
+            font-style: italic;;
+            color: red;
+          }
+          .p2-col-strategy {
+            position: absolute;
+            top: -15px;
+            width: 76px;
+            text-align: center;
+            font-weight: bold;
+            font-style: italic;
+            color: #0000ff;
+          }
+          .p1-payoff {
+            position: relative;
+            left: 2px;
+            color: red;
+            font-weight: bold;
+            height: 25%;
+          }
+          .p2-payoff {
+            position: relative;
+            color: blue;
+            font-weight: bold;
+            height: 25%;
+          }
+          .p3-payoff {
+            position: relative;
+
+            color: #00ff00;
+            font-weight: bold;
+            height: 25%;
+          }
+          .p4-payoff {
+            position: relative;
+            left: 100%;
+            transform: translateX(-100%);
+            color: #ff00ff;
+            font-weight: bold;
+            text-align: right;
+            height: 25%;
+          }
+        }
+      }
+      .diagonal-line {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        top: -35px;
+        left: -34px;
+        &:after {
+          content: "";
+          position: absolute;
+          border-top: 2px solid black;
+          width: 50px;
+          transform: rotate(45deg);
+          transform-origin: 0 0;
+        }
+        .p1-label {
+          color: red;
+          position: absolute;
+          bottom: 14px;
+          left: 5px;
+          font-size: 16px;
           font-weight: bold;
-          text-align: right;
-          height: 25%;
+
+        }
+        .p2-label {
+          color: blue;
+          position: absolute;
+          right: 24px;
+          top: 2px;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .p3-label {
+          color: #00ff00;
+          position: absolute;
+          right: 14px;
+          top: -10px;
+          font-size: 16px;
+          font-weight: bold;
+        }
+        .p4-label {
+          color: #ff00ff;
+          position: absolute;
+          right: 4px;
+          top: -21px;
+          font-size: 16px;
+          font-weight: bold;
         }
       }
     }
-    .diagonal-line {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      top: -35px;
-      left: -34px;
-      &:after {
-        content: "";
-        position: absolute;
-        border-top: 2px solid black;
-        width: 50px;
-        transform: rotate(45deg);
-        transform-origin: 0 0;
-      }
-      .p1-label {
-        color: red;
-        position: absolute;
-        bottom: 14px;
-        left: 5px;
-        font-size: 16px;
-        font-weight: bold;
-
-      }
-      .p2-label {
-        color: blue;
-        position: absolute;
-        right: 24px;
-        top: 2px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .p3-label {
-        color: #00ff00;
-        position: absolute;
-        right: 14px;
-        top: -10px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .p4-label {
-        color: #ff00ff;
-        position: absolute;
-        right: 4px;
-        top: -21px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-    }
-    //.row-strategies {
-    //  position: absolute;
-    //  display: flex;
-    //  flex-direction: column;
-    //  left: -100px;
-    //  line-height: 75px;
-    //  .row-strat {
-    //    width: 100px;
-    //    height: 75px;
-    //    color: red;
-    //    font-style: italic;
-    //    text-align: right;
-    //    padding-right: 5px;
-    //  }
-    //}
-    //.col-strategies {
-    //  position: absolute;
-    //  display: flex;
-    //  flex-direction: row;
-    //  top: -20px;
-    //  .col-strat {
-    //    width: 75px;
-    //    height: 20px;
-    //    text-align: center;
-    //    color: blue;
-    //    font-style: italic;
-    //  }
-    //}
-    //table {
-    //  table-layout: fixed;
-    //  max-height: 100%;
-    //  height: 100%;
-    //  overflow: auto;
-    //  border: 1px solid black;
-    //  td {
-    //    width: 75px;
-    //    height: 75px;
-    //    border: 1px solid black;
-    //    .payoffs-wrapper {
-    //      position: relative;
-    //      width: 100%;
-    //      height: 100%;
-    //      font-size: 20px;
-    //      .p1-payoff {
-    //        position: absolute;
-    //        top: 5px;
-    //        right: 7px;
-    //        color: red;
-    //      }
-    //      .p2-payoff {
-    //        position: absolute;
-    //        bottom: 3px;
-    //        left: 7px;
-    //        color: blue;
-    //      }
-    //    }
-    //  }
-    //}
   }
 }

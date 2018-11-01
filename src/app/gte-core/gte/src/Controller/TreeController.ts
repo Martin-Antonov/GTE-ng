@@ -385,6 +385,7 @@ export class TreeController {
 
     // 2. Change it with the corresponding one in treelist
     this.tree = newTree;
+    this.tree.resetPayoffsPlayers();
     this.treeView = new TreeView(this.game, this.tree, this.treeViewProperties);
     this.treeView.nodes.forEach(n => {
       n.resetNodeDrawing(this.tree.checkAllNodesLabeled(), this.treeView.properties.zeroSumOn);

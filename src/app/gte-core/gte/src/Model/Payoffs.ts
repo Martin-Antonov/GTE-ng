@@ -6,7 +6,7 @@ export class Payoffs {
   outcomes: Array<number>;
   private playersCount: number;
 
-  constructor(payoffs?: Array<number>) {
+  constructor(payoffs?: Array<number>, ) {
     this.playersCount = 2;
 
     if (payoffs) {

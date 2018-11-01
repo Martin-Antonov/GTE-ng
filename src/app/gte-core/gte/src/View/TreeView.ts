@@ -10,6 +10,7 @@ import {Node, NodeType} from '../Model/Node';
 import {Tree} from '../Model/Tree';
 import {TreeViewProperties} from './TreeViewProperties';
 import {TreeTweenManager} from '../Utils/TreeTweenManager';
+import {TREE_TWEEN_DURATION} from '../Utils/Constants';
 
 /** A class for the graphical representation of the tree. The main algorithm for drawing and repositioning
  * the tree is in this class*/
@@ -74,6 +75,9 @@ export class TreeView {
     this.resetNodesAndMovesDisplay();
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties.zeroSumOn);
+      this.game.time.events.add(TREE_TWEEN_DURATION + 10, () => {
+        this.resetNodesAndMovesDisplay();
+      });
     }
     else {
       this.updateMoves();

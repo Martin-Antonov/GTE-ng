@@ -94,9 +94,6 @@ export class MainScene extends Phaser.State {
     // }
 
     // if (this.treeController.treeView) {
-    //   this.treeController.treeView.nodes.forEach(nv => {
-    //
-    //   });
     //   for (let i = 0; i < this.treeController.treeView.nodes.length; i++) {
     //     const nodeV = this.treeController.treeView.nodes[i];
     //     this.game.debug.text('state: ' + nodeV.node.type,

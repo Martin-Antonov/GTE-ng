@@ -13,9 +13,6 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 export class StrategicFormTableComponent implements OnInit {
   @Input() stratFormScaleCSS: number;
   userActionController: UserActionController;
-  gridRows: SafeStyle;
-  gridCols: SafeStyle;
-
 
   constructor(private uac: UserActionControllerService, public sanitizer: DomSanitizer) {
     this.uac.userActionController.subscribe((value) => {
@@ -46,6 +43,40 @@ export class StrategicFormTableComponent implements OnInit {
   isThereP4() {
     return this.userActionController.strategicForm.p4Strategies.length !== 0;
   }
+
+  getP1PayoffStyle() {
+    if (!this.isThereP3() && !this.isThereP4()) {
+      return {'top': '47%'};
+    }
+    else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
+      return {'top': '27%'};
+    }
+    else {
+      return {'top': '0'};
+    }
+  }
+
+  getP2PayoffStyle() {
+    if (!this.isThereP3() && !this.isThereP4()) {
+      return {'left': '100%', 'transform': 'translateX(-100%)'};
+    }
+    else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
+      return {'left': '50%', 'top': '20%', 'transform': 'translate(-50%,-20%)'};
+    }
+    else {
+      return {'left': '33%', 'transform': 'translateX(-33%)'};
+    }
+  }
+
+  getP3PayoffStyle() {
+    if (this.isThereP4()) {
+      return {'left': '66%', 'transform': 'translateX(-66%)'};
+    }
+    else {
+      return {'left': '100%', 'transform': 'translateX(-100%)'};
+    }
+  }
+
 
   ngOnInit() {
   }
