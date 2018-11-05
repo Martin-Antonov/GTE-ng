@@ -248,14 +248,14 @@ export class UserActionController {
 
   /**A method which toggles the zero sum on or off*/
   toggleZeroSum() {
-    this.treeController.treeViewProperties.zeroSumOn = !this.treeController.treeViewProperties.zeroSumOn;
+    this.treeController.treeView.properties.zeroSumOn = !this.treeController.treeView.properties.zeroSumOn;
     this.treeController.resetTree(false, false);
     this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the fractional or decimal view of chance moves*/
   toggleFractionDecimal() {
-    this.treeController.treeViewProperties.fractionOn = !this.treeController.treeViewProperties.fractionOn;
+    this.treeController.treeView.properties.fractionOn = !this.treeController.treeView.properties.fractionOn;
     this.treeController.resetTree(false, false);
   }
 
@@ -333,7 +333,7 @@ export class UserActionController {
     });
     this.treeController.treeView.moves.forEach(m => {
       m.updateMovePosition();
-      m.updateLabel(this.treeController.treeViewProperties.fractionOn);
+      m.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
     });
     this.treeController.treeView.drawISets();
   }
@@ -361,9 +361,9 @@ export class UserActionController {
         let width = boundingRect.width;
         let height = boundingRect.height;
         this.game.scale.setGameSize(width, height);
-        this.treeController.treeViewProperties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
+        this.treeController.treeView.properties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
           this.game.width * INITIAL_TREE_WIDTH);
-        this.treeController.treeView.properties = this.treeController.treeViewProperties;
+        this.treeController.treeView.properties = this.treeController.treeView.properties;
         this.treeController.resetTree(true, false);
         this.resizeLocked = false;
       });

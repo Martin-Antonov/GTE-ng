@@ -8,14 +8,12 @@ import {TreeViewProperties} from '../View/TreeViewProperties';
 export class TreeTweenManager {
   game: Phaser.Game;
   oldCoordinates: Array<{ x, y }>;
-  properties: TreeViewProperties;
 
-  constructor(game: Phaser.Game, properties: TreeViewProperties) {
-    this.properties = properties;
+  constructor(game: Phaser.Game) {
     this.game = game;
   }
 
-  startTweens(nodes: Array<NodeView>, moves: Array<MoveView>, allNodesLabeled: boolean, zerosumOn: boolean) {
+  startTweens(nodes: Array<NodeView>, moves: Array<MoveView>, allNodesLabeled: boolean, properties: TreeViewProperties) {
     for (let i = 0; i < this.oldCoordinates.length; i++) {
       let clonedCoords = this.oldCoordinates[i];
       let nodeV = nodes[i];
@@ -25,11 +23,11 @@ export class TreeTweenManager {
       }, TREE_TWEEN_DURATION, Phaser.Easing.Quartic.Out, true)
         .onUpdateCallback(() => {
           nodes.forEach(n => {
-            n.resetNodeDrawing(allNodesLabeled, zerosumOn);
+            n.resetNodeDrawing(allNodesLabeled, properties.zeroSumOn);
           });
           moves.forEach(m => {
             m.updateMovePosition();
-            m.updateLabel(this.properties.fractionOn);
+            m.updateLabel(properties.fractionOn, properties.levelHeight);
           });
         }, this);
     }

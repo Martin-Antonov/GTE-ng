@@ -220,7 +220,7 @@ export class KeyboardController {
 
 
     this.upKey.onDown.add(() => {
-      let verticalDistance = this.userActionController.treeController.treeViewProperties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
+      let verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
 
       if (!this.controlKey.isDown) {
         this.userActionController.moveNodeManually(0, -1, verticalDistance);
@@ -228,7 +228,7 @@ export class KeyboardController {
     });
 
     this.downKey.onDown.add(() => {
-      let verticalDistance = this.userActionController.treeController.treeViewProperties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
+      let verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
 
       if (!this.controlKey.isDown) {
         this.userActionController.moveNodeManually(0, 1, verticalDistance);
@@ -236,7 +236,7 @@ export class KeyboardController {
     });
 
     this.leftKey.onDown.add(() => {
-      let horizontalDistance = this.userActionController.treeController.treeViewProperties.treeWidth /
+      let horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
         this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
 
       if (!this.controlKey.isDown) {
@@ -244,7 +244,7 @@ export class KeyboardController {
       }
     });
     this.rightKey.onDown.add(() => {
-      let horizontalDistance = this.userActionController.treeController.treeViewProperties.treeWidth /
+      let horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
         this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
 
       if (!this.controlKey.isDown) {

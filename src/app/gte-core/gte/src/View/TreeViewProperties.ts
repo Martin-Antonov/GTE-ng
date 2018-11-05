@@ -5,12 +5,14 @@ export class TreeViewProperties {
   treeWidth: number;
   zeroSumOn: boolean;
   fractionOn: boolean;
+  automaticLevelAdjustment: boolean;
 
   constructor(levelHeight: number, initialLevelDistance: number) {
     this.levelHeight = levelHeight;
     this.treeWidth = initialLevelDistance;
     this.zeroSumOn = false;
     this.fractionOn = true;
+    this.automaticLevelAdjustment = true;
   }
 }
 

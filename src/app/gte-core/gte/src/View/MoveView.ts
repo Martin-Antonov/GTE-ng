@@ -44,8 +44,7 @@ export class MoveView extends Phaser.Sprite {
     this.height = Phaser.Point.distance(this.from.position, this.to.position);
   }
 
-  updateLabel(fractionOn: boolean) {
-    let levelHeight = this.to.y - this.from.y;
+  updateLabel(fractionOn: boolean, levelHeight: number) {
     if (this.move.from.type === NodeType.CHANCE && this.move.probability !== null) {
       this.label.text = this.move.getProbabilityText(fractionOn);
     }

@@ -3,9 +3,8 @@
 
 import {Tree} from '../Model/Tree';
 import {TreeView} from '../View/TreeView';
-import {TreeViewProperties} from '../View/TreeViewProperties';
 import {Player} from '../Model/Player';
-import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH, NODE_RADIUS, PLAYER_COLORS} from '../Utils/Constants';
+import {NODE_RADIUS, PLAYER_COLORS} from '../Utils/Constants';
 import {NodeView} from '../View/NodeView';
 import {ISetView} from '../View/ISetView';
 import {ISet} from '../Model/ISet';
@@ -19,10 +18,8 @@ export class TreeController {
   bmd: Phaser.BitmapData;
   tree: Tree;
   treeView: TreeView;
-  treeViewProperties: TreeViewProperties;
 
   // An array used to list all nodes that need to be deleted
-  private nodesToDelete: Array<Node>;
   // A signal for the external HTML input label to be activated
   labelInputSignal: Phaser.Signal;
   // A signal for the external UndoRedoController to save the current tree
@@ -31,7 +28,6 @@ export class TreeController {
   constructor(game: Phaser.Game) {
     this.game = game;
     this.setCircleBitmapData(1);
-    this.nodesToDelete = [];
     this.createInitialTree();
     this.labelInputSignal = new Phaser.Signal();
     this.treeChangedSignal = new Phaser.Signal();
@@ -45,8 +41,7 @@ export class TreeController {
     this.tree.addPlayer(new Player(1, '1', PLAYER_COLORS[0]));
     this.tree.addPlayer(new Player(2, '2', PLAYER_COLORS[1]));
 
-    this.treeViewProperties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT, this.game.width * INITIAL_TREE_WIDTH);
-    this.treeView = new TreeView(this.game, this.tree, this.treeViewProperties);
+    this.treeView = new TreeView(this.game, this.tree);
 
     this.attachHandlersToNode(this.treeView.nodes[0]);
     this.addNodeHandler([this.treeView.nodes[0]]);
@@ -196,13 +191,11 @@ export class TreeController {
         this.deleteNode(node);
       }
       else {
-        this.nodesToDelete = [];
-        this.getAllBranchChildren(node);
-        this.nodesToDelete.pop();
-        this.nodesToDelete.forEach(n => {
+        let nodesToDelete = this.tree.getBranchChildren(node);
+        nodesToDelete.pop();
+        nodesToDelete.forEach(n => {
           this.deleteNode(n);
         });
-        this.nodesToDelete = [];
       }
     });
     this.tree.cleanISets();
@@ -386,7 +379,7 @@ export class TreeController {
     // 2. Change it with the corresponding one in treelist
     this.tree = newTree;
     this.tree.resetPayoffsPlayers();
-    this.treeView = new TreeView(this.game, this.tree, this.treeViewProperties);
+    this.treeView = new TreeView(this.game, this.tree);
     this.treeView.nodes.forEach(n => {
       n.resetNodeDrawing(this.tree.checkAllNodesLabeled(), this.treeView.properties.zeroSumOn);
     });
@@ -404,15 +397,7 @@ export class TreeController {
 
       this.treeView.drawISets();
     }
-    this.resetTree(false, false);
-  }
-
-  /**Get all children of a given node*/
-  private getAllBranchChildren(node: Node) {
-    node.children.forEach(c => {
-      this.getAllBranchChildren(c);
-    });
-    this.nodesToDelete.push(node);
+    this.resetTree(true, false);
   }
 
   /**A method for deleting a single! node from the treeView and tree*/

@@ -128,7 +128,7 @@ export class LabelInputHandler {
         let moveV = (<MoveView>this.currentlySelected);
         this.treeController.tree.changeMoveLabel(moveV.move, newLabel);
         this.treeController.treeView.moves.forEach(m => {
-          m.updateLabel(this.treeController.treeViewProperties.fractionOn);
+          m.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
         });
       }
       // If we are looking at nodes

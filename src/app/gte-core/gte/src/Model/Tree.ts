@@ -83,7 +83,7 @@ export class Tree {
         if (n.player) {
           n.convertToLabeled(n.player);
         }
-        else{
+        else {
           n.convertToDefault();
         }
       }
@@ -239,17 +239,6 @@ export class Tree {
   // endregion
 
   // region Traversing Algorithms
-  /**Gets the number of levels of the tree*/
-  getMaxDepth() {
-    let maxDepth = 0;
-    this.nodes.forEach(n => {
-      if (n.depth > maxDepth) {
-        maxDepth = n.depth;
-      }
-    });
-    return maxDepth;
-  }
-
   /**Depth first search on the nodes of the tree*/
   DFSOnTree() {
     this.dfsNodes = [];
@@ -290,6 +279,20 @@ export class Tree {
       }
     });
     return leaves;
+  }
+
+  /**Given a node, returns all nodes in the branch, defined by the node*/
+  getBranchChildren(node: Node) {
+    let branchChildren = [];
+    this.getBranchChildrenDFS(node, branchChildren);
+    return branchChildren;
+  }
+
+  private getBranchChildrenDFS(node: Node, branchChildren: Array<Node>) {
+    node.children.forEach((c: Node) => {
+      this.getBranchChildrenDFS(c, branchChildren);
+    });
+    branchChildren.push(node);
   }
 
   // endregion

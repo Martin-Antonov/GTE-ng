@@ -17,8 +17,8 @@ export const HOVER_CHILDREN_COLOR = 0xaaaaaa;
 export const NODE_SELECTED_COLOR = 0x004991;
 export const PLAYER_COLORS = [0xff0000, 0x0000ff, 0x00ff00, 0xff00ff];
 export const NODES_MANUAL_POS_ERROR_TEXT = 'Only a single selected node can be moved!';
-export const NODES_VERTICAL_STEP_POSITIONING = 0.25;
-export const NODES_HORIZONTAL_STEP_POSITIONING = 0.25;
+export const NODES_VERTICAL_STEP_POSITIONING = 0.5;
+export const NODES_HORIZONTAL_STEP_POSITIONING = 0.5;
 
 // Selection Rectangle Constants
 export const SELECTION_INNER_COLOR = 0x0389df;
