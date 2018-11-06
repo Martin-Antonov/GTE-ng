@@ -66,7 +66,7 @@ export class TreeView {
       this.crossingsMinimizer.equalizeInfoSetsLevels();
     }
 
-    const maxDepth = this.getMaxDepth();
+    let maxDepth = this.getMaxDepth();
     if (maxDepth * this.properties.levelHeight > this.game.height * 0.75) {
       this.properties.levelHeight *= 0.8;
     }
@@ -75,9 +75,22 @@ export class TreeView {
       this.setYCoordinates();
       this.updateLeavesPositions();
       this.centerParents();
-      this.crossingsMinimizer.checkISetNodeOverlapping();
-      this.crossingsMinimizer.horizontalAdjustment();
+      if (this.properties.automaticLevelAdjustment) {
+        this.crossingsMinimizer.adjustHorizontally();
+      }
       this.centerGroupOnScreen();
+      // if (this.iSets.length !== 0 && this.properties.automaticLevelAdjustment) {
+      //   this.crossingsMinimizer.checkISetNodeOverlapping();
+      //   // this.crossingsMinimizer.horizontalAdjustment();
+      //   maxDepth = this.getMaxDepth();
+      //   if (maxDepth * this.properties.levelHeight > this.game.height * 0.75) {
+      //     this.properties.levelHeight *= 0.8;
+      //   }
+      //   this.setYCoordinates();
+      //   this.updateLeavesPositions();
+      //   this.centerParents();
+      //   this.centerGroupOnScreen();
+      // }
       this.drawISets();
     }
     if (startAnimations) {

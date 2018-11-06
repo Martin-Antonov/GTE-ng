@@ -96,7 +96,7 @@ export class MainScene extends Phaser.State {
     // if (this.treeController.treeView) {
     //   for (let i = 0; i < this.treeController.treeView.nodes.length; i++) {
     //     const nodeV = this.treeController.treeView.nodes[i];
-    //     this.game.debug.text('state: ' + nodeV.node.type,
+    //     this.game.debug.text('level: ' + nodeV.level,
     //       nodeV.x, nodeV.y, '#ff0000', '20px Arial');
     //   }
     // }
