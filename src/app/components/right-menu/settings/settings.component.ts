@@ -61,4 +61,11 @@ export class SettingsComponent implements OnInit {
     this.userActionController.treeController.tree.labelSetter.labels[index] = this.playerLists[index].split('');
     this.userActionController.treeController.resetTree(false, false);
   }
+
+  toggleAutoLevels() {
+    let properties = this.userActionController.treeController.treeView.properties;
+    properties.automaticLevelAdjustment = !properties.automaticLevelAdjustment;
+    this.userActionController.treeController.resetTree(true, true);
+
+  }
 }

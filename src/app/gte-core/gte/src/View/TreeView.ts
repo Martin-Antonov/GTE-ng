@@ -66,9 +66,15 @@ export class TreeView {
       this.crossingsMinimizer.equalizeInfoSetsLevels();
     }
 
+    if (!this.properties.automaticLevelAdjustment) {
+      this.nodes.forEach((nV: NodeView) => {
+        nV.level = nV.node.depth;
+      });
+    }
+
     let maxDepth = this.getMaxDepth();
     if (maxDepth * this.properties.levelHeight > this.game.height * 0.75) {
-      this.properties.levelHeight *= 0.8;
+      this.properties.levelHeight = ((1 / (maxDepth + 2)) * this.game.height);
     }
 
     if (fullReset) {
@@ -79,18 +85,6 @@ export class TreeView {
         this.crossingsMinimizer.adjustHorizontally();
       }
       this.centerGroupOnScreen();
-      // if (this.iSets.length !== 0 && this.properties.automaticLevelAdjustment) {
-      //   this.crossingsMinimizer.checkISetNodeOverlapping();
-      //   // this.crossingsMinimizer.horizontalAdjustment();
-      //   maxDepth = this.getMaxDepth();
-      //   if (maxDepth * this.properties.levelHeight > this.game.height * 0.75) {
-      //     this.properties.levelHeight *= 0.8;
-      //   }
-      //   this.setYCoordinates();
-      //   this.updateLeavesPositions();
-      //   this.centerParents();
-      //   this.centerGroupOnScreen();
-      // }
       this.drawISets();
     }
     if (startAnimations) {
@@ -203,7 +197,7 @@ export class TreeView {
 
 
     let treeCenterX = left + width / 2;
-    let treeCenterY = top + height / 2;
+    let treeCenterY = top + height / 1.8;
 
     let offsetX = (this.game.width / 2 - treeCenterX);
     let offsetY = (this.game.height / 2 - treeCenterY);

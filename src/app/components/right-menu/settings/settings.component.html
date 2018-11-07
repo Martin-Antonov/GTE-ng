@@ -23,6 +23,11 @@
           <label for="p4List">P4 Moves List: </label>
           <input type="text" id="p4List" name="p4List" [(ngModel)]="this.playerLists[3]" (change)="this.updatePlayerList(3)" [(value)]="this.playerLists[3]"><br>
         </div>
+
+        <div class="auto-levels">
+          <label for="autoLevels">Minimize crossings:</label>
+          <input type="checkbox" id="autoLevels" class="checkbox" (change)="this.toggleAutoLevels()">
+        </div>
       </form>
     </div>
     <div class="bottom-field">

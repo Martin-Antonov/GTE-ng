@@ -23,10 +23,10 @@
         color: $grey3
       }
       span {
-        position:relative;
-        left:46%;
-        transform:translateX(-46%);
-        margin-top:3px;
+        position: relative;
+        left: 46%;
+        transform: translateX(-46%);
+        margin-top: 3px;
         color: $grey3;
       }
       input {
@@ -73,15 +73,69 @@
       }
     }
     .player-preferred-lists {
+      margin-bottom: 20px;
       label {
         font-size: 0.8em;
         color: $grey3;
       }
-      input{
-        margin-bottom:5px;
-        margin-left:5px;
-        border-radius:2px;
-        color:$grey4;
+      input {
+        margin-bottom: 5px;
+        margin-left: 5px;
+        border-radius: 2px;
+        color: $grey4;
+      }
+    }
+    .auto-levels {
+      display: flex;
+      align-items: center;
+      label {
+        font-size: 0.8em;
+        color: $grey3;
+      }
+      .checkbox {
+        &:hover {
+          &:before {
+            background: $grey3;
+            cursor: pointer;
+          }
+        }
+        position: relative;
+        width: 40px;
+        height: 20px;
+        margin-left: 20px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: #29ff50;
+        transition: background 0.5s ease-in-out;
+        outline: none;
+        border-radius: 15px;
+        border: 2px solid $grey3;
+
+        &:checked {
+          background: #ff7e6a;
+          transition: background 0.5s ease-in-out;
+          &:before {
+            left: 20px;
+          }
+        }
+        &:before {
+          content: '';
+          position: absolute;
+          top: -1px;
+          left: -1px;
+          width: 17px;
+          height: 18px;
+          background: $grey1;
+          border-radius: 10px;
+          transform: scale(.98, .96);
+          -moz-transform: scale(.98, .96);
+          transition: 0.3s;
+          -moz-transition: 0.3s;
+          &:hover {
+            background: cornflowerblue;
+          }
+        }
       }
     }
   }
