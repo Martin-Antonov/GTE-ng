@@ -103,6 +103,8 @@ export class StrategicForm {
     this.p3rows = this.strategyToString(this.p3Strategies);
     this.p4cols = this.strategyToString(this.p4Strategies);
 
+    this.matrixToString();
+
   }
 
   /**A method which checks whether the conditions for generating a strategic form are kept*/
@@ -317,7 +319,6 @@ export class StrategicForm {
       if (colsP4Length === 0) {
         colsP4Length++;
       }
-      // TODO: Check this?
       for (let i = 0; i < rowsP1Length; i++) {
         for (let j = 0; j < colsP2Length; j++) {
           for (let k = 0; k < rowsP3Length; k++) {
@@ -465,6 +466,26 @@ export class StrategicForm {
     });
     result += '\nReachable Rows: ' + this.reachableP1Rows.join(',');
     result += '\nReachable Cols: ' + this.reachableP2Cols.join(',');
+    console.log(result);
+  }
+
+  // For debugging purposes:
+  private matrixToString() {
+    let result = '';
+    for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
+      for (let i = 0; i < this.payoffsMatrix.length; i++) {
+        for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
+          for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
+            result += '(' + this.payoffsMatrix[i][j][k][l].outcomes.join(',') + ')';
+            result += ' ';
+          }
+          result += '    ';
+        }
+        result += '\n';
+      }
+      result += '\n\n\n';
+    }
+
     console.log(result);
   }
 

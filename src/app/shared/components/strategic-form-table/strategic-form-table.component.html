@@ -9,10 +9,10 @@
         <div *ngIf="this.isThereP3()" class="p3-label">{{this.userActionController.treeController.tree.players[3].label}}</div>
         <div *ngIf="this.isThereP4()" class="p4-label">{{this.userActionController.treeController.tree.players[4].label}}</div>
       </div>
-      <ng-container *ngFor="let p4Col of this.userActionController.strategicForm.p4cols; index as l">
+      <ng-container *ngFor="let p3Row of this.userActionController.strategicForm.p3rows; index as k">
         <div class="outer-cell" [style.grid-template-rows]="this.getInnerGridRows()"
              [style.grid-template-columns]="this.getInnerGridCols()"
-             *ngFor="let p3Row of this.userActionController.strategicForm.p3rows; index as k">
+             *ngFor="let p4Col of this.userActionController.strategicForm.p4cols; index as l">
           <div *ngIf="this.isThereP3() && l===0" class="p3-row-strategy"
                [ngStyle]="{top: (k*86*this.userActionController.strategicForm.p1Strategies.length)+70+'px'}">
             {{this.userActionController.treeController.tree.players[3].label+": "+p3Row}}</div>
