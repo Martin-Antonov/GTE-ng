@@ -85,9 +85,12 @@
         color: $grey4;
       }
     }
-    .auto-levels {
+    .toggle-button-container {
       display: flex;
       align-items: center;
+      span{
+        margin: auto;
+      }
       label {
         font-size: 0.8em;
         color: $grey3;

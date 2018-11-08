@@ -4,9 +4,10 @@ import * as math from 'mathjs';
 
 export class Payoffs {
   outcomes: Array<number>;
+  isBestResponce: Array<boolean>;
   private playersCount: number;
 
-  constructor(payoffs?: Array<number>, ) {
+  constructor(payoffs?: Array<number>) {
     this.playersCount = 2;
 
     if (payoffs) {
@@ -15,6 +16,7 @@ export class Payoffs {
     else {
       this.outcomes = [0, 0, 0, 0];
     }
+    this.isBestResponce = [false, false, false, false];
   }
 
   /**A method converting text payoffs from the input field, and placing them to the corresponding leaves*/
@@ -71,6 +73,11 @@ export class Payoffs {
       numbersToShow.push(this.outcomes[i]);
     }
     return numbersToShow.join(' ');
+  }
+
+  /**A method which returns true if all responses are best responses*/
+  isEquilibrium(){
+    return this.isBestResponce[0] && this.isBestResponce[1] && this.isBestResponce[2] && this.isBestResponce[3];
   }
 
   destroy() {

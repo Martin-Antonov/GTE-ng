@@ -11,6 +11,7 @@ export class UiSettingsService {
   shortcutsActive: boolean;
   consoleActive: boolean;
   tutorialActive: boolean;
+  bestResponsesActive: boolean;
 
   constructor() {
   }
@@ -23,5 +24,6 @@ export class UiSettingsService {
     this.shortcutsActive = false;
     this.consoleActive = false;
     this.tutorialActive = false;
+    this.bestResponsesActive = true;
   }
 }

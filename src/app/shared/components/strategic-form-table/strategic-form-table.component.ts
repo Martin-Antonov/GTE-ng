@@ -14,7 +14,7 @@ export class StrategicFormTableComponent implements OnInit {
   @Input() stratFormScaleCSS: number;
   userActionController: UserActionController;
 
-  constructor(private uac: UserActionControllerService, public sanitizer: DomSanitizer) {
+  constructor(private uac: UserActionControllerService, public sanitizer: DomSanitizer, private uis: UiSettingsService) {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
@@ -44,40 +44,82 @@ export class StrategicFormTableComponent implements OnInit {
     return this.userActionController.strategicForm.p4Strategies.length !== 0;
   }
 
-  getP1PayoffStyle() {
-    if (!this.isThereP3() && !this.isThereP4()) {
-      return {'top': '47%'};
+  getInnerCellStyle(i: number, j: number, k: number, l: number) {
+    let style = {};
+    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isEquilibrium() && this.uis.bestResponsesActive) {
+      style['background'] = ['#f5f5f5'];
     }
-    else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
-      return {'top': '27%'};
-    }
-    else {
-      return {'top': '0'};
-    }
+    return style;
   }
 
-  getP2PayoffStyle() {
+  getP1PayoffStyle(i: number, j: number, k: number, l: number) {
+    let style = {};
     if (!this.isThereP3() && !this.isThereP4()) {
-      return {'left': '100%', 'transform': 'translateX(-100%)'};
+      style['top'] = '47%';
     }
     else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
-      return {'left': '50%', 'top': '20%', 'transform': 'translate(-50%,-20%)'};
+      style['top'] = '27%';
     }
     else {
-      return {'left': '33%', 'transform': 'translateX(-33%)'};
+      style['top'] = '0';
     }
+
+    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[0] && this.uis.bestResponsesActive) {
+      style['background'] = 'rgba(255,0,0,0.15)';
+    }
+    return style;
   }
 
-  getP3PayoffStyle() {
+  getP2PayoffStyle(i: number, j: number, k: number, l: number) {
+    let style = {};
+    if (!this.isThereP3() && !this.isThereP4()) {
+      style['left'] = '100%';
+      style['transform'] = 'translateX(-100%)';
+    }
+    else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
+      style['left'] = '50%';
+      style['top'] = '20%';
+      style['transform'] = 'translate(-50%,-20%)';
+    }
+    else {
+      style['left'] = '33%';
+      style['transform'] = 'translateX(-33%)';
+    }
+
+    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[1] && this.uis.bestResponsesActive) {
+      style['background'] = 'rgba(0,0,255,0.15)';
+    }
+
+    return style;
+  }
+
+  getP3PayoffStyle(i: number, j: number, k: number, l: number) {
+    let style = {};
     if (this.isThereP4()) {
-      return {'left': '66%', 'transform': 'translateX(-66%)'};
+      style['left'] = '66%';
+      style['transform'] = 'translateX(-66%)';
     }
     else {
-      return {'left': '100%', 'transform': 'translateX(-100%)'};
+      style['left'] = '100%';
+      style['transform'] = 'translateX(-100%)';
+
     }
+    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[2] && this.uis.bestResponsesActive) {
+      style['background'] = 'rgba(0,255,0,0.15)';
+    }
+    return style;
   }
 
+  getP4PayoffStyle(i: number, j: number, k: number, l: number) {
+    let style = {};
+    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[3] && this.uis.bestResponsesActive) {
+      style['background'] = 'rgba(255,0,255,0.15)';
+    }
+    return style;
+  }
 
   ngOnInit() {
   }
 }
+
+

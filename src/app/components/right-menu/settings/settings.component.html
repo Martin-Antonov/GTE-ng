@@ -24,9 +24,15 @@
           <input type="text" id="p4List" name="p4List" [(ngModel)]="this.playerLists[3]" (change)="this.updatePlayerList(3)" [(value)]="this.playerLists[3]"><br>
         </div>
 
-        <div class="auto-levels">
+        <div class="toggle-button-container">
           <label for="autoLevels">Minimize crossings:</label>
+          <span></span>
           <input type="checkbox" id="autoLevels" class="checkbox" (change)="this.toggleAutoLevels()">
+        </div>
+        <div class="toggle-button-container">
+          <label for="bestResponses">Best Responses:</label>
+          <span></span>
+          <input type="checkbox" id="bestResponses" class="checkbox" (change)="this.toggleBestResponses()">
         </div>
       </form>
     </div>

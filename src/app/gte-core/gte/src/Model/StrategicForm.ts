@@ -103,8 +103,7 @@ export class StrategicForm {
     this.p3rows = this.strategyToString(this.p3Strategies);
     this.p4cols = this.strategyToString(this.p4Strategies);
 
-    this.matrixToString();
-
+    this.calculateBestResponses();
   }
 
   /**A method which checks whether the conditions for generating a strategic form are kept*/
@@ -427,6 +426,94 @@ export class StrategicForm {
         }
       }
       return true;
+    }
+  }
+
+  private calculateBestResponses() {
+    // Player 4
+    for (let i = 0; i < this.payoffsMatrix.length; i++) {
+      for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
+        for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
+          let maxPayoff = -1000000;
+          let maxIndices = [];
+          for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
+            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[3]) {
+              maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[3];
+              maxIndices = [l];
+            }
+            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[3]) {
+              maxIndices.push(l);
+            }
+          }
+          maxIndices.forEach((index) => {
+            this.payoffsMatrix[i][j][k][index].isBestResponce[3] = true;
+          });
+        }
+      }
+    }
+
+    // Player 3
+    for (let i = 0; i < this.payoffsMatrix.length; i++) {
+      for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
+        for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
+          let maxPayoff = -1000000;
+          let maxIndices = [];
+          for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
+            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[2]) {
+              maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[2];
+              maxIndices = [k];
+            }
+            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[2]) {
+              maxIndices.push(k);
+            }
+          }
+          maxIndices.forEach((index) => {
+            this.payoffsMatrix[i][j][index][l].isBestResponce[2] = true;
+          });
+        }
+      }
+    }
+
+    for (let i = 0; i < this.payoffsMatrix.length; i++) {
+      for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
+        for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
+          let maxPayoff = -1000000;
+          let maxIndices = [];
+          for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
+            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[1]) {
+              maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[1];
+              maxIndices = [j];
+            }
+            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[1]) {
+              maxIndices.push(j);
+            }
+          }
+          maxIndices.forEach((index) => {
+            this.payoffsMatrix[i][index][k][l].isBestResponce[1] = true;
+          });
+        }
+      }
+    }
+
+    for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
+      for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
+        for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
+          let maxPayoff = -1000000;
+          let maxIndices = [];
+          for (let i = 0; i < this.payoffsMatrix.length; i++) {
+            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[0]) {
+              maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[0];
+              maxIndices = [i];
+            }
+            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[0]) {
+              maxIndices.push(i);
+            }
+          }
+          maxIndices.forEach((index) => {
+            this.payoffsMatrix[index][j][k][l].isBestResponce[0] = true;
+          });
+        }
+      }
     }
   }
 

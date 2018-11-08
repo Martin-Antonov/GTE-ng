@@ -90,7 +90,7 @@ export class TreeView {
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);
 
-      this.game.time.events.add(TREE_TWEEN_DURATION + 10, () => {
+      this.game.time.events.add(TREE_TWEEN_DURATION + 30, () => {
         this.resetNodesAndMovesDisplay();
       });
     }
