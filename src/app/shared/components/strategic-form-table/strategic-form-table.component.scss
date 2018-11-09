@@ -54,20 +54,20 @@
             position: relative;
             left: 2px;
             color: red;
-            font-weight: bold;
+            font-weight: 500;
             height: 25%;
 
           }
           .p2-payoff {
             position: relative;
             color: blue;
-            font-weight: bold;
+            font-weight: 500;
             height: 25%;
           }
           .p3-payoff {
             position: relative;
             color: #00ff00;
-            font-weight: bold;
+            font-weight: 500;
             height: 25%;
           }
           .p4-payoff {
@@ -75,7 +75,7 @@
             left: 100%;
             transform: translateX(-100%);
             color: #ff00ff;
-            font-weight: bold;
+            font-weight: 500;
             text-align: right;
             height: 25%;
           }

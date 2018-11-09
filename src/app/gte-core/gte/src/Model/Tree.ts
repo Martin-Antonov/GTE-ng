@@ -208,7 +208,7 @@ export class Tree {
       });
       this.iSets.forEach(iSet => {
         if (iSet.player === player) {
-          iSet.destroy();
+          iSet.player = null;
         }
       });
       this.resetPayoffsPlayers();
@@ -301,7 +301,7 @@ export class Tree {
   /**A method which checks whether all nodes have been assigned a player*/
   checkAllNodesLabeled() {
     if (this.nodes.length === 1) {
-      return false;
+      return true;
     }
     for (let i = 0; i < this.nodes.length; i++) {
       if (this.nodes[i].children.length !== 0 && this.players.indexOf(this.nodes[i].player) === -1) {

@@ -24,6 +24,7 @@ export class TreeController {
   labelInputSignal: Phaser.Signal;
   // A signal for the external UndoRedoController to save the current tree
   treeChangedSignal: Phaser.Signal;
+  iSetClickedSignal: Phaser.Signal;
 
   constructor(game: Phaser.Game) {
     this.game = game;
@@ -31,6 +32,7 @@ export class TreeController {
     this.createInitialTree();
     this.labelInputSignal = new Phaser.Signal();
     this.treeChangedSignal = new Phaser.Signal();
+    this.iSetClickedSignal = new Phaser.Signal();
   }
 
   /**A method which creates the initial 3-node tree in the scene*/
@@ -142,20 +144,7 @@ export class TreeController {
 
   /**Handler for the signal HOVER on an ISet*/
   private handleInputDownISet(iSetV: ISetView) {
-    if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT)) {
-      let nodesToDelete = [];
-      iSetV.nodes.forEach((nV: NodeView) => {
-        nodesToDelete.push(
-          this.treeView.findNodeView(
-            nV.node.children[nV.node.children.length - 1]
-          ));
-      });
-      this.deleteNodeHandler(nodesToDelete);
-    }
-    else {
-      this.addNodeHandler(iSetV.nodes);
-    }
-    this.treeChangedSignal.dispatch();
+    this.iSetClickedSignal.dispatch(iSetV);
   }
 
   // endregion
@@ -363,9 +352,8 @@ export class TreeController {
   /**A method for resetting the tree after each action on the tree,
    * soft=true means only changing labels and isets, false redraws the full tree*/
   resetTree(fullReset: boolean, startAnimations: boolean) {
-    if (this.tree.nodes.length > 1) {
-      this.treeView.drawTree(fullReset, startAnimations);
-    }
+    this.treeView.drawTree(fullReset, startAnimations);
+
   }
 
   reloadTreeFromJSON(newTree: Tree, treeCoordinates?: Array<{ x: number, y: number }>) {

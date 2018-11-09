@@ -43,6 +43,12 @@ export class ISetView extends Phaser.Sprite {
     let rightNodePosition = this.nodes[Math.floor(this.nodes.length / 2)].position;
     let leftNodePosition = this.nodes[Math.floor(this.nodes.length / 2) - 1].position;
     this.label.position.set((rightNodePosition.x + leftNodePosition.x) * 0.5, (rightNodePosition.y + leftNodePosition.y) * 0.5);
+    this.updateISetLabel();
+    this.game.add.tween(this)
+      .from({alpha: 0}, 300, Phaser.Easing.Default, true);
+  }
+
+  private updateISetLabel(){
     if (this.nodes[0].node.player) {
       this.label.setText(this.nodes[0].node.player.label);
     }
@@ -56,8 +62,6 @@ export class ISetView extends Phaser.Sprite {
     this.nodes.forEach(n => {
       n.ownerLabel.alpha = 0;
     });
-    this.game.add.tween(this)
-      .from({alpha: 0}, 300, Phaser.Easing.Default, true);
   }
 
   /**Sorts the nodes left to right before drawing*/

@@ -37,11 +37,13 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   isThereP3() {
-    return this.userActionController.strategicForm.p3Strategies.length !== 0;
+    return this.userActionController.strategicForm.p3Strategies.length !== 0 ||
+      this.userActionController.treeController.tree.nodes.length === 1;
   }
 
   isThereP4() {
-    return this.userActionController.strategicForm.p4Strategies.length !== 0;
+    return this.userActionController.strategicForm.p4Strategies.length !== 0 ||
+      this.userActionController.treeController.tree.nodes.length === 1;
   }
 
   getInnerCellStyle(i: number, j: number, k: number, l: number) {
@@ -66,6 +68,8 @@ export class StrategicFormTableComponent implements OnInit {
 
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[0] && this.uis.bestResponsesActive) {
       style['background'] = 'rgba(255,0,0,0.15)';
+      style['font-weight'] = '900';
+      style['text-decoration'] = 'underline';
     }
     return style;
   }
@@ -88,6 +92,8 @@ export class StrategicFormTableComponent implements OnInit {
 
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[1] && this.uis.bestResponsesActive) {
       style['background'] = 'rgba(0,0,255,0.15)';
+      style['font-weight'] = '900';
+      style['text-decoration'] = 'underline';
     }
 
     return style;
@@ -106,6 +112,8 @@ export class StrategicFormTableComponent implements OnInit {
     }
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[2] && this.uis.bestResponsesActive) {
       style['background'] = 'rgba(0,255,0,0.15)';
+      style['font-weight'] = '900';
+      style['text-decoration'] = 'underline';
     }
     return style;
   }
@@ -114,6 +122,8 @@ export class StrategicFormTableComponent implements OnInit {
     let style = {};
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[3] && this.uis.bestResponsesActive) {
       style['background'] = 'rgba(255,0,255,0.15)';
+      style['font-weight'] = '900';
+      style['text-decoration'] = 'underline';
     }
     return style;
   }

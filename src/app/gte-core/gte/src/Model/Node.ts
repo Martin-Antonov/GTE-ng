@@ -55,10 +55,6 @@ export class Node {
   convertToDefault() {
     this.type = NodeType.DEFAULT;
     this.player = null;
-    if (this.iSet) {
-      this.iSet.removeNode(this);
-    }
-
     this.childrenMoves.forEach(c => c.convertToDefault());
   }
 

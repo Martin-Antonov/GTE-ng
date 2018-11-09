@@ -97,6 +97,8 @@ export class TreeView {
     else {
       this.updateMoves();
       this.resetNodesAndMovesDisplay();
+      this.drawISets();
+
     }
   }
 

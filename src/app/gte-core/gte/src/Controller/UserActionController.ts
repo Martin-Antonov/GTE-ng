@@ -53,6 +53,18 @@ export class UserActionController {
       this.undoRedoController.saveNewTree();
     });
 
+    this.treeController.iSetClickedSignal.add((iSetV: ISetView) => {
+      this.selectionRectangle.active = false;
+      iSetV.nodes.forEach((nV: NodeView) => {
+        nV.isSelected = true;
+        nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
+        this.selectedNodes.push(nV);
+      });
+      iSetV.events.onInputUp.addOnce(() => {
+        this.selectionRectangle.active = true;
+      });
+    });
+
     this.createBackgroundForInputReset();
   }
 
@@ -88,7 +100,6 @@ export class UserActionController {
   /**This sprite resets the input and node selection if someone clicks on a sprite which does not have input*/
   private createBackgroundForInputReset() {
     this.backgroundInputSprite = this.game.add.sprite(0, 0, '');
-
     this.backgroundInputSprite.width = this.game.width;
     this.backgroundInputSprite.height = this.game.height;
     this.backgroundInputSprite.inputEnabled = true;
@@ -363,7 +374,6 @@ export class UserActionController {
         this.game.scale.setGameSize(width, height);
         this.treeController.treeView.properties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
           this.game.width * INITIAL_TREE_WIDTH);
-        this.treeController.treeView.properties = this.treeController.treeView.properties;
         this.treeController.resetTree(true, false);
         this.resizeLocked = false;
       });
