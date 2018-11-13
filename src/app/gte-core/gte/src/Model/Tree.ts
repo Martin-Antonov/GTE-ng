@@ -1,6 +1,6 @@
 /// <reference path="../../../../../../node_modules/@types/mathjs/index.d.ts" />
 import {
-  IMPERFECT_RECALL_ERROR_TEXT,
+  IMPERFECT_RECALL_ERROR_TEXT, NODES_CONTAIN_CHANCE_PLAYER,
   NODES_DIFFERENT_PLAYERS_ERROR_TEXT,
   NODES_NUMBER_OF_CHILDREN_ERROR_TEXT,
   SAME_PATH_ON_ROOT_ERROR_TEXT
@@ -89,6 +89,10 @@ export class Tree {
       }
     });
 
+    if (node.type === NodeType.CHANCE) {
+      node.convertToChance(this.players[0]);
+    }
+
   }
 
   // endregion
@@ -129,6 +133,9 @@ export class Tree {
 
     if (this.checkIfNodesSharePathToRoot(nodes)) {
       throw new Error(SAME_PATH_ON_ROOT_ERROR_TEXT);
+    }
+    if (this.checkIfNodesContainChancePlayer(nodes)) {
+      throw new Error(NODES_CONTAIN_CHANCE_PLAYER);
     }
   }
 
@@ -234,6 +241,15 @@ export class Tree {
       }
     }
     return players.length <= 1;
+  }
+
+  private checkIfNodesContainChancePlayer(nodes: Array<Node>) {
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].type === NodeType.CHANCE) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // endregion

@@ -28,9 +28,10 @@ export const OVERLAY_SCALE = 3;
 
 // ISets
 export const SAME_PATH_ON_ROOT_ERROR_TEXT = 'Cannot create an information set for nodes which share a path to the root.';
-export const NODES_MISSING_PLAYERS_ERROR_TEXT = 'Cannot create information set for nodes which do not have player assigned.';
-export const NODES_DIFFERENT_PLAYERS_ERROR_TEXT = 'Cannot create information set for nodes which have different players.';
-export const NODES_NUMBER_OF_CHILDREN_ERROR_TEXT = 'Cannot create information set for nodes which have different number of children or are leaves.';
+export const NODES_CONTAIN_CHANCE_PLAYER = 'Cannot create an information set for node(s) which are owned by a chance player.';
+export const NODES_MISSING_PLAYERS_ERROR_TEXT = 'Cannot create an information set for nodes which do not have player assigned.';
+export const NODES_DIFFERENT_PLAYERS_ERROR_TEXT = 'Cannot create an information set for nodes which have different players.';
+export const NODES_NUMBER_OF_CHILDREN_ERROR_TEXT = 'Cannot create an information set for nodes which have different number of children or are leaves.';
 export const IMPERFECT_RECALL_ERROR_TEXT = 'The game tree does not have perfect recall';
 export const ISET_LINE_WIDTH = 0.05;
 

@@ -163,6 +163,8 @@ export class TreeController {
         const child1 = this.treeView.addChildToNode(nodeV);
         this.attachHandlersToNode(child1);
       }
+
+
     });
     this.tree.cleanISets();
     this.treeView.cleanISets();
@@ -170,7 +172,7 @@ export class TreeController {
   }
 
   /**A method for deleting a node - 2 step deletion.*/
-  deleteNodeHandler(nodesV: Array<NodeView>) {
+  deleteNodeHandler(nodesV: Array<NodeView>, ignoreAnimations?: boolean) {
     nodesV.forEach((nodeV: NodeView) => {
       const node = nodeV.node;
       if (this.tree.nodes.indexOf(node) === -1) {
@@ -189,7 +191,9 @@ export class TreeController {
     });
     this.tree.cleanISets();
     this.treeView.cleanISets();
-    this.resetTree(true, true);
+    if (!ignoreAnimations) {
+      this.resetTree(true, true);
+    }
   }
 
   // endregion
@@ -358,7 +362,7 @@ export class TreeController {
 
   reloadTreeFromJSON(newTree: Tree, treeCoordinates?: Array<{ x: number, y: number }>) {
     // 1. Delete the current Tree and ISets in tree controller
-    this.deleteNodeHandler([this.treeView.nodes[0]]);
+    this.deleteNodeHandler([this.treeView.nodes[0]], true);
     this.treeView.nodes[0].destroy();
     this.treeView.iSets.forEach((iSet: ISetView) => {
       iSet.destroy();

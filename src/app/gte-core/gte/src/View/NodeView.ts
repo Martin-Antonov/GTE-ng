@@ -16,7 +16,7 @@ export class NodeView extends Phaser.Sprite {
   isSelected: boolean;
   level: number;
   circle: Phaser.Sprite;
-  private square: Phaser.Sprite;
+  square: Phaser.Sprite;
   private previewSelected: Phaser.Sprite;
   // Horizontal offset: -1 for left, 1 for right;
   private labelHorizontalOffset: number;

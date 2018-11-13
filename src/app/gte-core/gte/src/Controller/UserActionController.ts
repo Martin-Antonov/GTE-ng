@@ -12,6 +12,7 @@ import {ISet} from '../Model/ISet';
 import {LabelInputHandler} from '../Utils/LabelInputHandler';
 import {TreeViewProperties} from '../View/TreeViewProperties';
 import {CutSpriteHandler} from '../Utils/CutSpriteHandler';
+import {ViewExporter} from '../Utils/ViewExporter';
 
 export class UserActionController {
   game: Phaser.Game;
@@ -30,6 +31,7 @@ export class UserActionController {
   backgroundInputSprite: Phaser.Sprite;
 
   treeParser: TreeParser;
+  viewExporter: ViewExporter;
 
   private resizeLocked: boolean;
 
@@ -37,6 +39,7 @@ export class UserActionController {
     this.game = game;
     this.treeController = treeController;
     this.treeParser = new TreeParser();
+    this.viewExporter = new ViewExporter(this.treeController.treeView);
     this.undoRedoController = new UndoRedoController(this.treeController);
     this.selectedNodes = [];
 
