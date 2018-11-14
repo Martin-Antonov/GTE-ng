@@ -139,6 +139,7 @@ export class LabelInputHandler {
           this.treeController.treeView.nodes.forEach(n => {
             if (n.node.player) {
               n.ownerLabel.setText(n.node.player.label, true);
+              n.updateLabelPosition();
             }
           });
 

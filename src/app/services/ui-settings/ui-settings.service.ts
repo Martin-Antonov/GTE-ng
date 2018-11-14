@@ -12,6 +12,7 @@ export class UiSettingsService {
   consoleActive: boolean;
   tutorialActive: boolean;
   bestResponsesActive: boolean;
+  saveFileActive: boolean;
 
   constructor() {
   }
@@ -25,5 +26,6 @@ export class UiSettingsService {
     this.consoleActive = false;
     this.tutorialActive = false;
     this.bestResponsesActive = true;
+    this.saveFileActive = true;
   }
 }

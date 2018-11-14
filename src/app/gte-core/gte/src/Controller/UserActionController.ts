@@ -239,8 +239,11 @@ export class UserActionController {
     if (nodeV) {
       this.removeISetHandler(nodeV.node.iSet);
     }
-    else {
+    else if (this.selectedNodes.length > 0) {
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
+    }
+    else{
+      return;
     }
     this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
@@ -249,7 +252,7 @@ export class UserActionController {
   /**A method for assigning undo/redo functionality (keyboard ctrl/shift + Z)*/
   undoRedoHandler(undo: boolean) {
     this.undoRedoController.changeTreeInController(undo);
-    // $('#player-number').html((this.treeController.tree.players.length - 1).toString());
+    this.viewExporter.treeView = this.treeController.treeView;
     this.emptySelectedNodes();
     this.checkCreateStrategicForm();
   }

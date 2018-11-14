@@ -93,7 +93,7 @@ export class TreesFileService {
     this.saveCurrentTree();
     let text = JSON.stringify(this.treeTabs[this.currentTabIndex]);
     let blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
-    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.txt');
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.gte');
   }
 
   loadTreeFromFile() {

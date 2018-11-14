@@ -19,7 +19,7 @@ export class NodeView extends Phaser.Sprite {
   square: Phaser.Sprite;
   private previewSelected: Phaser.Sprite;
   // Horizontal offset: -1 for left, 1 for right;
-  private labelHorizontalOffset: number;
+  labelHorizontalOffset: number;
 
   constructor(game: Phaser.Game, node: Node, x?: number, y?: number) {
     super(game, x, y, game.cache.getBitmapData('node-circle'));
@@ -100,14 +100,18 @@ export class NodeView extends Phaser.Sprite {
     this.payoffsLabel.input.priorityID = 199;
   }
 
-  private updateLabelPosition() {
+  updateLabelPosition() {
     if (this.node.parent && this.node.parent.children.indexOf(this.node) < this.node.parent.children.length / 2) {
       this.labelHorizontalOffset = -1;
+      // this.ownerLabel.align = 'right';
+      this.ownerLabel.anchor.set(1, 0.5);
     }
     else {
       this.labelHorizontalOffset = 1;
+      // this.ownerLabel.align = 'left';
+      this.ownerLabel.anchor.set(0, 0.5);
     }
-    this.ownerLabel.position.set(this.x + this.labelHorizontalOffset * this.circle.width,
+    this.ownerLabel.position.set(this.x + this.labelHorizontalOffset * this.circle.width * 0.75,
       this.y - this.circle.width);
   }
 

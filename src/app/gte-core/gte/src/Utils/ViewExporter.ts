@@ -17,9 +17,9 @@ export class ViewExporter {
     let factor = 15;
     let result = '';
     let playerLabels = [];
+    let chanceLabels = [];
     let moveLabels = [];
     let payoffsLabels = [];
-    let iSetLabels = [];
     result += '#FIG 3.2  Produced by Game Theory Explorer\n' +
       'Landscape\n' +
       'Center\n' +
@@ -43,23 +43,39 @@ export class ViewExporter {
         // other styles
         let post = '0 20 0.000 1 0.0000 ';
         let coords = Math.round(nV.world.x * factor) + ' ' + Math.round(nV.world.y * factor) + ' ';
-        let dimensions = Math.round((nV.circle.width / 2) * factor) + ' ' + Math.round((nV.circle.width / 2) * factor) + ' ';
+        let dimensions = Math.round((nV.circle.width * 0.65 / 2) * factor) + ' ' + Math.round((nV.circle.width * 0.65 / 2) * factor) + ' ';
         result += pre + depth + post + coords + dimensions + coords + coords + '\n';
 
         if (playerIndex > 0 && nV.node.iSet === null) {
-          playerLabels.push({text: nV.ownerLabel.text, color: color, x: nV.ownerLabel.x, y: nV.ownerLabel.y, index: playerIndex});
+          playerLabels.push({
+            text: nV.ownerLabel.text,
+            color: color,
+            x: nV.ownerLabel.x,
+            y: nV.y + nV.ownerLabel.height * 0.2,
+            index: playerIndex,
+            justify: nV.labelHorizontalOffset === 1 ? 0 : 2,
+          });
         }
       }
       else if (nV.node.type === NodeType.CHANCE) {
         let pre = '2 2 0 0 0 0 10 -1 20 0.000 0 0 -1 0 0 5 ';
         let centerX = Math.round(nV.square.x * factor);
         let centerY = Math.round(nV.square.y * factor);
-        let halfWidth = Math.round(nV.square.width * factor / 2);
+        let halfWidth = Math.round(nV.square.width * factor * 0.7 / 2);
         let topLeft = (centerX - halfWidth) + ' ' + (centerY - halfWidth) + ' ';
         let topRight = (centerX + halfWidth) + ' ' + (centerY - halfWidth) + ' ';
         let bottomLeft = (centerX - halfWidth) + ' ' + (centerY + halfWidth) + ' ';
         let bottomRight = (centerX + halfWidth) + ' ' + (centerY + halfWidth) + ' ';
         result += pre + '\n' + topLeft + topRight + bottomRight + bottomLeft + topLeft + '\n';
+
+        chanceLabels.push({
+          text: nV.ownerLabel.text,
+          color: 0,
+          x: nV.ownerLabel.x,
+          y: nV.y + nV.ownerLabel.height * 0.2,
+          index: 0,
+          justify: nV.labelHorizontalOffset === 1 ? 0 : 2,
+        });
         return;
       }
       else if (nV.node.type === NodeType.LEAF) {
@@ -91,11 +107,11 @@ export class ViewExporter {
       }
     });
 
-    result += 'moves\n';
+    result += '#moves\n';
     // Moves
     this.treeView.moves.forEach((mV: MoveView) => {
       // line, polyline, line style, thickness, pen color, fill color
-      let pre = '2 1 0 3 0 0 ';
+      let pre = '2 1 0 4 0 0 ';
       let playerIndex = this.treeView.tree.players.indexOf(mV.from.node.player);
       let depth = (60 + playerIndex) + ' ';
       let post = '0 -1 5.000 0 0 -1 0 0 2 ';
@@ -114,7 +130,7 @@ export class ViewExporter {
       }
     });
 
-    result += 'isets\n';
+    result += '#isets\n';
 
     this.treeView.iSets.forEach((iSetV: ISetView) => {
       let firstNode = iSetV.nodes[0];
@@ -142,17 +158,25 @@ export class ViewExporter {
         color: color,
         x: iSetV.label.x,
         y: iSetV.label.y + iSetV.label.height * 4 / factor,
-        index: playerIndex
+        index: playerIndex,
+        justify: 1
       });
     });
 
-    result += 'labels';
-    playerLabels.forEach((label: { text, color, x, y, index }) => {
+    result += '#labels\n';
+    playerLabels.forEach((label: { text, color, x, y, index, justify }) => {
       // type text, justification, color, depth, pen style, font, font size, angle, font flags, coords text
-      let pre = '4 1 ' + label.color + ' ' + (label.index + 40) + ' 0 2 30 0.0000 4 540 390 ' +
+      let pre = '4 ' + label.justify + ' ' + label.color + ' ' + (label.index + 40) + ' 0 2 30 0.0000 4 540 390 ' +
         Math.round(label.x * factor) + ' ' + Math.round(label.y * factor) + ' ' + label.text + '\\001';
       result += pre + '\n';
     });
+    chanceLabels.forEach((label: { text, color, x, y, index, justify }) => {
+      // type text, justification, color, depth, pen style, font, font size, angle, font flags, coords text
+      let pre = '4 ' + label.justify + ' ' + label.color + ' ' + (label.index + 40) + ' 0 0 30 0.0000 4 540 390 ' +
+        Math.round(label.x * factor) + ' ' + Math.round(label.y * factor) + ' ' + label.text + '\\001';
+      result += pre + '\n';
+    });
+
     moveLabels.forEach((label: { text, color, x, y, index }) => {
       let font = label.index === 0 ? 0 : 1;
       // type text, justification, color, depth, pen style, font, font size, angle, font flags, coords text
@@ -182,12 +206,12 @@ export class ViewExporter {
         color = '4';
         break;
       case 2:
-        // green
+        // blue
         color = '1';
         break;
       case 3:
-        // blue
-        color = '2';
+        // green
+        color = '13';
         break;
       case 4:
         // magenta

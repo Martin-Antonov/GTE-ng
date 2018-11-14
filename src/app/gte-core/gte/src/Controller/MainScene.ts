@@ -92,11 +92,11 @@ export class MainScene extends Phaser.State {
     //     this.game.debug.text("n: "+this.treeController.treeView.nodes.length + " o: "+
     // this.treeController.treeView.treeTweenManager.oldCoordinates.length, 20,40, "#ff0000", "20px Arial");
     // }
-
+    //
     // if (this.treeController.treeView) {
     //   for (let i = 0; i < this.treeController.treeView.nodes.length; i++) {
     //     const nodeV = this.treeController.treeView.nodes[i];
-    //     this.game.debug.text('level: ' + nodeV.level,
+    //     this.game.debug.text(nodeV.node.type,
     //       nodeV.x, nodeV.y, '#ff0000', '20px Arial');
     //   }
     // }
