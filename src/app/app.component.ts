@@ -22,4 +22,9 @@ export class AppComponent {
   resizeMiddleElement() {
     this.userActionController.gameResize();
   }
+
+
+  closeSaveFile() {
+    this.uis.saveFileActive = false;
+  }
 }

@@ -26,6 +26,6 @@ export class UiSettingsService {
     this.consoleActive = false;
     this.tutorialActive = false;
     this.bestResponsesActive = true;
-    this.saveFileActive = true;
+    this.saveFileActive = false;
   }
 }

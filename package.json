@@ -29,6 +29,7 @@
     "phaser-ce": "^2.11.0",
     "rxjs": "^6.0.0",
     "serve": "^10.0.1",
+    "svg.js": "^2.7.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

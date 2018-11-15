@@ -1,0 +1,27 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+:host {
+  position: absolute;
+  top: 24px;
+  left: 9%;
+  width:0;
+  height:0;
+  ul {
+    list-style: none;
+    li {
+      width: 150px;
+      height: 30px;
+      background: $grey3;
+      color: $grey-text;
+      border: 1px solid $grey1;
+      line-height: 30px;
+      padding-left:20px;
+
+      &:hover {
+        background: $grey2;
+        cursor: default;
+      }
+    }
+  }
+}

@@ -19,7 +19,8 @@ export class TopMenuComponent implements OnInit {
 
   strategicFormActive: boolean;
 
-  constructor(private uac: UserActionControllerService, public tts: TooltipsService, public uis: UiSettingsService, private tfs: TreesFileService) {
+  constructor(private uac: UserActionControllerService, public tts: TooltipsService,
+              public uis: UiSettingsService, private tfs: TreesFileService) {
   }
 
   ngOnInit() {
@@ -57,6 +58,10 @@ export class TopMenuComponent implements OnInit {
       this.userActionController.undoRedoController.treesList.length - 1;
   }
 
+  toggleSaveMenu() {
+    this.uis.saveFileActive = !this.uis.saveFileActive;
+  }
+
   createNewTree() {
     this.tfs.addNewTree();
   }
@@ -70,6 +75,12 @@ export class TopMenuComponent implements OnInit {
   }
 
   saveToImage() {
-    this.tfs.saveToImage();
+    this.tfs.saveTreeToImage();
+  }
+
+  closeSaveFile() {
+    if (this.uis.saveFileActive) {
+      this.uis.saveFileActive = false;
+    }
   }
 }

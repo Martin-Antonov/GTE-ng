@@ -5,6 +5,9 @@ import {NodeView} from '../View/NodeView';
 import {NodeType} from '../Model/Node';
 import {MoveView} from '../View/MoveView';
 import {ISetView} from '../View/ISetView';
+import * as SVG from 'svg.js';
+import {ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH} from './Constants';
+
 
 export class ViewExporter {
   treeView: TreeView;
@@ -191,7 +194,8 @@ export class ViewExporter {
       result += pre + '\n';
     });
 
-    console.log(result);
+    return result;
+    // console.log(result);
   }
 
   private getDigitLength(number: number) {
@@ -223,5 +227,87 @@ export class ViewExporter {
         break;
     }
     return color;
+  }
+
+  toSVG() {
+    let draw = SVG('svg-export').size(this.treeView.game.width, this.treeView.game.height);
+
+
+    this.treeView.nodes.forEach((nV: NodeView) => {
+      if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
+        draw.circle(nV.circle.width).attr({fill: Phaser.Color.getWebRGB(nV.circle.tint), 'stroke-width': 0}).center(nV.x, nV.y);
+        if (nV.node.iSet === null) {
+          draw.text(nV.ownerLabel.text).move(nV.ownerLabel.x, nV.ownerLabel.y - nV.ownerLabel.height * 0.75).fill(nV.ownerLabel.fill)
+            .font({
+              anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
+              size: nV.ownerLabel.fontSize,
+              weight: 'bold'
+            });
+        }
+      }
+      else if (nV.node.type === NodeType.CHANCE) {
+        draw.rect(nV.square.width, nV.square.height).center(nV.x, nV.y);
+        draw.text(nV.ownerLabel.text).move(nV.ownerLabel.x, nV.ownerLabel.y - nV.ownerLabel.height * 0.75)
+          .font({
+            anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
+            size: (<number>nV.ownerLabel.fontSize * nV.ownerLabel.scale.x),
+            weight: 'bold'
+          });
+
+      }
+      else if (nV.node.type === NodeType.LEAF) {
+        draw.text((add) => {
+          let payoffsShown = nV.payoffsLabel.text.split('\n');
+          for (let i = 0; i < payoffsShown.length; i++) {
+            let payoff = payoffsShown[i];
+            add.tspan(payoff).fill(Phaser.Color.getWebRGB(this.treeView.tree.players[i + 1].color)).newLine();
+          }
+        }).move(nV.payoffsLabel.x + nV.payoffsLabel.width / 2, nV.payoffsLabel.y).font({
+          anchor: 'end',
+          size: nV.payoffsLabel.fontSize,
+        }).leading(1);
+      }
+    });
+
+    this.treeView.moves.forEach((mV: MoveView) => {
+      draw.line(mV.from.x, mV.from.y, mV.to.x, mV.to.y).attr({
+        stroke: '#000',
+        'stroke-width': Math.round(this.treeView.game.height * LINE_WIDTH)
+      }).back();
+      draw.text(mV.label.text).move(mV.label.x - mV.label.width / 2, mV.label.y - mV.label.height).fill(mV.label.fill)
+        .font({
+          weight: '200',
+          style: mV.from.node.player.id !== 0 ? 'italic' : 'none',
+          size: mV.label.fontSize
+        });
+    });
+
+    this.treeView.iSets.forEach((iSetV: ISetView) => {
+      let pointCoords = [];
+      iSetV.nodes.forEach((nV: NodeView) => {
+        pointCoords.push(nV.x);
+        pointCoords.push(nV.y);
+      });
+
+      console.log('points-length: ' + pointCoords.length);
+
+      draw.polyline(pointCoords).attr({
+        stroke: Phaser.Color.getWebRGB(iSetV.tint),
+        opacity: 0.15,
+        'stroke-width': this.treeView.game.height * ISET_LINE_WIDTH,
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round'
+      }).fill('none');
+
+      draw.text(iSetV.label.text).move(iSetV.label.x - iSetV.label.width / 2, iSetV.label.y - iSetV.label.height * 0.7)
+        .fill(iSetV.label.fill)
+        .font({
+          // anchor: 'middle',
+          weight: 'bold',
+          size: iSetV.label.fontSize
+        });
+    });
+
+    return draw.svg();
   }
 }

@@ -30,6 +30,7 @@ import { SettingsComponent } from './components/right-menu/settings/settings.com
 import { ErrorLogComponent } from './shared/components/error-log/error-log.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ClickOutsideModule} from 'ng-click-outside';
+import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     ShortcutsComponent,
     SettingsComponent,
     ErrorLogComponent,
+    SaveMenuComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule, ClickOutsideModule

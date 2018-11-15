@@ -96,6 +96,27 @@ export class TreesFileService {
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.gte');
   }
 
+  saveTreeToFig(){
+    let figFile = this.userActionController.viewExporter.toFig();
+    let blob = new Blob([figFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.fig');
+  }
+
+  saveTreeToImage() {
+    setTimeout(() => {
+      let cnvs = document.getElementsByTagName('canvas');
+      (<any>cnvs[0]).toBlob(function (blob) {
+        saveAs(blob, 'GTE_Tree' + '.png');
+      });
+    }, 100);
+  }
+
+  saveTreeToSVG(){
+    let svgFile = this.userActionController.viewExporter.toSVG();
+    let blob = new Blob([svgFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.svg');
+  }
+
   loadTreeFromFile() {
     let input = event.target;
 
@@ -112,14 +133,6 @@ export class TreesFileService {
     let newTree = JSON.parse(text);
     this.treeTabs.push(newTree);
     this.changeToTree(this.treeTabs.length - 1);
-  }
-
-  saveToImage() {
-    setTimeout(() => {
-      let cnvs = document.getElementsByTagName('canvas');
-      (<any>cnvs[0]).toBlob(function (blob) {
-        saveAs(blob, 'GTE_Tree' + '.png');
-      });
-    }, 100);
+    this.userActionController.viewExporter.treeView = this.userActionController.treeController.treeView;
   }
 }
