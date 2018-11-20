@@ -6,11 +6,11 @@
                      (click)="this.userActionController.deleteNodeHandler();"
                      [inactive]="this.areNodesSelected()"
                      [tooltipText]="this.tooltips.minus"></app-square-button>
-  <app-square-button [imageKey]="'user.png'" (click)="this.togglePlayerActive()"
+  <app-square-button [imageKey]="'user.png'" (mouseover)="this.activatePlayerChoice()"
                      [inactive]="!this.doSelectedHaveChildren()"
                      [tooltipText]="this.tooltips.player"></app-square-button>
 
-  <div *ngIf="this.playerIsClicked && this.doSelectedHaveChildren()">
+  <div *ngIf="this.playerIsActive && this.doSelectedHaveChildren()">
     <div class="circle" [ngStyle]="{'background-color': playerColor}"
          [hidden]="i>=this.userActionController.treeController.tree.players.length-1"
          *ngFor="let playerColor of this.playerColors; let i=index" (click)="this.assignPlayer(i)">

@@ -75,7 +75,7 @@ export class KeyboardController {
 
     let keys = [Phaser.Keyboard.ONE, Phaser.Keyboard.TWO, Phaser.Keyboard.THREE, Phaser.Keyboard.FOUR];
 
-    keys.forEach(k => {
+    keys.forEach((k: number) => {
       this.playersKeys.push(this.game.input.keyboard.addKey(k));
     });
 
@@ -135,7 +135,7 @@ export class KeyboardController {
     });
 
     // Assigning players
-    this.playersKeys.forEach((k) => {
+    this.playersKeys.forEach((k: Phaser.Key) => {
       let playerID = this.playersKeys.indexOf(k) + 1;
       k.onDown.add(() => {
         this.userActionController.assignPlayerToNodeHandler(playerID);

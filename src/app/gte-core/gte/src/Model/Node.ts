@@ -55,7 +55,7 @@ export class Node {
   convertToDefault() {
     this.type = NodeType.DEFAULT;
     this.player = null;
-    this.childrenMoves.forEach(c => c.convertToDefault());
+    this.childrenMoves.forEach((m: Move) => m.convertToDefault());
   }
 
   /**Converts the current Node to a labeled, by setting an player */
@@ -76,7 +76,7 @@ export class Node {
       else {
         this.type = NodeType.OWNED;
         this.player = player;
-        this.childrenMoves.forEach(c => c.convertToLabeled());
+        this.childrenMoves.forEach((m: Move) => m.convertToLabeled());
       }
     }
   }
@@ -114,7 +114,7 @@ export class Node {
       else if (probabilities && this.childrenMoves.length !== probabilities.length) {
         throw new SyntaxError('Number of probabilities does not match number of moves!');
       } else {
-        this.childrenMoves.forEach(c => c.convertToChance(1 / this.childrenMoves.length));
+        this.childrenMoves.forEach((m: Move) => m.convertToChance(1 / this.childrenMoves.length));
       }
     }
   }
@@ -147,11 +147,11 @@ export class Node {
       this.payoffs = null;
     }
     if (this.children.length > 0) {
-      this.children.forEach((c) => c.destroy());
+      this.children.forEach((c: Node) => c.destroy());
       this.children = null;
     }
     if (this.childrenMoves.length > 0) {
-      this.childrenMoves.forEach((m) => {
+      this.childrenMoves.forEach((m: Move) => {
         m.destroy();
       });
       this.childrenMoves = null;

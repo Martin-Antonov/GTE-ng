@@ -54,7 +54,7 @@ export class Tree {
 
       this.nodes.splice(this.nodes.indexOf(node), 1);
       node.destroy();
-      this.nodes.forEach((n) => {
+      this.nodes.forEach((n: Node) => {
         if (n.children.length === 0) {
           n.convertToLeaf();
         }
@@ -75,7 +75,7 @@ export class Tree {
 
     this.nodes.push(child);
     this.moves.push(child.parentMove);
-    this.nodes.forEach(n => {
+    this.nodes.forEach((n: Node) => {
       if (n.children.length === 0) {
         n.convertToLeaf();
       }
@@ -143,12 +143,12 @@ export class Tree {
   /**Checks whether any 2 nodes of an array share a path to the root.*/
   private checkIfNodesSharePathToRoot(nodes: Array<Node>): boolean {
     let allNodesFromISets = [];
-    nodes.forEach(n => {
+    nodes.forEach((n: Node) => {
 
       if (n.iSet) {
-        n.iSet.nodes.forEach(nI => {
-          if (allNodesFromISets.indexOf(nI) === -1) {
-            allNodesFromISets.push(nI);
+        n.iSet.nodes.forEach((iN: Node) => {
+          if (allNodesFromISets.indexOf(iN) === -1) {
+            allNodesFromISets.push(iN);
           }
         });
       }
@@ -209,12 +209,12 @@ export class Tree {
   removePlayer(player: Player) {
     if (this.players.indexOf(player) !== -1) {
       this.players.splice(this.players.indexOf(player), 1);
-      this.nodes.forEach(n => {
+      this.nodes.forEach((n: Node) => {
         if (n.player === player) {
           n.convertToDefault();
         }
       });
-      this.iSets.forEach(iSet => {
+      this.iSets.forEach((iSet: ISet) => {
         if (iSet.player === player) {
           iSet.player = null;
         }
@@ -265,8 +265,8 @@ export class Tree {
 
   private DFSRecursion(node: Node) {
     this.dfsNodes.push(node);
-    node.children.forEach(n => {
-      this.DFSRecursion(n);
+    node.children.forEach((c: Node) => {
+      this.DFSRecursion(c);
     });
   }
 
@@ -279,9 +279,9 @@ export class Tree {
     while (nodesQueue.length > 0) {
       let current = nodesQueue.shift();
       bfsNodes.push(current);
-      current.children.forEach((n => {
-        nodesQueue.push(n);
-      }));
+      current.children.forEach((c: Node) => {
+        nodesQueue.push(c);
+      });
     }
     return bfsNodes;
   }
@@ -290,7 +290,7 @@ export class Tree {
   getLeaves() {
     let leaves = [];
     this.DFSOnTree();
-    this.dfsNodes.forEach(n => {
+    this.dfsNodes.forEach((n: Node) => {
       if (n.children.length === 0) {
         leaves.push(n);
       }
@@ -338,12 +338,12 @@ export class Tree {
   /**A method which resets the probabilities of chance moves*/
   private resetChanceProbabilities() {
     // Find all chance moves
-    this.nodes.forEach(node => {
+    this.nodes.forEach((n: Node) => {
       let shouldReset = false;
-      if (node.type === NodeType.CHANCE) {
+      if (n.type === NodeType.CHANCE) {
         let sum = 0;
-        for (let i = 0; i < node.childrenMoves.length; i++) {
-          let move = node.childrenMoves[i];
+        for (let i = 0; i < n.childrenMoves.length; i++) {
+          let move = n.childrenMoves[i];
           if (!move.probability) {
             shouldReset = true;
             break;
@@ -352,8 +352,8 @@ export class Tree {
         }
 
         if (shouldReset || sum !== 1) {
-          node.childrenMoves.forEach(m => {
-            m.probability = 1 / node.childrenMoves.length;
+          n.childrenMoves.forEach((m: Move) => {
+            m.probability = 1 / n.childrenMoves.length;
           });
         }
       }
@@ -370,7 +370,7 @@ export class Tree {
       move.manuallyAssigned = true;
       if (move.from.iSet !== null) {
         let index = move.from.childrenMoves.indexOf(move);
-        move.from.iSet.nodes.forEach(n => {
+        move.from.iSet.nodes.forEach((n: Node) => {
           n.childrenMoves[index].label = text;
         });
       }
@@ -379,7 +379,7 @@ export class Tree {
 
   /**A method which resets the payoffs nodes*/
   resetPayoffsPlayers() {
-    this.nodes.forEach(n => {
+    this.nodes.forEach((n: Node) => {
       n.payoffs.setPlayersCount(this.players.length - 1);
     });
   }
@@ -481,33 +481,33 @@ export class Tree {
         }
       });
 
-      parentNodes.forEach((node: Node) => {
-        if (node.type === NodeType.CHANCE) {
-          node.payoffs.outcomes = [0, 0, 0, 0];
-          node.children.forEach((child: Node) => {
-            child.payoffs.multiply(child.parentMove.probability);
-            node.payoffs.add(child.payoffs.outcomes);
+      parentNodes.forEach((n: Node) => {
+        if (n.type === NodeType.CHANCE) {
+          n.payoffs.outcomes = [0, 0, 0, 0];
+          n.children.forEach((c: Node) => {
+            c.payoffs.multiply(c.parentMove.probability);
+            n.payoffs.add(c.payoffs.outcomes);
           });
-          node.convertToLeaf();
+          n.convertToLeaf();
 
         }
-        else if (node.type === NodeType.OWNED) {
+        else if (n.type === NodeType.OWNED) {
           let maxLeaf: Node = null;
           let maxPayoff = -100000;
-          let playerIndex = clonedTree.players.indexOf(node.player);
-          node.payoffs.outcomes = [0, 0, 0, 0];
-          node.children.forEach((child: Node) => {
-            if (child.payoffs.outcomes[playerIndex - 1] > maxPayoff) {
-              maxPayoff = child.payoffs.outcomes[playerIndex - 1];
-              maxLeaf = child;
+          let playerIndex = clonedTree.players.indexOf(n.player);
+          n.payoffs.outcomes = [0, 0, 0, 0];
+          n.children.forEach((c: Node) => {
+            if (c.payoffs.outcomes[playerIndex - 1] > maxPayoff) {
+              maxPayoff = c.payoffs.outcomes[playerIndex - 1];
+              maxLeaf = c;
             }
           });
-          node.payoffs.outcomes = maxLeaf.payoffs.outcomes.slice(0);
+          n.payoffs.outcomes = maxLeaf.payoffs.outcomes.slice(0);
           this.moves[movesCloned.indexOf(maxLeaf.parentMove)].isBestInductionMove = true;
         }
 
-        for (let i = 0; i < node.children.length; i++) {
-          clonedTree.removeNode(node.children[i]);
+        for (let i = 0; i < n.children.length; i++) {
+          clonedTree.removeNode(n.children[i]);
           i--;
         }
       });

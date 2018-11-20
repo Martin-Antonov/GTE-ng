@@ -127,8 +127,8 @@ export class LabelInputHandler {
       if (this.currentlySelected instanceof MoveView) {
         let moveV = (<MoveView>this.currentlySelected);
         this.treeController.tree.changeMoveLabel(moveV.move, newLabel);
-        this.treeController.treeView.moves.forEach(m => {
-          m.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
+        this.treeController.treeView.moves.forEach((mV: MoveView) => {
+          mV.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
         });
       }
       // If we are looking at nodes
@@ -136,18 +136,18 @@ export class LabelInputHandler {
         let nodeV = (<NodeView>this.currentlySelected);
         if (nodeV.ownerLabel.alpha === 1) {
           nodeV.node.player.label = newLabel;
-          this.treeController.treeView.nodes.forEach(n => {
-            if (n.node.player) {
-              n.ownerLabel.setText(n.node.player.label, true);
-              n.updateLabelPosition();
+          this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+            if (nV.node.player) {
+              nV.ownerLabel.setText(nV.node.player.label, true);
+              nV.updateLabelPosition();
             }
           });
 
         }
         else {
           nodeV.node.payoffs.saveFromString(newLabel);
-          this.treeController.treeView.nodes.forEach(n => {
-            n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
+          this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+            nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           });
         }
       }

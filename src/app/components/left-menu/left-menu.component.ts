@@ -3,6 +3,7 @@ import {UserActionController} from '../../gte-core/gte/src/Controller/UserAction
 import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
+import {NodeView} from '../../gte-core/gte/src/View/NodeView';
 
 
 @Component({
@@ -13,7 +14,7 @@ import {UserActionControllerService} from '../../services/user-action-controller
 export class LeftMenuComponent implements OnInit {
   userActionController: UserActionController;
 
-  playerIsClicked: boolean;
+  playerIsActive: boolean;
   playerColors: Array<string>;
   tooltips: ITooltips;
 
@@ -27,16 +28,17 @@ export class LeftMenuComponent implements OnInit {
     this.tts.getTooltips().subscribe((tooltips) => {
       this.tooltips = tooltips;
     });
-    this.playerIsClicked = false;
-    this.playerColors = ['#ff0000', '#0000ff', '#00ff00', '#ff00ff'];
-  }
-
-  togglePlayerActive() {
-    this.playerIsClicked = !this.playerIsClicked;
+    this.playerIsActive = false;
+    this.playerColors = ['#ff0000', '#0000ff', '#00bb00', '#ff00ff'];
   }
 
   assignPlayer(id: number) {
     this.userActionController.assignPlayerToNodeHandler(id + 1);
+    this.playerIsActive = false;
+  }
+
+  activatePlayerChoice() {
+    this.playerIsActive = true;
   }
 
   areNodesSelected() {
@@ -52,8 +54,8 @@ export class LeftMenuComponent implements OnInit {
   doSelectedHaveChildren() {
     if (this.userActionController) {
       let result = false;
-      this.userActionController.selectedNodes.forEach((n) => {
-        if (n.node.children.length > 0) {
+      this.userActionController.selectedNodes.forEach((nV: NodeView) => {
+        if (nV.node.children.length > 0) {
           result = true;
         }
       });
@@ -68,9 +70,9 @@ export class LeftMenuComponent implements OnInit {
     if (this.userActionController && this.userActionController.selectedNodes.length > 1) {
       let selectedNodes = this.userActionController.selectedNodes;
       let nodes = [];
-      selectedNodes.forEach((n => {
-        nodes.push(n.node);
-      }));
+      selectedNodes.forEach((nV: NodeView) => {
+        nodes.push(nV.node);
+      });
 
       try {
         this.userActionController.treeController.tree.canCreateISet(nodes);

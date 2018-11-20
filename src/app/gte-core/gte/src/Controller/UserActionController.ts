@@ -76,17 +76,17 @@ export class UserActionController {
    * It handles the selection of nodes, while holding the mouse button*/
   update() {
     if (this.game.input.activePointer.isDown && this.selectionRectangle.active) {
-      this.treeController.treeView.nodes.forEach((n: NodeView) => {
-        if (this.selectionRectangle.overlap(n) && this.selectedNodes.indexOf(n) === -1) {
-          n.isSelected = true;
-          n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
-          this.selectedNodes.push(n);
+      this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+        if (this.selectionRectangle.overlap(nV) && this.selectedNodes.indexOf(nV) === -1) {
+          nV.isSelected = true;
+          nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
+          this.selectedNodes.push(nV);
         }
-        if (!this.selectionRectangle.overlap(n) && this.selectedNodes.indexOf(n) !== -1 &&
+        if (!this.selectionRectangle.overlap(nV) && this.selectedNodes.indexOf(nV) !== -1 &&
           !this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT)) {
-          n.isSelected = false;
-          n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
-          this.selectedNodes.splice(this.selectedNodes.indexOf(n), 1);
+          nV.isSelected = false;
+          nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
+          this.selectedNodes.splice(this.selectedNodes.indexOf(nV), 1);
         }
       });
     }
@@ -125,9 +125,9 @@ export class UserActionController {
   /**A method for deselecting nodes.*/
   deselectNodesHandler() {
     if (this.selectedNodes.length > 0) {
-      this.selectedNodes.forEach(n => {
-        n.isSelected = false;
-        n.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
+      this.selectedNodes.forEach((nV: NodeView) => {
+        nV.isSelected = false;
+        nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
       });
       this.emptySelectedNodes();
     }
@@ -155,15 +155,15 @@ export class UserActionController {
     }
     const deletedNodes = [];
     if (this.selectedNodes.length > 0) {
-      this.selectedNodes.forEach(n => {
-        if (n.node === null) {
-          deletedNodes.push(n);
+      this.selectedNodes.forEach((nV: NodeView) => {
+        if (nV.node === null) {
+          deletedNodes.push(nV);
         }
       });
     }
 
-    deletedNodes.forEach(n => {
-      this.selectedNodes.splice(this.selectedNodes.indexOf(n), 1);
+    deletedNodes.forEach((nV: NodeView) => {
+      this.selectedNodes.splice(this.selectedNodes.indexOf(nV), 1);
     });
 
     this.checkCreateStrategicForm();
@@ -296,21 +296,21 @@ export class UserActionController {
     this.deselectNodesHandler();
     this.game.add.tween(this.cutSpriteHandler.cutSprite).to({alpha: 1}, 300, Phaser.Easing.Default, true);
     this.game.input.keyboard.enabled = false;
-    this.treeController.treeView.nodes.forEach(n => {
-      n.inputEnabled = false;
+    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+      nV.inputEnabled = false;
     });
-    this.treeController.treeView.iSets.forEach(iSet => {
-      iSet.inputEnabled = false;
+    this.treeController.treeView.iSets.forEach( (iSetV: ISetView) => {
+      iSetV.inputEnabled = false;
     });
 
     this.game.input.onDown.addOnce(() => {
       this.cutSpriteHandler.cutSprite.alpha = 0;
 
-      this.treeController.treeView.nodes.forEach(n => {
-        n.inputEnabled = true;
+      this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+        nV.inputEnabled = true;
       });
-      this.treeController.treeView.iSets.forEach(iSet => {
-        iSet.inputEnabled = true;
+      this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
+        iSetV.inputEnabled = true;
       });
       this.game.input.keyboard.enabled = true;
 
@@ -345,13 +345,13 @@ export class UserActionController {
 
   /**Moves a node manually and does not move the children*/
   moveNodeManually(directionX: number, directionY: number, distance: number) {
-    this.selectedNodes.forEach(node => {
-      node.position.add(directionX * distance, directionY * distance);
-      node.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
+    this.selectedNodes.forEach((nV: NodeView) => {
+      nV.position.add(directionX * distance, directionY * distance);
+      nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
     });
-    this.treeController.treeView.moves.forEach(m => {
-      m.updateMovePosition();
-      m.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
+    this.treeController.treeView.moves.forEach((mV: MoveView) => {
+      mV.updateMovePosition();
+      mV.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
     });
     this.treeController.treeView.drawISets();
   }
@@ -366,6 +366,7 @@ export class UserActionController {
         }
         else {
           mV.alpha = 0.3;
+          mV.label.alpha = 0.3;
         }
       });
       while (clonedTree.nodes.length !== 0) {

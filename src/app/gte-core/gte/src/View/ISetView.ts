@@ -59,8 +59,8 @@ export class ISetView extends Phaser.Sprite {
       this.label.alpha = 1;
       this.label.fill = Phaser.Color.getWebRGB(this.iSet.player.color);
     }
-    this.nodes.forEach(n => {
-      n.ownerLabel.alpha = 0;
+    this.nodes.forEach((nV: NodeView) => {
+      nV.ownerLabel.alpha = 0;
     });
   }
 

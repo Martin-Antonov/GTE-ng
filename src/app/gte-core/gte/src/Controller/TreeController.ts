@@ -65,41 +65,41 @@ export class TreeController {
   // region Input Handlers and Signals
   /**Attaching listeners, that will listen for specific actions from the user*/
   attachHandlersToNodes() {
-    this.treeView.nodes.forEach(n => {
-      this.attachHandlersToNode(n);
+    this.treeView.nodes.forEach((nV: NodeView) => {
+      this.attachHandlersToNode(nV);
     });
   }
 
   /** The node specific method for attaching handlers
    * Also when we add node we attach the handler for the parent move label*/
-  private attachHandlersToNode(n: NodeView) {
-    n.events.onInputOver.add(() => {
-      this.handleInputOverNode(n);
+  private attachHandlersToNode(nV: NodeView) {
+    nV.events.onInputOver.add(() => {
+      this.handleInputOverNode(nV);
     });
-    n.events.onInputDown.add(() => {
-      this.handleInputDownNode(n);
+    nV.events.onInputDown.add(() => {
+      this.handleInputDownNode(nV);
     });
-    n.events.onInputOut.add(() => {
-      this.handleInputOutNode(n);
+    nV.events.onInputOut.add(() => {
+      this.handleInputOutNode(nV);
     });
-    n.events.onInputUp.add(() => {
-      this.handleInputUpNode(n);
+    nV.events.onInputUp.add(() => {
+      this.handleInputUpNode(nV);
     });
 
-    n.ownerLabel.events.onInputDown.add(() => {
-      if (n.ownerLabel.alpha === 1) {
-        this.labelInputSignal.dispatch(n);
+    nV.ownerLabel.events.onInputDown.add(() => {
+      if (nV.ownerLabel.alpha === 1) {
+        this.labelInputSignal.dispatch(nV);
       }
     }, this);
 
-    n.payoffsLabel.events.onInputDown.add(() => {
-      if (n.payoffsLabel.alpha === 1) {
-        this.labelInputSignal.dispatch(n);
+    nV.payoffsLabel.events.onInputDown.add(() => {
+      if (nV.payoffsLabel.alpha === 1) {
+        this.labelInputSignal.dispatch(nV);
       }
     }, this);
 
-    if (n.node.parentMove) {
-      const move = this.treeView.findMoveView(n.node.parentMove);
+    if (nV.node.parentMove) {
+      const move = this.treeView.findMoveView(nV.node.parentMove);
       move.label.events.onInputDown.add(() => {
         if (move.label.alpha === 1) {
           this.labelInputSignal.dispatch(move);
@@ -152,15 +152,15 @@ export class TreeController {
   // region Nodes Logic
   /**Adding child or children to a node*/
   addNodeHandler(nodesV: Array<NodeView>) {
-    nodesV.forEach((nodeV: NodeView) => {
-      if (nodeV.node.children.length === 0) {
-        const child1 = this.treeView.addChildToNode(nodeV);
-        const child2 = this.treeView.addChildToNode(nodeV);
+    nodesV.forEach((nV: NodeView) => {
+      if (nV.node.children.length === 0) {
+        const child1 = this.treeView.addChildToNode(nV);
+        const child2 = this.treeView.addChildToNode(nV);
         this.attachHandlersToNode(child1);
         this.attachHandlersToNode(child2);
       }
       else {
-        const child1 = this.treeView.addChildToNode(nodeV);
+        const child1 = this.treeView.addChildToNode(nV);
         this.attachHandlersToNode(child1);
       }
 
@@ -173,8 +173,8 @@ export class TreeController {
 
   /**A method for deleting a node - 2 step deletion.*/
   deleteNodeHandler(nodesV: Array<NodeView>, ignoreAnimations?: boolean) {
-    nodesV.forEach((nodeV: NodeView) => {
-      const node = nodeV.node;
+    nodesV.forEach((nV: NodeView) => {
+      const node = nV.node;
       if (this.tree.nodes.indexOf(node) === -1) {
         return;
       }
@@ -184,7 +184,7 @@ export class TreeController {
       else {
         let nodesToDelete = this.tree.getBranchChildren(node);
         nodesToDelete.pop();
-        nodesToDelete.forEach(n => {
+        nodesToDelete.forEach((n: Node) => {
           this.deleteNode(n);
         });
       }
@@ -207,12 +207,12 @@ export class TreeController {
     }
 
     this.addPlayer(playerID);
-    nodesV.forEach((nodeV: NodeView) => {
-      nodeV.node.convertToLabeled(this.tree.findPlayerById(playerID));
+    nodesV.forEach((nV: NodeView) => {
+      nV.node.convertToLabeled(this.tree.findPlayerById(playerID));
       // If the node is in an iset, change the owner of the iSet to the new player
-      if (nodeV.node.iSet && nodeV.node.iSet.nodes.length > 1) {
-        nodeV.node.iSet.player = this.tree.players[playerID];
-        let iSetView = this.treeView.findISetView(nodeV.node.iSet);
+      if (nV.node.iSet && nV.node.iSet.nodes.length > 1) {
+        nV.node.iSet.player = this.tree.players[playerID];
+        let iSetView = this.treeView.findISetView(nV.node.iSet);
         iSetView.tint = iSetView.iSet.player.color;
       }
     });
@@ -222,8 +222,8 @@ export class TreeController {
 
   /**A method for assigning chance player to a given node*/
   assignChancePlayerToNode(nodesV: Array<NodeView>) {
-    nodesV.forEach((nodeV: NodeView) => {
-      nodeV.node.convertToChance(this.tree.players[0]);
+    nodesV.forEach((nV: NodeView) => {
+      nV.node.convertToChance(this.tree.players[0]);
     });
 
     this.resetTree(false, false);
@@ -248,8 +248,8 @@ export class TreeController {
   /**Creates an iSet with the corresponding checks*/
   createISet(nodesV: Array<NodeView>) {
     const nodes = [];
-    nodesV.forEach(n => {
-      nodes.push(n.node);
+    nodesV.forEach((nV: NodeView) => {
+      nodes.push(nV.node);
     });
     // Check for errors
     this.tree.canCreateISet(nodes);
@@ -257,21 +257,21 @@ export class TreeController {
     // Create a list of nodes to put into an iSet - create the union of all iSets
     const iSetNodes = [];
     let player = null;
-    nodesV.forEach((n) => {
-      if (n.node.iSet) {
-        n.node.iSet.nodes.forEach(iNode => {
-          iSetNodes.push(iNode);
+    nodesV.forEach((nV: NodeView) => {
+      if (nV.node.iSet) {
+        nV.node.iSet.nodes.forEach((n: Node) => {
+          iSetNodes.push(n);
         });
-        const iSetView = this.treeView.findISetView(n.node.iSet);
-        this.tree.removeISet(n.node.iSet);
+        const iSetView = this.treeView.findISetView(nV.node.iSet);
+        this.tree.removeISet(nV.node.iSet);
         this.treeView.removeISetView(iSetView);
       }
       else {
-        iSetNodes.push(n.node);
+        iSetNodes.push(nV.node);
       }
 
-      if (n.node.player) {
-        player = n.node.player;
+      if (nV.node.player) {
+        player = nV.node.player;
       }
     });
     const iSet = this.tree.addISet(player, iSetNodes);
@@ -300,9 +300,9 @@ export class TreeController {
   /**A helper method which returns all iSets from the selected nodes*/
   getDistinctISetsFromNodes(nodesV: Array<NodeView>) {
     const distinctISets = [];
-    nodesV.forEach((n) => {
-      if (n.node.iSet && distinctISets.indexOf(n.node.iSet) === -1) {
-        distinctISets.push(n.node.iSet);
+    nodesV.forEach((nV: NodeView) => {
+      if (nV.node.iSet && distinctISets.indexOf(nV.node.iSet) === -1) {
+        distinctISets.push(nV.node.iSet);
       }
     });
 
@@ -317,12 +317,12 @@ export class TreeController {
     else {
       const leftNodes = [];
       const rightNodes = [];
-      iSetV.nodes.forEach(n => {
-        if (n.x <= x) {
-          leftNodes.push(n);
+      iSetV.nodes.forEach((nV: NodeView) => {
+        if (nV.x <= x) {
+          leftNodes.push(nV);
         }
         else {
-          rightNodes.push(n);
+          rightNodes.push(nV);
         }
       });
       if (leftNodes.length === 1) {
@@ -364,21 +364,21 @@ export class TreeController {
     // 1. Delete the current Tree and ISets in tree controller
     this.deleteNodeHandler([this.treeView.nodes[0]], true);
     this.treeView.nodes[0].destroy();
-    this.treeView.iSets.forEach((iSet: ISetView) => {
-      iSet.destroy();
+    this.treeView.iSets.forEach((iSetV: ISetView) => {
+      iSetV.destroy();
     });
 
     // 2. Change it with the corresponding one in treelist
     this.tree = newTree;
     this.tree.resetPayoffsPlayers();
     this.treeView = new TreeView(this.game, this.tree);
-    this.treeView.nodes.forEach(n => {
-      n.resetNodeDrawing(this.tree.checkAllNodesLabeled(), this.treeView.properties.zeroSumOn);
+    this.treeView.nodes.forEach((nV: NodeView) => {
+      nV.resetNodeDrawing(this.tree.checkAllNodesLabeled(), this.treeView.properties.zeroSumOn);
     });
 
     this.attachHandlersToNodes();
-    this.treeView.iSets.forEach((iSet) => {
-      this.attachHandlersToISet(iSet);
+    this.treeView.iSets.forEach((iSetV: ISetView) => {
+      this.attachHandlersToISet(iSetV);
     });
 
     if (treeCoordinates) {

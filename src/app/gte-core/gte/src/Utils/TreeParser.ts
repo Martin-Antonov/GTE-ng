@@ -16,12 +16,12 @@ export class TreeParser {
     };
 
     // Copy players
-    tree.players.forEach(p => {
+    tree.players.forEach((p: Player) => {
       strippedTree.players.push(new Player(p.id, p.label, p.color));
     });
 
     // Copy the nodes without any connection to other nodes
-    tree.nodes.forEach(n => {
+    tree.nodes.forEach((n: Node) => {
       let node = new Node();
       node.type = n.type;
       node.depth = n.depth;
@@ -37,7 +37,7 @@ export class TreeParser {
     });
 
     // Copy moves
-    tree.moves.forEach(m => {
+    tree.moves.forEach((m: Move) => {
       let move = {
         type: null,
         fromIndex: null,
@@ -61,12 +61,12 @@ export class TreeParser {
     });
 
     // Copy iSets
-    tree.iSets.forEach(is => {
+    tree.iSets.forEach((is: ISet) => {
       let iSet = {
         label: null,
         nodeIndexes: []
       };
-      is.nodes.forEach((n) => {
+      is.nodes.forEach((n: Node) => {
         iSet.nodeIndexes.push(tree.nodes.indexOf(n));
       });
       strippedTree.iSets.push(iSet);

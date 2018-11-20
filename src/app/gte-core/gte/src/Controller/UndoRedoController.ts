@@ -41,8 +41,8 @@ export class UndoRedoController {
     this.treesList.push(this.treeParser.parse(this.treeParser.stringify(this.treeController.tree)));
     if (saveCoordinates) {
       const coordsArray = [];
-      this.treeController.treeView.nodes.forEach((n: NodeView) => {
-        coordsArray.push({x: n.position.x, y: n.position.y});
+      this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+        coordsArray.push({x: nV.position.x, y: nV.position.y});
       });
       this.treeCoordinatesList[this.currentTreeIndex + 1] = coordsArray;
     }

@@ -53,7 +53,7 @@ export class StrategicForm {
     let p4InfoSets = [];
 
     // Get all P1 and P2 information sets and singletons from the BFS order
-    nodes.forEach(n => {
+    nodes.forEach((n: Node) => {
       if (n.player === this.tree.players[1]) {
         if (n.iSet && p1InfoSets.indexOf(n.iSet) === -1) {
           p1InfoSets.push(n.iSet);
@@ -160,16 +160,16 @@ export class StrategicForm {
     let isReachable = false;
     if (index !== 0) {
       let nodesToCheckReachability = [];
-      strategy.forEach((move: Move) => {
-        if (move !== null) {
-          if (move.from.iSet === null) {
-            nodesToCheckReachability.push(move.to);
+      strategy.forEach((m: Move) => {
+        if (m !== null) {
+          if (m.from.iSet === null) {
+            nodesToCheckReachability.push(m.to);
           }
           else {
-            move.from.iSet.nodes.forEach((n: Node) => {
-              n.childrenMoves.forEach((m: Move) => {
-                if (m.label === move.label) {
-                  nodesToCheckReachability.push(m.to);
+            m.from.iSet.nodes.forEach((n: Node) => {
+              n.childrenMoves.forEach((cM: Move) => {
+                if (cM.label === m.label) {
+                  nodesToCheckReachability.push(cM.to);
                 }
               });
             });
@@ -445,7 +445,7 @@ export class StrategicForm {
               maxIndices.push(l);
             }
           }
-          maxIndices.forEach((index) => {
+          maxIndices.forEach((index: number) => {
             this.payoffsMatrix[i][j][k][index].isBestResponce[3] = true;
           });
         }
@@ -467,7 +467,7 @@ export class StrategicForm {
               maxIndices.push(k);
             }
           }
-          maxIndices.forEach((index) => {
+          maxIndices.forEach((index: number) => {
             this.payoffsMatrix[i][j][index][l].isBestResponce[2] = true;
           });
         }
@@ -488,7 +488,7 @@ export class StrategicForm {
               maxIndices.push(j);
             }
           }
-          maxIndices.forEach((index) => {
+          maxIndices.forEach((index: number) => {
             this.payoffsMatrix[i][index][k][l].isBestResponce[1] = true;
           });
         }
@@ -509,7 +509,7 @@ export class StrategicForm {
               maxIndices.push(i);
             }
           }
-          maxIndices.forEach((index) => {
+          maxIndices.forEach((index: number) => {
             this.payoffsMatrix[index][j][k][l].isBestResponce[0] = true;
           });
         }
@@ -544,11 +544,11 @@ export class StrategicForm {
   // For debugging purposes
   private currentPathToString(leaf: Node) {
     let result = '' + leaf.payoffs.outcomes + '-> ';
-    this.movesToReachLeafP1.forEach(m => {
+    this.movesToReachLeafP1.forEach((m: Move) => {
       result += m.label + ' ';
     });
     result += '|| ';
-    this.movesToReachLeafP2.forEach(m => {
+    this.movesToReachLeafP2.forEach((m: Move) => {
       result += m.label + ' ';
     });
     result += '\nReachable Rows: ' + this.reachableP1Rows.join(',');

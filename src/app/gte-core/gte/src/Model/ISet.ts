@@ -11,7 +11,7 @@ export class ISet {
     this.player = player;
     this.nodes = [];
     if (nodes) {
-      nodes.forEach(n => {
+      nodes.forEach((n: Node) => {
         this.addNode(n);
         if (this.player) {
           n.convertToLabeled(this.player);
@@ -45,7 +45,7 @@ export class ISet {
   /**The destroy method ensures that there are no memory-leaks */
   destroy() {
     this.player = null;
-    this.nodes.forEach(n => {
+    this.nodes.forEach((n: Node) => {
       n.iSet = null;
     });
     this.nodes = [];

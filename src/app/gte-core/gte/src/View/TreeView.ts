@@ -40,7 +40,7 @@ export class TreeView {
 
   /**Given a tree from the Model, we initialize the treeView by adding the corresponding sprites*/
   private initializeTree() {
-    this.tree.nodes.forEach(n => {
+    this.tree.nodes.forEach((n: Node) => {
       let nodeView = new NodeView(this.game, n);
       this.nodes.push(nodeView);
       if (n !== this.tree.root) {
@@ -48,7 +48,7 @@ export class TreeView {
         this.moves.push(new MoveView(this.game, parent, nodeView));
       }
     });
-    this.tree.iSets.forEach(iSet => {
+    this.tree.iSets.forEach((iSet: ISet) => {
       this.addISetView(iSet);
     });
     this.drawTree(true, false);
@@ -104,16 +104,16 @@ export class TreeView {
   /**In order to tween the nodes, we need to save the old coordinates for each node*/
   getOldCoordinates() {
     let oldCoordinates = [];
-    this.nodes.forEach(n => {
-      oldCoordinates.push({x: n.position.x, y: n.position.y});
+    this.nodes.forEach((nV: NodeView) => {
+      oldCoordinates.push({x: nV.position.x, y: nV.position.y});
     });
     return oldCoordinates;
   }
 
   /**Sets the Y-coordinates for the tree nodes*/
   setYCoordinates() {
-    this.nodes.forEach(nodeView => {
-      nodeView.y = nodeView.level * this.properties.levelHeight;
+    this.nodes.forEach((nV: NodeView) => {
+      nV.y = nV.level * this.properties.levelHeight;
     });
   }
 
@@ -164,9 +164,9 @@ export class TreeView {
 
     if (this.tree.labelSetter.initiallyAssigned) {
       this.tree.resetLabels();
-      this.moves.forEach((m: MoveView) => {
-        m.label.alpha = 1;
-        m.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
+      this.moves.forEach((mV: MoveView) => {
+        mV.label.alpha = 1;
+        mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
       });
     }
   }
