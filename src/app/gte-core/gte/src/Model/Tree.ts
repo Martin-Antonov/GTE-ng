@@ -1,5 +1,6 @@
 /// <reference path="../../../../../../node_modules/@types/mathjs/index.d.ts" />
 import {
+  BACKWARDS_INDUCTION_NOT_ALL_LABELED, BACKWARDS_INDUCTION_PERFECT_INFORMATION,
   IMPERFECT_RECALL_ERROR_TEXT, NODES_CONTAIN_CHANCE_PLAYER,
   NODES_DIFFERENT_PLAYERS_ERROR_TEXT,
   NODES_NUMBER_OF_CHILDREN_ERROR_TEXT,
@@ -462,6 +463,58 @@ export class Tree {
     }
   }
 
-  // endregion
+
+  backwardInduction(clonedTree: Tree) {
+    if (!clonedTree.checkAllNodesLabeled()) {
+      throw new Error(BACKWARDS_INDUCTION_NOT_ALL_LABELED);
+    }
+    if (this.iSets.length !== 0) {
+      throw new Error(BACKWARDS_INDUCTION_PERFECT_INFORMATION);
+    }
+    let movesCloned = clonedTree.moves.slice(0);
+    while (clonedTree.nodes.length !== 1) {
+      let leaves = clonedTree.getLeaves();
+      let parentNodes = [];
+      leaves.forEach((leaf: Node) => {
+        if (parentNodes.indexOf(leaf.parent) === -1) {
+          parentNodes.push(leaf.parent);
+        }
+      });
+
+      parentNodes.forEach((node: Node) => {
+        if (node.type === NodeType.CHANCE) {
+          node.payoffs.outcomes = [0, 0, 0, 0];
+          node.children.forEach((child: Node) => {
+            child.payoffs.multiply(child.parentMove.probability);
+            node.payoffs.add(child.payoffs.outcomes);
+          });
+          node.convertToLeaf();
+
+        }
+        else if (node.type === NodeType.OWNED) {
+          let maxLeaf: Node = null;
+          let maxPayoff = -100000;
+          let playerIndex = clonedTree.players.indexOf(node.player);
+          node.payoffs.outcomes = [0, 0, 0, 0];
+          node.children.forEach((child: Node) => {
+            if (child.payoffs.outcomes[playerIndex - 1] > maxPayoff) {
+              maxPayoff = child.payoffs.outcomes[playerIndex - 1];
+              maxLeaf = child;
+            }
+          });
+          node.payoffs.outcomes = maxLeaf.payoffs.outcomes.slice(0);
+          this.moves[movesCloned.indexOf(maxLeaf.parentMove)].isBestInductionMove = true;
+        }
+
+        for (let i = 0; i < node.children.length; i++) {
+          clonedTree.removeNode(node.children[i]);
+          i--;
+        }
+      });
+    }
+    movesCloned = null;
+  }
+
+// endregion
 }
 

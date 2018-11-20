@@ -36,10 +36,6 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  getBody() {
-    return document.getElementsByTagName('BODY')[0];
-  }
-
   close() {
     this.settingsButton.clickHandler();
     this.uis.settingsActive = false;

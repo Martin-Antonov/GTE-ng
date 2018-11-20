@@ -1,10 +1,7 @@
-<ng-container *ngIf="this.shortcuts">
-  <div class="shortcuts-container" ngDraggable [handle]="dragHandle"
-       [inBounds]="true" [bounds]="this.getBody()">
-    <div #dragHandle class="top-handle">
-      <span class="shortcuts-title">Shortcuts</span>
-      <app-clickable-x (click)="this.close()"></app-clickable-x>
-    </div>
+<app-draggable-window *ngIf="this.shortcuts" [width]="'650px'" [height]="'700px'" [isResizeable]="false" [top]="'10%'"
+                      [right]="'calc(50% - 325px)'"
+                      (closeCallback)="this.close()" [title]="'Settings'">
+
     <div class="shortcuts-content">
       <ul class="shortcuts-list">
         <li *ngFor="let shortcut of this.shortcuts; index as i ">
@@ -14,9 +11,8 @@
         </li>
       </ul>
     </div>
-    <div class="bottom-field">
-    </div>
-    <video *ngIf="this.currentlyHoveredIndex!==-1 && this.shortcuts[this.currentlyHoveredIndex].videoURL" class="video"
-           [src]="this.shortcuts[this.currentlyHoveredIndex].videoURL" autoplay loop></video>
-  </div>
-</ng-container>
+
+  <video *ngIf="this.currentlyHoveredIndex!==-1 && this.shortcuts[this.currentlyHoveredIndex].videoURL" class="video"
+         [src]="this.shortcuts[this.currentlyHoveredIndex].videoURL" autoplay loop></video>
+</app-draggable-window>
+

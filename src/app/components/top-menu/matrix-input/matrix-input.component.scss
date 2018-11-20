@@ -1,19 +1,7 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-.matrix-input-container {
-  @include window(700px, 500px);
-  top: 5%;
-  right: 6%;
-  .top-handle {
-    @include window-handle();
-    .matrix-input-title {
-      @include window-title();
-    }
-    app-clickable-x {
-      float: right;
-    }
-  }
+app-draggable-window {
   .matrix-input-content {
     @include window-content();
     position: relative;
@@ -119,10 +107,6 @@
         margin-top: 10px;
       }
     }
-  }
-
-  .bottom-field {
-    @include window-bottom();
   }
 }
 

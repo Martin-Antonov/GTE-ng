@@ -1,24 +1,23 @@
-<div class="strat-form-container" #block="ngResizable" ngDraggable ngResizable rzHandles="all" [handle]="dragHandle"
-     [rzMinWidth]="300" [rzMinHeight]="300" [rzMaxHeight]="800" [rzMaxWidth]="1500"
-     [inBounds]="true" [bounds]="this.getBody()" rzContainment="#body-id">
-  <div #dragHandle class="top-handle">
-    <span class="strat-form-title">Strategic Form</span>
-    <app-clickable-x (click)="this.close()"></app-clickable-x>
-  </div>
+<app-draggable-window [width]="'500px'" [height]="'500px'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
+                      (closeCallback)="this.close()" [title]="'Strategic Form'">
   <app-strategic-form-table [stratFormScaleCSS]="this.stratFormScaleCSS"></app-strategic-form-table>
 
-  <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm"
-       (click)="postFromStrategicForm()">Solve
-  </div>
-  <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">
-    Strategic form not available...
-  </div>
-  <div class="bottom-field">
+  <ng-container>
+    <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm"
+         (click)="postFromStrategicForm()">Solve
+    </div>
+    <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">
+      Strategic form not available...
+    </div>
+  </ng-container>
+
+  <ng-container bottom>
     <div class="zoom-button">
       <img [src]="'assets/images/zoom-out.png'" alt="zoom out button" (click)="this.downScale(1.2)">
     </div>
     <div class="zoom-button">
       <img [src]="'assets/images/zoom-in.png'" alt="zoom in button" (click)="this.upScale(1.2)">
     </div>
-  </div>
-</div>
+  </ng-container>
+
+</app-draggable-window>

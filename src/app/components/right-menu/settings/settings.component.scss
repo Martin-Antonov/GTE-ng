@@ -1,19 +1,7 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-.settings-container {
-  @include window(500px, 600px);
-  top: 5%;
-  right: 4%;
-  .top-handle {
-    @include window-handle();
-    .settings-title {
-      @include window-title();
-    }
-    app-clickable-x {
-      float: right;
-    }
-  }
+app-draggable-window{
   .settings-content {
     @include window-content();
     .tree-dimensions {
@@ -141,8 +129,5 @@
         }
       }
     }
-  }
-  .bottom-field {
-    @include window-bottom();
   }
 }

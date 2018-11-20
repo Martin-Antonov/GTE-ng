@@ -1,19 +1,7 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-.shortcuts-container {
-  @include window(650px, 700px);
-  top: 10%;
-  left: calc(50% - 325px);
-  .top-handle {
-    @include window-handle();
-    .shortcuts-title {
-      @include window-title();
-    }
-    app-clickable-x {
-      float: right;
-    }
-  }
+app-draggable-window{
   .shortcuts-content {
     @include window-content();
     ul {
@@ -25,15 +13,8 @@
           margin-right: 20px;
           color: cornflowerblue;
         }
-        .explanation {
-
-        }
-
       }
     }
-  }
-  .bottom-field {
-    @include window-bottom();
   }
 }
 

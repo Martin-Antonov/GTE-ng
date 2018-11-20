@@ -283,7 +283,6 @@ export class KeyboardController {
 
 
     this.testButton.onDown.add(() => {
-      this.userActionController.viewExporter.toSVG();
     });
   }
 }

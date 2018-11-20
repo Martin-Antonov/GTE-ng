@@ -1,20 +1,8 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-.strat-form-container {
-  @include window(500px, 500px);
-  top: 5%;
-  right: 2%;
-  .top-handle {
-    @include window-handle();
+app-draggable-window {
 
-    .strat-form-title {
-      @include window-title();
-    }
-    app-clickable-x {
-      float: right;
-    }
-  }
   .solve-button {
     position: absolute;
     bottom: 45px;
@@ -35,27 +23,24 @@
     transform: translateY(-50%);
     color: $grey-text;
   }
-  .bottom-field {
-    @include window-bottom();
-    .zoom-button {
+  .zoom-button {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    margin-right: 2px;
+    &:hover {
+      background-color: $grey3;
+    }
+    img {
       position: relative;
       top: 50%;
-      transform: translateY(-50%);
-      width: 25px;
-      height: 25px;
-      display: inline-block;
-      margin-right: 2px;
-      &:hover {
-        background-color: $grey3;
-      }
-      img {
-        position: relative;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        width: 75%;
-        height: 75%;
-      }
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      width: 75%;
+      height: 75%;
     }
   }
 }

@@ -1,0 +1,42 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+.window-container {
+  position: absolute;
+  @include removeSelection();
+  background: $grey2;
+  font-family: $myriad-pro;
+  color: $grey-text;
+  box-shadow: 3px 3px 16px -1px rgba(0, 0, 0, 0.51);
+
+  .top-handle {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 32px;
+    width: 100%;
+    padding: 5px;
+    .window-title {
+      font-family: $myriad-pro;
+      color: $grey-text;
+      float: left;
+      line-height: 32px;
+    }
+    app-clickable-x {
+      float: right;
+    }
+  }
+  .bottom-field {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 32px;
+    width: 100%;
+    padding-left: 5px;
+  }
+}
+
+
+
+
+

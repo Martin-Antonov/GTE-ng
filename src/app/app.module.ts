@@ -31,6 +31,7 @@ import { ErrorLogComponent } from './shared/components/error-log/error-log.compo
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ClickOutsideModule} from 'ng-click-outside';
 import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.component';
+import { DraggableWindowComponent } from './shared/components/draggable-window/draggable-window.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.com
     SettingsComponent,
     ErrorLogComponent,
     SaveMenuComponent,
+    DraggableWindowComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule, ClickOutsideModule

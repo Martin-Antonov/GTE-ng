@@ -25,10 +25,6 @@ export class ShortcutsComponent implements OnInit {
   ngOnInit() {
   }
 
-  getBody() {
-    return document.getElementsByTagName('BODY')[0];
-  }
-
   close() {
     this.shortcutsButton.clickHandler();
     this.uis.shortcutsActive = false;

@@ -1,10 +1,5 @@
-
-<div class="settings-container" ngDraggable [handle]="dragHandle"
-       [inBounds]="true" [bounds]="this.getBody()">
-    <div #dragHandle class="top-handle">
-      <span class="settings-title">Settings</span>
-      <app-clickable-x (click)="this.close()"></app-clickable-x>
-    </div>
+<app-draggable-window [width]="'500px'" [height]="'600px'" [isResizeable]="false" [top]="'5%'" [right]="'4%'"
+                      (closeCallback)="this.close()" [title]="'Settings'">
     <div class="settings-content">
       <form #settingsForm="ngForm" autocomplete="off">
         <div class="tree-dimensions">
@@ -36,6 +31,4 @@
         </div>
       </form>
     </div>
-    <div class="bottom-field">
-    </div>
-</div>
+</app-draggable-window>

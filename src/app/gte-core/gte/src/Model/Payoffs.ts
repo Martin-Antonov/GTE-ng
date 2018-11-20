@@ -59,6 +59,12 @@ export class Payoffs {
     }
   }
 
+  multiply(number: number) {
+    for (let i = 0; i < this.outcomes.length; i++) {
+      this.outcomes[i] *= number;
+    }
+  }
+
   /**A helper method for the visual representation of outcomes. Uses an external library mathjs.*/
   round() {
     for (let i = 0; i < this.outcomes.length; i++) {
@@ -76,7 +82,7 @@ export class Payoffs {
   }
 
   /**A method which returns true if all responses are best responses*/
-  isEquilibrium(){
+  isEquilibrium() {
     return this.isBestResponce[0] && this.isBestResponce[1] && this.isBestResponce[2] && this.isBestResponce[3];
   }
 

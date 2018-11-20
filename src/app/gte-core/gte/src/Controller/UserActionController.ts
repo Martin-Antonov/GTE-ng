@@ -13,6 +13,7 @@ import {LabelInputHandler} from '../Utils/LabelInputHandler';
 import {TreeViewProperties} from '../View/TreeViewProperties';
 import {CutSpriteHandler} from '../Utils/CutSpriteHandler';
 import {ViewExporter} from '../Utils/ViewExporter';
+import {MoveView} from '../View/MoveView';
 
 export class UserActionController {
   game: Phaser.Game;
@@ -242,7 +243,7 @@ export class UserActionController {
     else if (this.selectedNodes.length > 0) {
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
     }
-    else{
+    else {
       return;
     }
     this.checkCreateStrategicForm();
@@ -353,6 +354,28 @@ export class UserActionController {
       m.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
     });
     this.treeController.treeView.drawISets();
+  }
+
+  calculateSPNE() {
+    try {
+      let clonedTree = this.treeParser.parse(this.treeParser.stringify(this.treeController.tree));
+      this.treeController.tree.backwardInduction(clonedTree);
+      this.treeController.treeView.moves.forEach((mV: MoveView) => {
+        if (mV.move.isBestInductionMove) {
+          mV.tint = mV.from.circle.tint;
+        }
+        else {
+          mV.alpha = 0.3;
+        }
+      });
+      while (clonedTree.nodes.length !== 0) {
+        clonedTree.removeNode(clonedTree.nodes[0]);
+      }
+      clonedTree = null;
+    }
+    catch (err) {
+      this.errorSignal.dispatch(err);
+    }
   }
 
   checkCreateStrategicForm() {

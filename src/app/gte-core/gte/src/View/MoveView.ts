@@ -42,6 +42,9 @@ export class MoveView extends Phaser.Sprite {
   updateMovePosition() {
     this.rotation = Phaser.Point.angle(this.from.position, this.to.position) + Math.PI / 2;
     this.height = Phaser.Point.distance(this.from.position, this.to.position);
+    this.alpha = 1;
+    this.tint = 0x000000;
+    this.move.isBestInductionMove=false;
   }
 
   updateLabel(fractionOn: boolean, levelHeight: number) {

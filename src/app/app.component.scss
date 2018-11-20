@@ -17,12 +17,15 @@
     z-index: 2;
   }
   app-top-menu {
+    z-index:3;
     grid-area: g-top;
   }
   app-bottom-menu {
+    z-index:3;
     grid-area: g-bottom;
   }
   app-gte-core {
+    z-index:1;
     grid-area: g-middle;
     .ng-resizable-diagonal{
       border-bottom: 12px solid $grey1;

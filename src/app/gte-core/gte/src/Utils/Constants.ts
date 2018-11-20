@@ -15,7 +15,7 @@ export const PAYOFF_SIZE = 1;
 export const HOVER_COLOR = 0x555555;
 export const HOVER_CHILDREN_COLOR = 0xaaaaaa;
 export const NODE_SELECTED_COLOR = 0x004991;
-export const PLAYER_COLORS = [0xff0000, 0x0000ff, 0x00ff00, 0xff00ff];
+export const PLAYER_COLORS = [0xff0000, 0x0000ff, 0x00bb00, 0xff00ff];
 export const NODES_MANUAL_POS_ERROR_TEXT = 'Only a single selected node can be moved!';
 export const NODES_VERTICAL_STEP_POSITIONING = 0.5;
 export const NODES_HORIZONTAL_STEP_POSITIONING = 0.5;
@@ -26,13 +26,18 @@ export const SELECTION_BORDER_COLOR = 0x000fff;
 export const PREVIEW_CIRCLE_COLOR = 0xff0000;
 export const OVERLAY_SCALE = 3;
 
-// ISets
+// Errors
 export const SAME_PATH_ON_ROOT_ERROR_TEXT = 'Cannot create an information set for nodes which share a path to the root.';
 export const NODES_CONTAIN_CHANCE_PLAYER = 'Cannot create an information set for node(s) which are owned by a chance player.';
 export const NODES_MISSING_PLAYERS_ERROR_TEXT = 'Cannot create an information set for nodes which do not have player assigned.';
 export const NODES_DIFFERENT_PLAYERS_ERROR_TEXT = 'Cannot create an information set for nodes which have different players.';
-export const NODES_NUMBER_OF_CHILDREN_ERROR_TEXT = 'Cannot create an information set for nodes which have different number of children or are leaves.';
+export const NODES_NUMBER_OF_CHILDREN_ERROR_TEXT = 'Cannot create an information set for nodes which have different number of ' +
+  'children or are leaves.';
 export const IMPERFECT_RECALL_ERROR_TEXT = 'The game tree does not have perfect recall';
+export const BACKWARDS_INDUCTION_NOT_ALL_LABELED = 'Not all nodes have a player assigned';
+export const BACKWARDS_INDUCTION_PERFECT_INFORMATION = 'Cannot calculate SPNE for games with imperfect information.';
+
+// ISets
 export const ISET_LINE_WIDTH = 0.05;
 
 // Hover Button Colors

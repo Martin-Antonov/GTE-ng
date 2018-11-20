@@ -1,20 +1,7 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-.solver-container {
-  @include window(600px, 600px);
-  top: 5%;
-  left: 12%;
-  .top-handle {
-    @include window-handle();
-    app-clickable-x {
-      float: right;
-    }
-    .solver-title {
-      @include window-title();
-    }
-  }
-
+app-draggable-window {
   .solver-content {
     @include window-content();
     overflow: scroll;
@@ -30,6 +17,10 @@
       -ms-user-select: text;
       user-select: text;
       font-family: $inconsolata;
+    }
+
+    div {
+      text-align: center;
     }
   }
 }

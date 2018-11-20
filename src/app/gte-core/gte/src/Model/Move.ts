@@ -10,12 +10,14 @@ export class Move {
   label: string;
   probability: number;
   manuallyAssigned: boolean;
+  isBestInductionMove: boolean;
 
   constructor(from?: Node, to?: Node) {
     this.from = from;
     this.to = to;
     this.label = '';
     this.manuallyAssigned = false;
+    this.isBestInductionMove = false;
   }
 
   /**Converts the Move to a labeled Move */
