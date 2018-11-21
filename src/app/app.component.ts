@@ -17,6 +17,13 @@ export class AppComponent {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
+
+    // confirm on reload page
+    window.addEventListener('beforeunload', function (e) {
+      let confirmationMessage = '';
+      e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+      return confirmationMessage;              // Gecko, WebKit, Chrome <34
+    });
   }
 
   resizeMiddleElement() {

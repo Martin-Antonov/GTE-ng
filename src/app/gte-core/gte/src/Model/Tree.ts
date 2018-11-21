@@ -481,6 +481,10 @@ export class Tree {
         }
       });
 
+      parentNodes.sort((x: Node, y: Node) => {
+        return x.depth > y.depth ? -1 : 1;
+      });
+
       parentNodes.forEach((n: Node) => {
         if (n.type === NodeType.CHANCE) {
           n.payoffs.outcomes = [0, 0, 0, 0];
