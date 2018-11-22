@@ -1,14 +1,12 @@
 /**A class for handling the Undo/Redo functionality */
 import {TreeController} from './TreeController';
 import {Tree} from '../Model/Tree';
-import {TreeParser} from '../Utils/TreeParser';
 import {NodeView} from '../View/NodeView';
 
 export class UndoRedoController {
   treeController: TreeController;
   treesList: Array<Tree>;
   currentTreeIndex: number;
-  treeParser: TreeParser;
   treeCoordinatesList: Array<Array<{ x: number, y: number }>>;
 
   constructor(treeController: TreeController) {
@@ -16,8 +14,7 @@ export class UndoRedoController {
     this.treesList = [];
     this.treeCoordinatesList = [];
     this.currentTreeIndex = 0;
-    this.treeParser = new TreeParser();
-    this.treesList.push(this.treeParser.parse(this.treeParser.stringify(this.treeController.tree)));
+    this.treesList.push(this.treeController.treeParser.parse(this.treeController.treeParser.stringify(this.treeController.tree)));
   }
 
   /**Undo-Redo method */
@@ -31,14 +28,14 @@ export class UndoRedoController {
     else {
       return;
     }
-    let newTree = this.treeParser.parse(this.treeParser.stringify(this.treesList[this.currentTreeIndex]));
+    let newTree = this.treeController.treeParser.parse(this.treeController.treeParser.stringify(this.treesList[this.currentTreeIndex]));
 
     this.treeController.reloadTreeFromJSON(newTree, this.treeCoordinatesList[this.currentTreeIndex]);
   }
 
   saveNewTree(saveCoordinates?: boolean) {
     this.treesList.splice(this.currentTreeIndex + 1, this.treesList.length);
-    this.treesList.push(this.treeParser.parse(this.treeParser.stringify(this.treeController.tree)));
+    this.treesList.push(this.treeController.treeParser.parse(this.treeController.treeParser.stringify(this.treeController.tree)));
     if (saveCoordinates) {
       const coordsArray = [];
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {

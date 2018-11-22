@@ -1,15 +1,14 @@
 <app-draggable-window [width]="'500px'" [height]="'500px'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
                       (closeCallback)="this.close()" [title]="'Strategic Form'">
-  <app-strategic-form-table [stratFormScaleCSS]="this.stratFormScaleCSS"></app-strategic-form-table>
+  <app-strategic-form-table *ngIf="this.userActionController && this.userActionController.strategicForm"
+                            [stratFormScaleCSS]="this.stratFormScaleCSS"></app-strategic-form-table>
 
-  <ng-container>
-    <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm"
-         (click)="postFromStrategicForm()">Solve
-    </div>
-    <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">
-      Strategic form not available...
-    </div>
-  </ng-container>
+  <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm"
+       (click)="postFromStrategicForm()">Solve
+  </div>
+  <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">
+    Strategic form not available...
+  </div>
 
   <ng-container bottom>
     <div class="zoom-button">

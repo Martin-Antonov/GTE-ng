@@ -9,6 +9,8 @@ import {NodeView} from '../View/NodeView';
 import {ISetView} from '../View/ISetView';
 import {ISet} from '../Model/ISet';
 import {Node} from '../Model/Node';
+import {MoveView} from '../View/MoveView';
+import {TreeParser} from '../Utils/TreeParser';
 
 
 /**A class which connects the TreeView and the Tree Model.
@@ -25,14 +27,17 @@ export class TreeController {
   // A signal for the external UndoRedoController to save the current tree
   treeChangedSignal: Phaser.Signal;
   iSetClickedSignal: Phaser.Signal;
+  treeParser: TreeParser;
 
   constructor(game: Phaser.Game) {
     this.game = game;
-    this.setCircleBitmapData(1);
-    this.createInitialTree();
+    this.treeParser = new TreeParser();
     this.labelInputSignal = new Phaser.Signal();
     this.treeChangedSignal = new Phaser.Signal();
     this.iSetClickedSignal = new Phaser.Signal();
+    this.setCircleBitmapData(1);
+    this.createInitialTree();
+
   }
 
   /**A method which creates the initial 3-node tree in the scene*/
@@ -358,6 +363,25 @@ export class TreeController {
   resetTree(fullReset: boolean, startAnimations: boolean) {
     this.treeView.drawTree(fullReset, startAnimations);
 
+  }
+
+  /**A method for calculating SPNE with backwards induction*/
+  calculateSPNE(){
+    let clonedTree = this.treeParser.parse(this.treeParser.stringify(this.tree));
+    this.tree.backwardInduction(clonedTree);
+    this.treeView.moves.forEach((mV: MoveView) => {
+      if (mV.move.isBestInductionMove) {
+        mV.tint = mV.from.node.player.color;
+      }
+      else {
+        mV.alpha = 0.3;
+        mV.label.alpha = 0.3;
+      }
+    });
+    while (clonedTree.nodes.length !== 0) {
+      clonedTree.removeNode(clonedTree.nodes[0]);
+    }
+    clonedTree = null;
   }
 
   reloadTreeFromJSON(newTree: Tree, treeCoordinates?: Array<{ x: number, y: number }>) {

@@ -7,13 +7,14 @@ import {MoveView} from '../View/MoveView';
 import {ISetView} from '../View/ISetView';
 import * as SVG from 'svg.js';
 import {ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH} from './Constants';
+import {TreeController} from '../Controller/TreeController';
 
 
 export class ViewExporter {
-  treeView: TreeView;
+  treeController: TreeController;
 
-  constructor(treeView: TreeView) {
-    this.treeView = treeView;
+  constructor(treeController: TreeController) {
+    this.treeController = treeController;
   }
 
   toFig() {
@@ -34,10 +35,10 @@ export class ViewExporter {
       '1200 2\n' +
       '#nodes\n';
     // Nodes first
-    this.treeView.nodes.forEach((nV: NodeView) => {
+    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
         // Calculate color from player based on the colour codes.
-        let playerIndex = this.treeView.tree.players.indexOf(nV.node.player);
+        let playerIndex = this.treeController.treeView.tree.players.indexOf(nV.node.player);
         let color = this.getColorFromPlayerIndex(playerIndex);
         // ellipse, type circle, line type, line width, pen color, fill color
         let pre = '1 3 0 0 ' + color + ' ' + color + ' ';
@@ -84,7 +85,7 @@ export class ViewExporter {
       else if (nV.node.type === NodeType.LEAF) {
         let maxNumberOfDigits = 0;
         let outcomes = nV.node.payoffs.outcomes;
-        outcomes.splice(this.treeView.tree.players.length - 1, 10);
+        outcomes.splice(this.treeController.treeView.tree.players.length - 1, 10);
         outcomes.forEach((payoff: number) => {
           let numberOfDigits = this.getDigitLength(payoff);
           if (maxNumberOfDigits < numberOfDigits) {
@@ -112,10 +113,10 @@ export class ViewExporter {
 
     result += '#moves\n';
     // Moves
-    this.treeView.moves.forEach((mV: MoveView) => {
+    this.treeController.treeView.moves.forEach((mV: MoveView) => {
       // line, polyline, line style, thickness, pen color, fill color
       let pre = '2 1 0 4 0 0 ';
-      let playerIndex = this.treeView.tree.players.indexOf(mV.from.node.player);
+      let playerIndex = this.treeController.treeView.tree.players.indexOf(mV.from.node.player);
       let depth = (60 + playerIndex) + ' ';
       let post = '0 -1 5.000 0 0 -1 0 0 2 ';
       let coordsFrom = '\n' + Math.round(mV.from.x * factor) + ' ' + Math.round(mV.from.y * factor) + ' ';
@@ -135,10 +136,10 @@ export class ViewExporter {
 
     result += '#isets\n';
 
-    this.treeView.iSets.forEach((iSetV: ISetView) => {
+    this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
       let firstNode = iSetV.nodes[0];
       let lastNode = iSetV.nodes[iSetV.nodes.length - 1];
-      let playerIndex = this.treeView.tree.players.indexOf(iSetV.iSet.player);
+      let playerIndex = this.treeController.treeView.tree.players.indexOf(iSetV.iSet.player);
       let color = this.getColorFromPlayerIndex(playerIndex);
       // line, type arc-box, default style and thickness
       let pre = '2 4 0 3 ' + color + ' ' + color + ' ';
@@ -230,10 +231,10 @@ export class ViewExporter {
   }
 
   toSVG() {
-    let draw = SVG('svg-export').size(this.treeView.game.width, this.treeView.game.height);
+    let draw = SVG('svg-export').size(this.treeController.treeView.game.width, this.treeController.treeView.game.height);
 
 
-    this.treeView.nodes.forEach((nV: NodeView) => {
+    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
         draw.circle(nV.circle.width).attr({fill: Phaser.Color.getWebRGB(nV.circle.tint), 'stroke-width': 0}).center(nV.x, nV.y);
         if (nV.node.iSet === null) {
@@ -260,7 +261,7 @@ export class ViewExporter {
           let payoffsShown = nV.payoffsLabel.text.split('\n');
           for (let i = 0; i < payoffsShown.length; i++) {
             let payoff = payoffsShown[i];
-            add.tspan(payoff).fill(Phaser.Color.getWebRGB(this.treeView.tree.players[i + 1].color)).newLine();
+            add.tspan(payoff).fill(Phaser.Color.getWebRGB(this.treeController.treeView.tree.players[i + 1].color)).newLine();
           }
         }).move(nV.payoffsLabel.x + nV.payoffsLabel.width / 2, nV.payoffsLabel.y).font({
           anchor: 'end',
@@ -269,10 +270,10 @@ export class ViewExporter {
       }
     });
 
-    this.treeView.moves.forEach((mV: MoveView) => {
+    this.treeController.treeView.moves.forEach((mV: MoveView) => {
       draw.line(mV.from.x, mV.from.y, mV.to.x, mV.to.y).attr({
         stroke: '#000',
-        'stroke-width': Math.round(this.treeView.game.height * LINE_WIDTH)
+        'stroke-width': Math.round(this.treeController.treeView.game.height * LINE_WIDTH)
       }).back();
       draw.text(mV.label.text).move(mV.label.x - mV.label.width / 2, mV.label.y - mV.label.height).fill(mV.label.fill)
         .font({
@@ -282,7 +283,7 @@ export class ViewExporter {
         });
     });
 
-    this.treeView.iSets.forEach((iSetV: ISetView) => {
+    this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
       let pointCoords = [];
       iSetV.nodes.forEach((nV: NodeView) => {
         pointCoords.push(nV.x);
@@ -294,7 +295,7 @@ export class ViewExporter {
       draw.polyline(pointCoords).attr({
         stroke: Phaser.Color.getWebRGB(iSetV.tint),
         opacity: 0.15,
-        'stroke-width': this.treeView.game.height * ISET_LINE_WIDTH,
+        'stroke-width': this.treeController.treeView.game.height * ISET_LINE_WIDTH,
         'stroke-linecap': 'round',
         'stroke-linejoin': 'round'
       }).fill('none');

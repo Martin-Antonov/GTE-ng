@@ -45,7 +45,7 @@ export class TreesFileService {
       this.saveCurrentTree();
       this.userActionController.emptySelectedNodes();
       this.userActionController.treeController.reloadTreeFromJSON(
-        this.userActionController.undoRedoController.treeParser.parse(this.treeTabs[index].currentTree),
+        this.userActionController.treeController.treeParser.parse(this.treeTabs[index].currentTree),
         this.treeTabs[index].coordsList
       );
       this.currentTabIndex = index;
@@ -68,7 +68,7 @@ export class TreesFileService {
     }
     this.userActionController.emptySelectedNodes();
     this.userActionController.treeController.reloadTreeFromJSON(
-      this.userActionController.undoRedoController.treeParser.parse(this.treeTabs[this.currentTabIndex].currentTree)
+      this.userActionController.treeController.treeParser.parse(this.treeTabs[this.currentTabIndex].currentTree)
     );
   }
 
@@ -78,7 +78,7 @@ export class TreesFileService {
     currentFile.coordsList = [];
 
     // Stringify and save current tree
-    currentFile.currentTree = undoRedoController.treeParser
+    currentFile.currentTree = this.userActionController.treeController.treeParser
       .stringify(undoRedoController.treeController.tree);
 
     // Save the coordinates if any
@@ -133,6 +133,6 @@ export class TreesFileService {
     let newTree = JSON.parse(text);
     this.treeTabs.push(newTree);
     this.changeToTree(this.treeTabs.length - 1);
-    this.userActionController.viewExporter.treeView = this.userActionController.treeController.treeView;
+    // this.userActionController.viewExporter.treeView = this.userActionController.treeController.treeView;
   }
 }

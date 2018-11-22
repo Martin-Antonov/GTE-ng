@@ -6,7 +6,6 @@ import {UndoRedoController} from './UndoRedoController';
 import {NodeView} from '../View/NodeView';
 import {SelectionRectangle} from '../Utils/SelectionRectangle';
 import {ISetView} from '../View/ISetView';
-import {TreeParser} from '../Utils/TreeParser';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
 import {ISet} from '../Model/ISet';
 import {LabelInputHandler} from '../Utils/LabelInputHandler';
@@ -31,7 +30,6 @@ export class UserActionController {
   selectionRectangle: SelectionRectangle;
   backgroundInputSprite: Phaser.Sprite;
 
-  treeParser: TreeParser;
   viewExporter: ViewExporter;
 
   private resizeLocked: boolean;
@@ -39,8 +37,7 @@ export class UserActionController {
   constructor(game: Phaser.Game, treeController: TreeController) {
     this.game = game;
     this.treeController = treeController;
-    this.treeParser = new TreeParser();
-    this.viewExporter = new ViewExporter(this.treeController.treeView);
+    this.viewExporter = new ViewExporter(this.treeController);
     this.undoRedoController = new UndoRedoController(this.treeController);
     this.selectedNodes = [];
 
@@ -253,7 +250,7 @@ export class UserActionController {
   /**A method for assigning undo/redo functionality (keyboard ctrl/shift + Z)*/
   undoRedoHandler(undo: boolean) {
     this.undoRedoController.changeTreeInController(undo);
-    this.viewExporter.treeView = this.treeController.treeView;
+    // this.viewExporter.treeView = this.treeController.treeView;
     this.emptySelectedNodes();
     this.checkCreateStrategicForm();
   }
@@ -358,21 +355,7 @@ export class UserActionController {
 
   calculateSPNE() {
     try {
-      let clonedTree = this.treeParser.parse(this.treeParser.stringify(this.treeController.tree));
-      this.treeController.tree.backwardInduction(clonedTree);
-      this.treeController.treeView.moves.forEach((mV: MoveView) => {
-        if (mV.move.isBestInductionMove) {
-          mV.tint = mV.from.circle.tint;
-        }
-        else {
-          mV.alpha = 0.3;
-          mV.label.alpha = 0.3;
-        }
-      });
-      while (clonedTree.nodes.length !== 0) {
-        clonedTree.removeNode(clonedTree.nodes[0]);
-      }
-      clonedTree = null;
+      this.treeController.calculateSPNE();
     }
     catch (err) {
       this.errorSignal.dispatch(err);
