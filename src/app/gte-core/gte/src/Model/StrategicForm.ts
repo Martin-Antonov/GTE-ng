@@ -5,6 +5,7 @@ import {Node, NodeType} from './Node';
 import {Tree} from './Tree';
 import {Payoffs} from './Payoffs';
 import {ISet} from './ISet';
+import {StrategicFormSerializer} from '../Utils/StrategicFormSerializer';
 
 export class StrategicForm {
   tree: Tree;
@@ -34,9 +35,11 @@ export class StrategicForm {
   private reachableP3Rows: Array<number>;
   private reachableP4Cols: Array<number>;
 
+  serializer: StrategicFormSerializer;
+
   constructor(tree: Tree) {
     this.tree = tree;
-
+    this.serializer = new StrategicFormSerializer(this);
     this.generateStrategicForm();
   }
 
@@ -322,18 +325,6 @@ export class StrategicForm {
         for (let j = 0; j < colsP2Length; j++) {
           for (let k = 0; k < rowsP3Length; k++) {
             for (let l = 0; l < colsP4Length; l++) {
-              // if (this.reachableP1Rows.length !== 0 && this.reachableP2Cols.length !== 0) {
-              //   this.payoffsMatrix[this.reachableP1Rows[i]][this.reachableP2Cols[j]].add(payoffsToAdd);
-              // }
-              // else if (this.reachableP1Rows.length !== 0 && this.reachableP2Cols.length === 0) {
-              //   this.payoffsMatrix[this.reachableP1Rows[i]][j].add(payoffsToAdd);
-              // }
-              // else if (this.reachableP1Rows.length === 0 && this.reachableP2Cols.length !== 0) {
-              //   this.payoffsMatrix[i][this.reachableP2Cols[j]].add(payoffsToAdd);
-              // }
-              // else {
-              //   this.payoffsMatrix[i][j].add(payoffsToAdd);
-              // }
               let p1Index = this.reachableP1Rows.length !== 0 ? this.reachableP1Rows[i] : i;
               let p2Index = this.reachableP2Cols.length !== 0 ? this.reachableP2Cols[j] : j;
               let p3Index = this.reachableP3Rows.length !== 0 ? this.reachableP3Rows[k] : k;

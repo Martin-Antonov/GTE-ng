@@ -45,5 +45,12 @@ export class UndoRedoController {
     }
     this.currentTreeIndex++;
   }
+
+  destroy() {
+    this.treeController = null;
+    this.currentTreeIndex = null;
+    this.treeCoordinatesList = null;
+    this.treesList = null;
+  }
 }
 

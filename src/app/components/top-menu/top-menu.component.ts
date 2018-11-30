@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
 import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../services/ui-settings/ui-settings.service';
 import {TreesFileService} from '../../services/trees-file/trees-file.service';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-top-menu',
@@ -16,11 +17,25 @@ export class TopMenuComponent implements OnInit {
   userActionController: UserActionController;
   tooltips: ITooltips;
   logoSrc: string;
-
   strategicFormActive: boolean;
 
+  @ViewChild('loadInput') loadFileField;
+
   constructor(private uac: UserActionControllerService, public tts: TooltipsService,
-              public uis: UiSettingsService, private tfs: TreesFileService) {
+              public uis: UiSettingsService, private tfs: TreesFileService, private hotkeys: HotkeysService) {
+
+    this.hotkeys.add(new Hotkey('alt+n', (event: KeyboardEvent): boolean => {
+      this.createNewTree();
+      return false;
+    }));
+    this.hotkeys.add(new Hotkey('alt+s', (event: KeyboardEvent): boolean => {
+      this.uis.saveFileActive = !this.uis.saveFileActive;
+      return false;
+    }));
+    this.hotkeys.add(new Hotkey('alt+o', (): boolean => {
+      this.loadFileField.nativeElement.click();
+      return false;
+    }));
   }
 
   ngOnInit() {
@@ -66,16 +81,8 @@ export class TopMenuComponent implements OnInit {
     this.tfs.addNewTree();
   }
 
-  saveTreeToFile() {
-    this.tfs.saveTreeToFile();
-  }
-
   loadTreeFromFile() {
     this.tfs.loadTreeFromFile();
-  }
-
-  saveToImage() {
-    this.tfs.saveTreeToImage();
   }
 
   closeSaveFile() {

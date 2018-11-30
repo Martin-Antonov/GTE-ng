@@ -114,7 +114,7 @@ export class KeyboardController {
   attachHandlersToKeys() {
     // Add Children
     this.nKey.onDown.add(() => {
-      if (!this.controlKey.isDown && !this.altKey.isDown) {
+      if (!this.controlKey.isDown && !this.altKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.addNodesHandler();
       }
     });
@@ -128,7 +128,9 @@ export class KeyboardController {
       this.userActionController.deleteNodeHandler();
     });
     this.dKey.onDown.add(() => {
-      this.userActionController.deleteNodeHandler();
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.deleteNodeHandler();
+      }
     });
     this.numMinusKey.onDown.add(() => {
       this.userActionController.deleteNodeHandler();
@@ -138,51 +140,63 @@ export class KeyboardController {
     this.playersKeys.forEach((k: Phaser.Key) => {
       let playerID = this.playersKeys.indexOf(k) + 1;
       k.onDown.add(() => {
-        this.userActionController.assignPlayerToNodeHandler(playerID);
+        if (!this.userActionController.labelInput.active) {
+          this.userActionController.assignPlayerToNodeHandler(playerID);
+        }
       });
     });
     this.zeroKey.onDown.add(() => {
-      this.userActionController.assignChancePlayerToNodeHandler();
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.assignChancePlayerToNodeHandler();
+      }
     });
 
     // Create an information set
     this.iKey.onDown.add(() => {
-      if (!this.controlKey.isDown && !this.altKey.isDown) {
+      if (!this.controlKey.isDown && !this.altKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.createISetHandler();
       }
     });
 
     // Undo and redo
     this.zKey.onDown.add(() => {
-      if (this.controlKey.isDown && !this.shiftKey.isDown) {
+      if (this.controlKey.isDown && !this.shiftKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(true);
       }
-      if (this.controlKey.isDown && this.shiftKey.isDown) {
+      if (this.controlKey.isDown && this.shiftKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(false);
       }
     });
 
     this.uKey.onDown.add(() => {
-      this.userActionController.undoRedoHandler(true);
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.undoRedoHandler(true);
+      }
     });
 
     this.rKey.onDown.add(() => {
-      this.userActionController.undoRedoHandler(false);
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.undoRedoHandler(false);
+      }
     });
 
     this.yKey.onDown.add(() => {
-      if (this.controlKey.isDown) {
+      if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(false);
       }
     });
     // Remove information set
     this.sKey.onDown.add(() => {
-      this.userActionController.removeISetsByNodesHandler();
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.removeISetsByNodesHandler();
+      }
     });
 
     // Cut information set
     this.cKey.onDown.add(() => {
-      this.userActionController.initiateCutSpriteHandler();
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.initiateCutSpriteHandler();
+      }
     });
 
     // Change to the next label

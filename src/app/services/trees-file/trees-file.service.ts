@@ -3,6 +3,8 @@ import {UserActionControllerService} from '../user-action-controller/user-action
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
 import {TreeFile} from './TreeFile';
 import {saveAs} from 'file-saver';
+import {UiSettingsService} from '../ui-settings/ui-settings.service';
+import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedoController';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,11 @@ export class TreesFileService {
   treeTabs: Array<TreeFile>;
   currentTabIndex: number;
 
-  constructor(private uac: UserActionControllerService) {
+  constructor(private uac: UserActionControllerService, private uis: UiSettingsService) {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
+
     this.treeTabs = [];
   }
 
@@ -34,10 +37,8 @@ export class TreesFileService {
     this.treeTabs.push(newTree);
     this.currentTabIndex = this.treeTabs.length - 1;
     this.userActionController.createNewTree();
-    this.userActionController.undoRedoController.treesList = [];
-    this.userActionController.undoRedoController.treeCoordinatesList = [];
-    this.userActionController.undoRedoController.currentTreeIndex = 0;
-
+    this.userActionController.undoRedoController.destroy();
+    this.userActionController.undoRedoController = new UndoRedoController(this.userActionController.treeController);
   }
 
   changeToTree(index: number) {
@@ -50,6 +51,10 @@ export class TreesFileService {
       );
       this.currentTabIndex = index;
       this.userActionController.checkCreateStrategicForm();
+      this.userActionController.undoRedoController.destroy();
+      this.userActionController.undoRedoController = new UndoRedoController(this.userActionController.treeController);
+      this.userActionController.undoRedoController.currentTreeIndex = this.treeTabs[index].urCurrentTreeIndex;
+      this.userActionController.undoRedoController.treesList = this.treeTabs[index].urTreesList;
     }
   }
 
@@ -59,7 +64,7 @@ export class TreesFileService {
       return;
     }
 
-    this.treeTabs.splice(index, 1);
+    let closedTree = this.treeTabs.splice(index, 1);
     if (index !== 0) {
       this.currentTabIndex = index - 1;
     }
@@ -70,6 +75,9 @@ export class TreesFileService {
     this.userActionController.treeController.reloadTreeFromJSON(
       this.userActionController.treeController.treeParser.parse(this.treeTabs[this.currentTabIndex].currentTree)
     );
+
+    closedTree[0].destroy();
+    closedTree = null;
   }
 
   private saveCurrentTree() {
@@ -87,6 +95,8 @@ export class TreesFileService {
         currentFile.coordsList.push({x: coords.x, y: coords.y});
       });
     }
+    currentFile.urTreesList = undoRedoController.treesList.slice(0);
+    currentFile.urCurrentTreeIndex = undoRedoController.currentTreeIndex;
   }
 
   saveTreeToFile() {
@@ -96,9 +106,9 @@ export class TreesFileService {
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.gte');
   }
 
-  saveTreeToFig(){
+  saveTreeToFig() {
     let figFile = this.userActionController.viewExporter.toFig();
-    let blob = new Blob([figFile], {type: 'text/plain;charset=utf-8'});
+    let blob = new Blob([figFile], {type: 'text/plain;charset=us-ascii'});
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.fig');
   }
 
@@ -111,10 +121,15 @@ export class TreesFileService {
     }, 100);
   }
 
-  saveTreeToSVG(){
+  saveTreeToSVG() {
     let svgFile = this.userActionController.viewExporter.toSVG();
     let blob = new Blob([svgFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.svg');
+  }
+
+  saveStrategicForm() {
+    let stratFormFile = this.userActionController.strategicForm.serializer.toText(this.treeTabs[this.currentTabIndex].fileName);
+    console.log(stratFormFile);
   }
 
   loadTreeFromFile() {
@@ -133,6 +148,5 @@ export class TreesFileService {
     let newTree = JSON.parse(text);
     this.treeTabs.push(newTree);
     this.changeToTree(this.treeTabs.length - 1);
-    // this.userActionController.viewExporter.treeView = this.userActionController.treeController.treeView;
   }
 }

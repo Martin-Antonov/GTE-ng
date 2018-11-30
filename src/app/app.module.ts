@@ -32,6 +32,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ClickOutsideModule} from 'ng-click-outside';
 import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.component';
 import { DraggableWindowComponent } from './shared/components/draggable-window/draggable-window.component';
+import {HotkeyModule} from 'angular2-hotkeys';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { DraggableWindowComponent } from './shared/components/draggable-window/d
     DraggableWindowComponent,
   ],
   imports: [
-    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule, ClickOutsideModule
+    BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule,
+    ClickOutsideModule, HotkeyModule.forRoot()
   ],
   providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService, ShortcutsService],
   bootstrap: [AppComponent]

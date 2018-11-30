@@ -2,7 +2,6 @@ export interface ITooltips {
   new_tree: string;
   save_tree: string;
   load_tree: string;
-  save_image: string;
   undo: string;
   redo: string;
   plus: string;

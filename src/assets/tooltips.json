@@ -1,8 +1,7 @@
 {
-  "new_tree": "Create a new tree   (Ctrl+N - not working)",
-  "save_tree": "Save tree to file   (Ctrl+S - not working)",
-  "load_tree": "Load tree to file   (Ctrl+O - not working)",
-  "save_image": "Save tree as an Image   (Ctrl+Shift+S - not working)",
+  "new_tree": "Create a new tree   (Alt+N)",
+  "save_tree": "Save tree to file   (Alt+S)",
+  "load_tree": "Load tree to file   (Alt+O)",
   "undo": "Undo action   (Ctrl+Z/U)",
   "redo": "Redo action   (Ctrl+Shift+Z/Ctrl+Y/R)",
   "plus": "Add nodes   (N/Num+)",

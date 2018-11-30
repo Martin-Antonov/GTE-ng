@@ -67,10 +67,12 @@ export class StrategicFormTableComponent implements OnInit {
     }
 
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[0] && this.uis.bestResponsesActive) {
-      style['background'] = 'rgba(255,0,0,0.15)';
+      // style['background'] = 'rgba(255,0,0,0.15)';
       style['font-weight'] = '900';
-      style['text-decoration'] = 'underline';
+      // style['text-decoration'] = 'underline';
+      style['border-bottom'] = '2px solid red';
     }
+
     return style;
   }
 
@@ -91,9 +93,10 @@ export class StrategicFormTableComponent implements OnInit {
     }
 
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[1] && this.uis.bestResponsesActive) {
-      style['background'] = 'rgba(0,0,255,0.15)';
+      // style['background'] = 'rgba(0,0,255,0.15)';
       style['font-weight'] = '900';
-      style['text-decoration'] = 'underline';
+      // style['text-decoration'] = 'underline';
+      style['border-bottom'] = '2px solid blue';
     }
 
     return style;
@@ -111,9 +114,10 @@ export class StrategicFormTableComponent implements OnInit {
 
     }
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[2] && this.uis.bestResponsesActive) {
-      style['background'] = 'rgba(0,255,0,0.15)';
+      // style['background'] = 'rgba(0,255,0,0.15)';
       style['font-weight'] = '900';
-      style['text-decoration'] = 'underline';
+      // style['text-decoration'] = 'underline';
+      style['border-bottom'] = '2px solid #00bb00';
     }
     return style;
   }
@@ -121,9 +125,10 @@ export class StrategicFormTableComponent implements OnInit {
   getP4PayoffStyle(i: number, j: number, k: number, l: number) {
     let style = {};
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[3] && this.uis.bestResponsesActive) {
-      style['background'] = 'rgba(255,0,255,0.15)';
+      // style['background'] = 'rgba(255,0,255,0.15)';
       style['font-weight'] = '900';
-      style['text-decoration'] = 'underline';
+      // style['text-decoration'] = 'underline';
+      style['border-bottom'] = '2px solid #ff00ff';
     }
     return style;
   }

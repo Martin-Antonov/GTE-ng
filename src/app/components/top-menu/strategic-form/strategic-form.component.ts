@@ -3,6 +3,7 @@ import {UserActionController} from '../../../gte-core/gte/src/Controller/UserAct
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
+import {TreesFileService} from '../../../services/trees-file/trees-file.service';
 
 @Component({
   selector: 'app-strategic-form',
@@ -14,7 +15,10 @@ export class StrategicFormComponent implements OnInit {
   stratFormScaleCSS: string;
   private stratFormScale: number;
 
-  constructor(private uac: UserActionControllerService, private uis: UiSettingsService, private solver: SolverService) {
+  constructor(private uac: UserActionControllerService,
+              private uis: UiSettingsService,
+              private solver: SolverService,
+              private tts: TreesFileService) {
   }
 
 
@@ -59,5 +63,9 @@ export class StrategicFormComponent implements OnInit {
 
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
+  }
+
+  saveStrategicForm(){
+    this.tts.saveStrategicForm();
   }
 }

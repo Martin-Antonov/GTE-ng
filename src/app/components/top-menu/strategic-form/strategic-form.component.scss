@@ -3,23 +3,31 @@
 
 app-draggable-window {
 
-  .solve-button {
+  .buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items:center;
     position: absolute;
     bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
-    width: 70px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    background: $grey2;
-    color: $grey-text;
-    @include clickableButton();
+    width:150px;
+    height:50px;
+    .button {
+      width: 70px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      margin: 0 5px;
+      background: $grey2;
+      color: $grey-text;
+      @include clickableButton();
+    }
   }
   .not-available-text {
     position: absolute;
     text-align: center;
-    left:50%;
+    left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     color: $grey-text;

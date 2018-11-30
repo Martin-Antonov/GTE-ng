@@ -3,9 +3,12 @@
   <app-strategic-form-table *ngIf="this.userActionController && this.userActionController.strategicForm"
                             [stratFormScaleCSS]="this.stratFormScaleCSS"></app-strategic-form-table>
 
-  <div class="solve-button" *ngIf="this.userActionController && this.userActionController.strategicForm"
-       (click)="postFromStrategicForm()">Solve
+
+  <div class="buttons-container" *ngIf="this.userActionController && this.userActionController.strategicForm">
+    <div class="button" (click)="this.postFromStrategicForm()">Solve</div>
+    <div class="button" (click)="this.saveStrategicForm()">Save</div>
   </div>
+
   <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">
     Strategic form not available...
   </div>

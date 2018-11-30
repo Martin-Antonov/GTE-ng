@@ -68,5 +68,20 @@
     "command": "Esc / Mouse Click",
     "explanation": "Exit label assignment mode",
     "videoURL": null
+  },
+  {
+    "command": "Alt+N",
+    "explanation": "New tree",
+    "videoURL": null
+  },
+  {
+    "command": "Alt+S",
+    "explanation": "Save tree to file... (.gte, .fig, .svg, .png)",
+    "videoURL": null
+  },
+  {
+    "command": "Alt+O",
+    "explanation": "Load tree from file",
+    "videoURL": null
   }
 ]
