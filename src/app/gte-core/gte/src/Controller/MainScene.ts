@@ -3,8 +3,6 @@
 import {TreeController} from './TreeController';
 import {UserActionController} from './UserActionController';
 import {KeyboardController} from './KeyboardController';
-import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
-import {TreeViewProperties} from '../View/TreeViewProperties';
 import {InitialBitmapsCreator} from '../Utils/InitialBitmapsCreator';
 
 /**A class for the main part of the software. This is the starting point of the core software*/
@@ -14,7 +12,7 @@ export class MainScene extends Phaser.State {
   // User Action Controller handles actions from the user. These actions will be called whenever a keyboard key
   // or a button is pressed. Abstracts the logic of user actions and removes unnecessary code repetition.
   userActionController: UserActionController;
-  // The Keyboard Controller handles input and sends signals and executes methods from the treeController
+  // The Keyboard Controller handles input and sends signals and executes methods from the User Action Controller
   keyboardController: KeyboardController;
 
   preload() {

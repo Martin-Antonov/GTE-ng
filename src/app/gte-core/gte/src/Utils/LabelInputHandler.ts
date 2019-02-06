@@ -25,8 +25,7 @@ export class LabelInputHandler {
     this.leavesDFSOrder = [];
     this.treeController = treeController;
     this.selectTextSignal = new Phaser.Signal();
-    this.treeController.labelInputSignal.add(function () {
-        let sprite: Phaser.Sprite = arguments[0];
+    this.treeController.labelInputSignal.add((sprite: Phaser.Sprite) => {
         this.activate(sprite);
       }, this
     );
@@ -158,7 +157,17 @@ export class LabelInputHandler {
 
   getLabelValue(): string {
     if (this.currentlySelected instanceof MoveView) {
-      return this.currentlySelected.move.label;
+      let moveV = (<MoveView>this.currentlySelected);
+      if (moveV.move.label) {
+        let stringToReturn = moveV.move.label;
+        if (moveV.move.subscript) {
+          stringToReturn += '_' + moveV.move.subscript;
+        }
+        return stringToReturn;
+      }
+      else {
+        return moveV.label.text;
+      }
     }
     else if (this.currentlySelected instanceof NodeView) {
       let nodeV = (<NodeView>this.currentlySelected);

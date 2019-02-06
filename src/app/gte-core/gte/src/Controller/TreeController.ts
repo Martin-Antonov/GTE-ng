@@ -81,7 +81,7 @@ export class TreeController {
     nV.events.onInputOver.add(() => {
       this.handleInputOverNode(nV);
     });
-    nV.events.onInputDown.add(() => {
+    nV.circle.events.onInputDown.add(() => {
       this.handleInputDownNode(nV);
     });
     nV.events.onInputOut.add(() => {
@@ -116,19 +116,17 @@ export class TreeController {
   /**The iSet specific method for attaching handlers*/
   attachHandlersToISet(iSet: ISetView) {
     iSet.events.onInputDown.add(function () {
-      let iSet = <ISetView>arguments[0];
-      this.handleInputDownISet(iSet);
+      let iSetV = <ISetView>arguments[0];
+      this.handleInputDownISet(iSetV);
     }, this);
   }
 
   /**Handler for the signal HOVER on a Node*/
   private handleInputOverNode(nodeV: NodeView) {
-
   }
 
   /**Handler for the signal HOVER_OUT on a Node*/
   private handleInputOutNode(nodeV?: NodeView) {
-
   }
 
   /**Handler for the signal CLICK on a Node*/
@@ -366,7 +364,7 @@ export class TreeController {
   }
 
   /**A method for calculating SPNE with backwards induction*/
-  calculateSPNE(){
+  calculateSPNE() {
     let clonedTree = this.treeParser.parse(this.treeParser.stringify(this.tree));
     this.tree.backwardInduction(clonedTree);
     this.treeView.moves.forEach((mV: MoveView) => {
@@ -376,6 +374,7 @@ export class TreeController {
       else {
         mV.alpha = 0.3;
         mV.label.alpha = 0.3;
+        mV.subscript.alpha = 0.3;
       }
     });
     while (clonedTree.nodes.length !== 0) {

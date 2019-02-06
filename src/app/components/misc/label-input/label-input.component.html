@@ -1,5 +1,5 @@
 <ng-container *ngIf="this.checkInputShown()">
-  <input (keydown.enter)="changeLabel()" type="text" #inputLabel
+  <input (keydown.enter)="changeLabel()" (keydown.tab)="changeLabel()" type="text" #inputLabel
          [value]="this.getValue()"
          [style.left]="this.getX()" [style.top]="this.getY()" autofocus>
   <div class="click-exit" (click)="hide()"></div>

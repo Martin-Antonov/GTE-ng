@@ -64,6 +64,15 @@ export class TopMenuComponent implements OnInit {
     this.uis.solverActive = !this.uis.solverActive;
   }
 
+  toggleSPNE() {
+    if (!this.userActionController.SPNEActive) {
+      this.userActionController.calculateSPNE();
+    }
+    else {
+      this.userActionController.resetSPNE();
+    }
+  }
+
   isUndoActive() {
     return this.userActionController.undoRedoController.currentTreeIndex === 0;
   }

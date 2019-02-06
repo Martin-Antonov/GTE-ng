@@ -1,6 +1,7 @@
 /// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
 import {Player} from './Player';
 import {Node} from './Node';
+import {Move} from './Move';
 
 /**The class that represents the ISet. The ISet has player, array storing all nodes, and a label */
 export class ISet {
@@ -16,6 +17,9 @@ export class ISet {
         if (this.player) {
           n.convertToLabeled(this.player);
         }
+        n.childrenMoves.forEach((m: Move) => {
+          m.manuallyAssigned = true;
+        });
       });
     }
   }

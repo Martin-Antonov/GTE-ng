@@ -4,6 +4,8 @@ import {Player} from '../Model/Player';
 import {Node, NodeType} from '../Model/Node';
 import {ISet} from '../Model/ISet';
 
+import * as converter from 'xml-js';
+
 export class TreeParser {
 
   private copyWithoutCircularReferences(tree: Tree) {
@@ -43,12 +45,16 @@ export class TreeParser {
         fromIndex: null,
         toIndex: null,
         label: null,
+        subscript: null,
         probability: null,
         manuallyAssigned: null
       };
 
       if (m.label) {
         move.label = m.label;
+      }
+      if (m.subscript) {
+        move.subscript = m.subscript;
       }
       if (m.probability) {
         move.probability = m.probability;
@@ -115,6 +121,7 @@ export class TreeParser {
     strippedTree.moves.forEach(m => {
       let move = new Move();
       move.label = m.label;
+      move.subscript = m.subscript;
       move.probability = m.probability;
       move.manuallyAssigned = m.manuallyAssigned;
       move.from = clonedTree.nodes[m.fromIndex];
@@ -131,6 +138,11 @@ export class TreeParser {
     clonedTree.getLeaves();
 
     return clonedTree;
+  }
+
+  fromXML(xmlTree: string) {
+    let jsonTree = converter.xml2json(xmlTree, {compact: true, spaces: 2});
+    console.log(jsonTree);
   }
 }
 

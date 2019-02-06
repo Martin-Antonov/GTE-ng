@@ -23,6 +23,7 @@ export class ViewExporter {
     let playerLabels = [];
     let chanceLabels = [];
     let moveLabels = [];
+    let subscriptLabels = [];
     let payoffsLabels = [];
     result += '#FIG 3.2  Produced by Game Theory Explorer\n' +
       'Landscape\n' +
@@ -131,6 +132,16 @@ export class ViewExporter {
           y: mV.label.y,
           index: playerIndex
         });
+
+        if (mV.move.subscript) {
+          subscriptLabels.push({
+            text: mV.subscript.text,
+            color: this.getColorFromPlayerIndex(playerIndex),
+            x: mV.subscript.x + mV.subscript.width / 2,
+            y: mV.subscript.y - mV.subscript.height * 0.25,
+            index: playerIndex
+          });
+        }
       }
     });
 
@@ -185,6 +196,14 @@ export class ViewExporter {
       let font = label.index === 0 ? 0 : 1;
       // type text, justification, color, depth, pen style, font, font size, angle, font flags, coords text
       let pre = '4 1 ' + label.color + ' ' + (label.index + 30) + ' 0 ' + font + ' 28 0.0000 4 540 390 ' +
+        Math.round(label.x * factor) + ' ' + Math.round(label.y * factor) + ' ' + label.text + '\\001';
+      result += pre + '\n';
+    });
+
+    subscriptLabels.forEach((label: { text, color, x, y, index }) => {
+      let font = label.index === 0 ? 0 : 1;
+      // type text, justification, color, depth, pen style, font, font size, angle, font flags, coords text
+      let pre = '4 1 ' + label.color + ' ' + (label.index + 30) + ' 0 ' + font + ' 16 0.0000 4 540 390 ' +
         Math.round(label.x * factor) + ' ' + Math.round(label.y * factor) + ' ' + label.text + '\\001';
       result += pre + '\n';
     });
@@ -281,6 +300,14 @@ export class ViewExporter {
           style: mV.from.node.player.id !== 0 ? 'italic' : 'none',
           size: mV.label.fontSize
         });
+      if (mV.move.subscript) {
+        draw.text(mV.subscript.text).move(mV.subscript.x, mV.subscript.y - mV.subscript.height)
+          .fill(mV.subscript.fill)
+          .font({
+            weight: '200',
+            size: mV.subscript.fontSize
+          });
+      }
     });
 
     this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {

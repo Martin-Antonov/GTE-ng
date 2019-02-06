@@ -8,6 +8,7 @@ export class Move {
   from: Node;
   to: Node;
   label: string;
+  subscript: string;
   probability: number;
   manuallyAssigned: boolean;
   isBestInductionMove: boolean;
@@ -16,6 +17,7 @@ export class Move {
     this.from = from;
     this.to = to;
     this.label = '';
+    this.subscript = '';
     this.manuallyAssigned = false;
     this.isBestInductionMove = false;
   }

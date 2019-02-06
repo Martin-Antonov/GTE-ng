@@ -18,37 +18,38 @@
              [style.grid-template-columns]="this.getInnerGridCols()"
              *ngFor="let p4Col of this.userActionController.strategicForm.p4cols; index as l">
           <div *ngIf="this.isThereP3() && l===0" class="p3-row-strategy"
-               [ngStyle]="{top: (k*86*this.userActionController.strategicForm.p1Strategies.length)+70+'px'}">
-            {{this.userActionController.treeController.tree.players[3].label+": "+p3Row}}
+               [ngStyle]="{top: (k*86*this.userActionController.strategicForm.p1Strategies.length)+70+'px'}"
+               [innerHTML]="this.userActionController.treeController.tree.players[3].label+': '+this.transformStrategy(p3Row)">
           </div>
           <div *ngIf="this.isThereP4() && k===0" class="p4-col-strategy"
-               [ngStyle]="{left: (l*86*this.userActionController.strategicForm.p2Strategies.length)+70+'px'}">
-            {{this.userActionController.treeController.tree.players[4].label+": "+p4Col}}
+               [ngStyle]="{left: (l*86*this.userActionController.strategicForm.p2Strategies.length)+70+'px'}"
+               [innerHTML]="this.userActionController.treeController.tree.players[3].label+': '+this.transformStrategy(p4Col)">
           </div>
           <ng-container *ngFor="let p1Row of this.userActionController.strategicForm.p1rows; index as i">
             <div class="inner-cell" *ngFor="let p2Col of this.userActionController.strategicForm.p2cols; index as j;"
-            [ngStyle]="this.getInnerCellStyle(i,j,k,l)">
+                 [ngStyle]="this.getInnerCellStyle(i,j,k,l)">
               <div *ngIf="l===0" class="p1-row-strategy"
-                   [ngStyle]="{top:(k*20+k*75*this.userActionController.strategicForm.p1rows.length +i*75+30)+'px'}">
-                {{p1Row}}
+                   [ngStyle]="{top:(k*20+k*75*this.userActionController.strategicForm.p1rows.length +i*75+30)+'px'}"
+                   [innerHTML]="this.transformStrategy(p1Row)">
+
               </div>
               <div *ngIf="k===0" class="p2-col-strategy"
-                   [ngStyle]="{left: (l*20+l*75*this.userActionController.strategicForm.p2cols.length+j*75)+'px'}">
-                {{p2Col}}
+                   [ngStyle]="{left: (l*20+l*75*this.userActionController.strategicForm.p2cols.length+j*75)+'px'}"
+                   [innerHTML]="this.transformStrategy(p2Col)">
               </div>
               <div *ngIf="this.isThereP4()" [ngStyle]="this.getP4PayoffStyle(i,j,k,l)" class="p4-payoff">
-                {{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[3]}}
+                {{this.getOutcome(i,j,k,l,3)}}
               </div>
               <div *ngIf="this.isThereP3()" [ngStyle]="this.getP3PayoffStyle(i,j,k,l)" class="p3-payoff"
               >
-                {{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[2]}}
+                {{this.getOutcome(i,j,k,l,2)}}
               </div>
               <div class="p2-payoff" [ngStyle]="this.getP2PayoffStyle(i,j,k,l)">
-                {{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[1]}}
+                {{this.getOutcome(i,j,k,l,1)}}
               </div>
               <div class="p1-payoff" [ngStyle]="this.getP1PayoffStyle(i,j,k,l)"
                    [ngStyle]="this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[0] && {'border': '1px solid #ff0000'}">
-                {{this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomes[0]}}
+                {{this.getOutcome(i,j,k,l,0)}}
               </div>
             </div>
           </ng-container>

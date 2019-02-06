@@ -205,7 +205,7 @@ export class KeyboardController {
         this.userActionController.activateLabelField(false);
       }
       else {
-        this.userActionController.activateLabelField(true);
+        // this.userActionController.activateLabelField(true);
       }
     });
 

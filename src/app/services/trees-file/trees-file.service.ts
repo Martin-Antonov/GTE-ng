@@ -53,8 +53,10 @@ export class TreesFileService {
       this.userActionController.checkCreateStrategicForm();
       this.userActionController.undoRedoController.destroy();
       this.userActionController.undoRedoController = new UndoRedoController(this.userActionController.treeController);
-      this.userActionController.undoRedoController.currentTreeIndex = this.treeTabs[index].urCurrentTreeIndex;
-      this.userActionController.undoRedoController.treesList = this.treeTabs[index].urTreesList;
+      if (this.treeTabs[index].urTreesList) {
+        this.userActionController.undoRedoController.currentTreeIndex = this.treeTabs[index].urCurrentTreeIndex;
+        this.userActionController.undoRedoController.treesList = this.treeTabs[index].urTreesList;
+      }
     }
   }
 
@@ -101,7 +103,10 @@ export class TreesFileService {
 
   saveTreeToFile() {
     this.saveCurrentTree();
-    let text = JSON.stringify(this.treeTabs[this.currentTabIndex]);
+    let treeToSave = this.treeTabs[this.currentTabIndex];
+    treeToSave.urTreesList = null;
+    treeToSave.urCurrentTreeIndex = null;
+    let text = JSON.stringify(treeToSave);
     let blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.gte');
   }
@@ -145,8 +150,9 @@ export class TreesFileService {
   }
 
   private newTreeFromFile(text: string) {
-    let newTree = JSON.parse(text);
+    let newTree: TreeFile = JSON.parse(text);
     this.treeTabs.push(newTree);
     this.changeToTree(this.treeTabs.length - 1);
+    // this.userActionController.treeController.treeParser.fromXML(text);
   }
 }

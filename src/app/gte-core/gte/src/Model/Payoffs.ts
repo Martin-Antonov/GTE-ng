@@ -4,6 +4,8 @@ import * as math from 'mathjs';
 
 export class Payoffs {
   outcomes: Array<number>;
+  outcomesAsFractions: Array<any>;
+  outcomesAsDecimals: Array<any>;
   isBestResponce: Array<boolean>;
   private playersCount: number;
 
@@ -16,6 +18,8 @@ export class Payoffs {
     else {
       this.outcomes = [0, 0, 0, 0];
     }
+    this.outcomesAsFractions = [];
+    this.outcomesAsDecimals = [];
     this.isBestResponce = [false, false, false, false];
   }
 
@@ -27,7 +31,7 @@ export class Payoffs {
         return;
       }
       let currentPayoff = parseFloat(payoffsAsStringArray[i]);
-      if (currentPayoff) {
+      if (currentPayoff === 0 || currentPayoff) {
         this.outcomes[i] = currentPayoff;
       }
     }
@@ -69,6 +73,14 @@ export class Payoffs {
   round() {
     for (let i = 0; i < this.outcomes.length; i++) {
       this.outcomes[i] = parseFloat(math.format(math.round(this.outcomes[i], 2)));
+    }
+  }
+
+  /**A helper method for the visual representation of outcomes. Uses an external library mathjs.*/
+  setOutcomes() {
+    for (let i = 0; i < this.outcomes.length; i++) {
+      this.outcomesAsFractions[i] = math.fraction(this.outcomes[i]);
+      this.outcomesAsDecimals[i] = math.round(this.outcomes[i], 2);
     }
   }
 

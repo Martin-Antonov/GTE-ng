@@ -86,12 +86,14 @@ app-draggable-window {
             border-right: 3px solid black;
             border-radius: 10px;
             padding: 5px 15px;
-            tr{
-              td{
-                input{
-                  width:20px;
-                  height:20px;
-                  text-align:center;
+            tr {
+              td {
+                input {
+                  width: 30px;
+                  height: 30px;
+                  text-align: center;
+                  font-size: 10px;
+                  font-weight: bold;
                 }
               }
             }

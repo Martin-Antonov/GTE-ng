@@ -31,6 +31,7 @@ export class UserActionController {
   backgroundInputSprite: Phaser.Sprite;
 
   viewExporter: ViewExporter;
+  SPNEActive: boolean;
 
   private resizeLocked: boolean;
 
@@ -48,6 +49,7 @@ export class UserActionController {
     this.resizeLocked = false;
 
     this.errorSignal = new Phaser.Signal();
+    this.SPNEActive = false;
 
     this.treeController.treeChangedSignal.add(() => {
       this.checkCreateStrategicForm();
@@ -296,8 +298,8 @@ export class UserActionController {
     this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       nV.inputEnabled = false;
     });
-    this.treeController.treeView.iSets.forEach( (iSetV: ISetView) => {
-      iSetV.inputEnabled = false;
+    this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
+      iSetView.inputEnabled = false;
     });
 
     this.game.input.onDown.addOnce(() => {
@@ -306,8 +308,8 @@ export class UserActionController {
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
         nV.inputEnabled = true;
       });
-      this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
-        iSetV.inputEnabled = true;
+      this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
+        iSetView.inputEnabled = true;
       });
       this.game.input.keyboard.enabled = true;
 
@@ -356,13 +358,23 @@ export class UserActionController {
   calculateSPNE() {
     try {
       this.treeController.calculateSPNE();
+      this.SPNEActive = true;
     }
     catch (err) {
       this.errorSignal.dispatch(err);
+      this.SPNEActive = false;
     }
   }
 
+  resetSPNE() {
+    this.SPNEActive = false;
+    this.treeController.treeView.moves.forEach((mV: MoveView) => {
+      mV.updateMovePosition();
+    });
+  }
+
   checkCreateStrategicForm() {
+    this.SPNEActive = false;
     this.destroyStrategicForm();
     if (this.treeController.tree.checkAllNodesLabeled()) {
       this.strategicForm = new StrategicForm(this.treeController.tree);

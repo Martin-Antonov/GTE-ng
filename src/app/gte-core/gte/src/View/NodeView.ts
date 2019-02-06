@@ -52,6 +52,14 @@ export class NodeView extends Phaser.Sprite {
     this.circle.anchor.set(0.5, 0.5);
     this.circle.position = this.position;
     this.circle.tint = this.tint;
+    this.circle.inputEnabled = true;
+    this.circle.input.priorityID = 2;
+    this.circle.events.onInputOver.add(() => {
+      this.game.canvas.style.cursor = 'pointer';
+    });
+    this.circle.events.onInputOut.add(() => {
+      this.game.canvas.style.cursor = 'default';
+    });
 
     this.square = this.game.add.sprite(this.x, this.y, this.game.cache.getBitmapData('line'));
     this.square.position = this.position;
@@ -88,6 +96,13 @@ export class NodeView extends Phaser.Sprite {
     this.ownerLabel.inputEnabled = true;
     // this.ownerLabel.fontWeight = 100;
     this.ownerLabel.input.priorityID = 199;
+    this.ownerLabel.events.onInputOver.add(() => {
+      this.game.canvas.style.cursor = 'text';
+    });
+    this.ownerLabel.events.onInputOut.add(() => {
+      this.game.canvas.style.cursor = 'default';
+    });
+
 
     this.payoffsLabel = this.game.add.text(this.x, this.y + this.width, '', null);
     this.payoffsLabel.position = this.position;
@@ -98,6 +113,13 @@ export class NodeView extends Phaser.Sprite {
     this.payoffsLabel.lineSpacing = -10;
     this.payoffsLabel.align = 'right';
     this.payoffsLabel.input.priorityID = 199;
+    this.payoffsLabel.events.onInputOver.add(() => {
+      this.game.canvas.style.cursor = 'text';
+    });
+    this.payoffsLabel.events.onInputOut.add(() => {
+      this.game.canvas.style.cursor = 'default';
+    });
+
   }
 
   updateLabelPosition() {

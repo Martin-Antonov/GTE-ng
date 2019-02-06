@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-label-input',
@@ -13,6 +14,7 @@ export class LabelInputComponent implements OnInit {
   userActionController: UserActionController;
 
   constructor(private uac: UserActionControllerService) {
+
   }
 
   ngOnInit() {
@@ -24,11 +26,15 @@ export class LabelInputComponent implements OnInit {
         this.selectInputText();
       }, this);
     }, 2000);
+
+
   }
 
   changeLabel() {
-    this.userActionController.changeLabel(this.inputField.nativeElement.value);
-    this.selectInputText();
+    if (this.inputField && this.inputField.nativeElement) {
+      this.userActionController.changeLabel(this.inputField.nativeElement.value);
+      this.selectInputText();
+    }
   }
 
   getValue() {

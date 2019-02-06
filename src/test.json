@@ -1,0 +1,248 @@
+{
+  "gte": {
+    "_attributes": {
+      "version": "0.1"
+    },
+    "gameDescription": {
+      "_text": "Sample Game"
+    },
+    "players": {
+      "player": [
+        {
+          "_attributes": {
+            "playerId": "1"
+          },
+          "_text": "Player 1"
+        },
+        {
+          "_attributes": {
+            "playerId": "2"
+          },
+          "_text": "Player 2"
+        }
+      ]
+    },
+    "display": {},
+    "extensiveForm": {
+      "node": {
+        "_attributes": {
+          "nodeName": "root"
+        },
+        "node": [
+          {
+            "_attributes": {
+              "iset": "1",
+              "move": "Chance 1",
+              "nodeName": "P2 - 1",
+              "player": "Player 2",
+              "prob": "1/2"
+            },
+            "payoff": [
+              {
+                "_attributes": {
+                  "player": "Player 1"
+                },
+                "_text": "1"
+              },
+              {
+                "_attributes": {
+                  "player": "Player 2"
+                },
+                "_text": "5"
+              }
+            ],
+            "outcome": {
+              "_attributes": {
+                "move": "a"
+              },
+              "payoff": [
+                {
+                  "_attributes": {
+                    "player": "Player 1"
+                  },
+                  "_text": "14"
+                },
+                {
+                  "_attributes": {
+                    "player": "Player 2"
+                  },
+                  "_text": "15"
+                }
+              ]
+            },
+            "node": {
+              "_attributes": {
+                "iset": "2",
+                "move": "b",
+                "nodeName": "P1 - 1",
+                "player": "Player 1"
+              },
+              "outcome": [
+                {
+                  "_attributes": {
+                    "move": "C"
+                  },
+                  "payoff": [
+                    {
+                      "_attributes": {
+                        "player": "Player 1"
+                      },
+                      "_text": "24"
+                    },
+                    {
+                      "_attributes": {
+                        "player": "Player 2"
+                      },
+                      "_text": "10"
+                    }
+                  ]
+                },
+                {
+                  "_attributes": {
+                    "move": "D"
+                  },
+                  "payoff": [
+                    {
+                      "_attributes": {
+                        "player": "Player 1"
+                      },
+                      "_text": "21"
+                    },
+                    {
+                      "_attributes": {
+                        "player": "Player 2"
+                      },
+                      "_text": "19"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "_attributes": {
+              "iset": "1",
+              "move": "Chance 2",
+              "nodeName": "P2 - 2",
+              "player": "Player 2",
+              "prob": "1/2"
+            },
+            "payoff": [
+              {
+                "_attributes": {
+                  "player": "Player 1"
+                },
+                "_text": "2"
+              },
+              {
+                "_attributes": {
+                  "player": "Player 2"
+                },
+                "_text": "3"
+              }
+            ],
+            "node": [
+              {
+                "_attributes": {
+                  "iset": "3",
+                  "move": "a",
+                  "nodeName": "P1 - 2",
+                  "player": "Player 1"
+                },
+                "outcome": [
+                  {
+                    "_attributes": {
+                      "move": "E"
+                    },
+                    "payoff": [
+                      {
+                        "_attributes": {
+                          "player": "Player 1"
+                        },
+                        "_text": "2"
+                      },
+                      {
+                        "_attributes": {
+                          "player": "Player 2"
+                        },
+                        "_text": "14"
+                      }
+                    ]
+                  },
+                  {
+                    "_attributes": {
+                      "move": "F"
+                    },
+                    "payoff": [
+                      {
+                        "_attributes": {
+                          "player": "Player 1"
+                        },
+                        "_text": "23"
+                      },
+                      {
+                        "_attributes": {
+                          "player": "Player 2"
+                        },
+                        "_text": "10"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "_attributes": {
+                  "iset": "3",
+                  "move": "b",
+                  "nodeName": "P1 - 3",
+                  "player": "Player 1"
+                },
+                "outcome": [
+                  {
+                    "_attributes": {
+                      "move": "E"
+                    },
+                    "payoff": [
+                      {
+                        "_attributes": {
+                          "player": "Player 1"
+                        },
+                        "_text": "2"
+                      },
+                      {
+                        "_attributes": {
+                          "player": "Player 2"
+                        },
+                        "_text": "18"
+                      }
+                    ],
+                    "_text": "\r\n! 19!\r\n"
+                  },
+                  {
+                    "_attributes": {
+                      "move": "F"
+                    },
+                    "payoff": [
+                      {
+                        "_attributes": {
+                          "player": "Player 1"
+                        },
+                        "_text": "4"
+                      },
+                      {
+                        "_attributes": {
+                          "player": "Player 2"
+                        },
+                        "_text": "7"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

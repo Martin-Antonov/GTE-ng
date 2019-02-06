@@ -339,7 +339,7 @@ export class StrategicForm {
       for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
         for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
           for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
-            this.payoffsMatrix[i][j][k][l].round();
+            this.payoffsMatrix[i][j][k][l].setOutcomes();
           }
         }
       }
@@ -520,12 +520,15 @@ export class StrategicForm {
       for (let j = 0; j < strategies[i].length; j++) {
         let current = strategies[i][j];
         if (current) {
-          str += current.label + STRATEGIC_FORM_DELIMITER;
+          str += current.label;
+          if (current.subscript) {
+            str += '_' + current.subscript;
+          }
+          str += STRATEGIC_FORM_DELIMITER;
         }
         else {
           str += '*' + STRATEGIC_FORM_DELIMITER;
         }
-
       }
       strategyAsString.push(str.substring(0, str.length - 1));
     }

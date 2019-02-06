@@ -7,7 +7,7 @@ import {
   SAME_PATH_ON_ROOT_ERROR_TEXT
 } from '../Utils/Constants';
 import {Move} from './Move';
-import * as math from 'mathjs';
+import * as  math from 'mathjs';
 import {Node, NodeType} from './Node';
 import {Player} from './Player';
 import {ISet} from './ISet';
@@ -366,12 +366,27 @@ export class Tree {
       this.chanceNodesSetProbabilities(move, text);
     }
     else {
-      move.label = text;
-      move.manuallyAssigned = true;
+      let dashedArray = text.split('_');
+      if (dashedArray.length === 1) {
+        move.label = text;
+        move.subscript = '';
+      }
+      if (dashedArray.length === 2) {
+        move.label = dashedArray[0];
+        move.subscript = dashedArray[1];
+      }
+      else {
+        move.label = dashedArray[0];
+        dashedArray.splice(0, 1);
+        move.subscript = dashedArray.join('');
+      }
+
       if (move.from.iSet !== null) {
         let index = move.from.childrenMoves.indexOf(move);
         move.from.iSet.nodes.forEach((n: Node) => {
-          n.childrenMoves[index].label = text;
+          n.childrenMoves[index].label = move.label;
+          n.childrenMoves[index].manuallyAssigned = true;
+          n.childrenMoves[index].subscript = move.subscript;
         });
       }
     }
@@ -386,6 +401,7 @@ export class Tree {
 
   /** A method which sets the probabilities of a chance node, once a new probability is set externally*/
   private chanceNodesSetProbabilities(move: Move, text: string) {
+    move.subscript = '';
     let newProb = <number>math.number(<any>(math.fraction(text)));
     if (newProb >= 0 && newProb <= 1) {
       move.probability = newProb;

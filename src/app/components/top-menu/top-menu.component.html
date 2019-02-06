@@ -19,7 +19,8 @@
 
   <app-players-box></app-players-box>
 
-  <app-text-button [text]="'SPNE'" (click)="this.userActionController.calculateSPNE()"></app-text-button>
+  <app-text-button [text]="'SPNE'" (click)="this.toggleSPNE()"
+  [isActive]="this.userActionController.SPNEActive"></app-text-button>
   <app-text-button [text]="'Strategic Form'" (click)="this.toggleStrategicForm()"
                    [isActive]="this.uis.strategicFormActive"></app-text-button>
   <app-text-button [text]="'Matrix Input'" (click)="this.toggleMatrixInput()"

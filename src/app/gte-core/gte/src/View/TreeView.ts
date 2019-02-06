@@ -166,6 +166,7 @@ export class TreeView {
       this.tree.resetLabels();
       this.moves.forEach((mV: MoveView) => {
         mV.label.alpha = 1;
+        mV.subscript.alpha = 1;
         mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
       });
     }

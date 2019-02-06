@@ -4,6 +4,8 @@ import {UserActionControllerService} from '../../../services/user-action-control
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import * as math from 'mathjs';
+import {Fraction} from 'mathjs';
 
 @Component({
   selector: 'app-strategic-form-table',
@@ -131,6 +133,41 @@ export class StrategicFormTableComponent implements OnInit {
       style['border-bottom'] = '2px solid #ff00ff';
     }
     return style;
+  }
+
+  transformStrategy(strategy: string) {
+    let result = ``;
+    let separateMoves = strategy.split(' ');
+    separateMoves.forEach(move => {
+        let moveWithSubscript = move.split('_');
+        if (moveWithSubscript.length === 1) {
+          result += moveWithSubscript[0];
+        }
+        else {
+          result += moveWithSubscript[0] + '<sub>' + moveWithSubscript[1] + '</sub>';
+        }
+        result += ' ';
+      }
+    );
+    return result;
+  }
+
+  getOutcome(i: number, j: number, k: number, l: number, outcome: number) {
+
+    if (this.userActionController.treeController.treeView.properties.fractionOn) {
+      let outcomePayoff = this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
+      if (outcomePayoff.n === 0) {
+        return 0;
+      }
+      else {
+        let sign = outcomePayoff.s === 1 ? '' : '-';
+        return sign + outcomePayoff.n + '/' + outcomePayoff.d;
+      }
+    }
+    else {
+      return this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsDecimals[outcome];
+    }
+
   }
 
   ngOnInit() {
