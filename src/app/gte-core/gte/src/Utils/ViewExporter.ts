@@ -93,10 +93,11 @@ export class ViewExporter {
             maxNumberOfDigits = numberOfDigits;
           }
         });
+        let halfWidthToRightFactor = maxNumberOfDigits === 1 ? 2 : 1;
 
         for (let i = 0; i < outcomes.length; i++) {
           // 195 is half width to the right
-          let x = Math.round((nV.payoffsLabel.x) * factor + 195);
+          let x = Math.round((nV.payoffsLabel.x) * factor + 195 / halfWidthToRightFactor);
           // 440 is label height in FIG
           let y = Math.round(nV.payoffsLabel.y * factor) + (i + 1) * 440;
           payoffsLabels.push({

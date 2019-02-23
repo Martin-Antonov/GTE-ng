@@ -65,6 +65,11 @@
     "videoURL": "assets/videos/editLabels.mp4"
   },
   {
+    "command": "Shift+Select",
+    "explanation": "Multiple nodes selection",
+    "videoURL": "assets/videos/shiftSelect.mp4"
+  },
+  {
     "command": "Esc / Mouse Click",
     "explanation": "Exit label assignment mode",
     "videoURL": null

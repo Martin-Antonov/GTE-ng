@@ -17,9 +17,6 @@ export class ISet {
         if (this.player) {
           n.convertToLabeled(this.player);
         }
-        n.childrenMoves.forEach((m: Move) => {
-          m.manuallyAssigned = true;
-        });
       });
     }
   }

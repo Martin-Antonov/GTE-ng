@@ -1,12 +1,13 @@
 <app-draggable-window *ngIf="this.shortcuts" [width]="'650px'" [height]="'700px'" [isResizeable]="false" [top]="'10%'"
                       [right]="'calc(50% - 325px)'"
-                      (closeCallback)="this.close()" [title]="'Settings'">
+                      (closeCallback)="this.close()" [title]="'Shortcuts'">
 
     <div class="shortcuts-content">
       <ul class="shortcuts-list">
         <li *ngFor="let shortcut of this.shortcuts; index as i ">
           <span class="command" (mouseenter)="this.currentlyHoveredIndex=i;"
-                (mouseleave)="this.currentlyHoveredIndex=-1">{{shortcut.command}}</span>
+                (mouseleave)="this.currentlyHoveredIndex=-1" [ngStyle] ="this.shortcuts[i].videoURL && {'cursor': 'pointer'}">
+            {{shortcut.command}}</span>
           <span class="explanation">{{shortcut.explanation}}</span>
         </li>
       </ul>

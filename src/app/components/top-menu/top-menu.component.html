@@ -7,7 +7,7 @@
                      [tooltipText]="this.tooltips.save_tree"></app-square-button>
   <app-square-button [imageKey]="'load.png'" (click)="loadInput.click();"
                      [tooltipText]="this.tooltips.load_tree"></app-square-button>
-  <input type="file" accept="text/plain" #loadInput (change)="this.loadTreeFromFile()">
+  <input type="file" accept=".gte" #loadInput (change)="this.loadTreeFromFile()">
   <app-square-button [imageKey]="'undo.png'" (click)="this.userActionController.undoRedoHandler(true)"
                      style="margin-left:2em" [tooltipText]="this.tooltips.undo"
                      [inactive]="this.isUndoActive()"></app-square-button>

@@ -159,6 +159,10 @@ export class StrategicFormTableComponent implements OnInit {
       if (outcomePayoff.n === 0) {
         return 0;
       }
+      else if (outcomePayoff.d === 1) {
+        let sign = outcomePayoff.s === 1 ? '' : '-';
+        return sign + outcomePayoff.n;
+      }
       else {
         let sign = outcomePayoff.s === 1 ? '' : '-';
         return sign + outcomePayoff.n + '/' + outcomePayoff.d;
