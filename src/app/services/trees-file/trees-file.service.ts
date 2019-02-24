@@ -120,8 +120,10 @@ export class TreesFileService {
   saveTreeToImage() {
     setTimeout(() => {
       let cnvs = document.getElementsByTagName('canvas');
+      let name = this.treeTabs[this.currentTabIndex].fileName;
+
       (<any>cnvs[0]).toBlob(function (blob) {
-        saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.png');
+        saveAs(blob, name + '.png');
       });
     }, 100);
   }
