@@ -121,7 +121,7 @@ export class TreesFileService {
     setTimeout(() => {
       let cnvs = document.getElementsByTagName('canvas');
       (<any>cnvs[0]).toBlob(function (blob) {
-        saveAs(blob, 'GTE_Tree' + '.png');
+        saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.png');
       });
     }, 100);
   }
@@ -137,7 +137,7 @@ export class TreesFileService {
     console.log(stratFormFile);
   }
 
-  loadTreeFromFile() {
+  loadTreeFromFile(event) {
     let input = event.target;
 
     let reader = new FileReader();

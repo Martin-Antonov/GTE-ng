@@ -90,8 +90,8 @@ export class TopMenuComponent implements OnInit {
     this.tfs.addNewTree();
   }
 
-  loadTreeFromFile() {
-    this.tfs.loadTreeFromFile();
+  loadTreeFromFile(event) {
+    this.tfs.loadTreeFromFile(event);
   }
 
   closeSaveFile() {
