@@ -325,7 +325,6 @@ export class Tree {
         return false;
       }
     }
-    this.labelSetter.initiallyAssigned = true;
     return true;
   }
 
@@ -385,7 +384,6 @@ export class Tree {
         let index = move.from.childrenMoves.indexOf(move);
         move.from.iSet.nodes.forEach((n: Node) => {
           n.childrenMoves[index].label = move.label;
-          n.childrenMoves[index].manuallyAssigned = true;
           n.childrenMoves[index].subscript = move.subscript;
         });
       }

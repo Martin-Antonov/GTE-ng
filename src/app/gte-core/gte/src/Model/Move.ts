@@ -26,6 +26,10 @@ export class Move {
   convertToLabeled(label?: string) {
     this.label = label || null;
     this.probability = null;
+
+    if (this.label) {
+      this.manuallyAssigned = true;
+    }
   }
 
   /**Converts to a chance move with given probabilities */

@@ -3,7 +3,6 @@ import {Move} from './Move';
 
 export class LabelSetter {
   labels: Array<Array<string>>;
-  initiallyAssigned: boolean;
 
   constructor() {
     this.labels = [];
@@ -11,16 +10,15 @@ export class LabelSetter {
     this.labels[1] = 'abcdefghijklmno'.split('');
     this.labels[2] = 'LMNOPQRSTUVWXYZ'.split('');
     this.labels[3] = 'pqrstuvwxyz'.split('');
-    this.initiallyAssigned = false;
   }
 
   /** Calculates and sets the labels for moves in a BFS order*/
   calculateLabels(bfsNodes: Array<Node>, moves: Array<Move>) {
-    bfsNodes.forEach((n: Node) => {
-      if (n.parentMove && !n.parentMove.manuallyAssigned) {
-        n.parentMove.label = '';
-      }
-    });
+    // bfsNodes.forEach((n: Node) => {
+    //   if (n.parentMove && !n.parentMove.manuallyAssigned) {
+    //     n.parentMove.label = '';
+    //   }
+    // });
     bfsNodes.forEach((n: Node) => {
       if (n.type === NodeType.OWNED) {
         // reference the labels depending on the player
@@ -49,7 +47,7 @@ export class LabelSetter {
           for (let i = 1; i < n.iSet.nodes.length; i++) {
             let iSetNode = n.iSet.nodes[i];
             for (let j = 0; j < iSetNode.children.length; j++) {
-              iSetNode.children[j].parentMove.label = n.children[j].parentMove.label;
+              iSetNode.children[j].parentMove.convertToLabeled( n.children[j].parentMove.label);
             }
           }
         }

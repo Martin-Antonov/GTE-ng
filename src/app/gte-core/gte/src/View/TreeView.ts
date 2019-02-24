@@ -162,7 +162,7 @@ export class TreeView {
       n.resetNodeDrawing(areAllNodesLabeled, this.properties.zeroSumOn);
     });
 
-    if (this.tree.labelSetter.initiallyAssigned) {
+    if (areAllNodesLabeled) {
       this.tree.resetLabels();
       this.moves.forEach((mV: MoveView) => {
         mV.label.alpha = 1;
@@ -170,6 +170,7 @@ export class TreeView {
         mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
       });
     }
+
   }
 
   /**Re-centers the tree on the screen*/

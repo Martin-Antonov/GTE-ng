@@ -74,9 +74,19 @@ export class Node {
         }
       }
       else {
+        let playerTheSame = this.player === player;
         this.type = NodeType.OWNED;
         this.player = player;
-        this.childrenMoves.forEach((m: Move) => m.convertToLabeled());
+        this.childrenMoves.forEach((m: Move) => {
+            if (!playerTheSame) {
+              m.manuallyAssigned = false;
+              m.convertToLabeled();
+            }
+            else{
+             m.convertToLabeled(m.label);
+            }
+          }
+        );
       }
     }
   }
