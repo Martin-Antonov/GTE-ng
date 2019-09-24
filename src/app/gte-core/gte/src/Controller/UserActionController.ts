@@ -63,9 +63,9 @@ export class UserActionController {
         nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
         this.selectedNodes.push(nV);
       });
-      iSetV.events.onInputUp.addOnce(() => {
-        this.selectionRectangle.active = true;
-      });
+
+      this.selectionRectangle.active = true;
+
     });
 
     this.createBackgroundForInputReset();
@@ -136,8 +136,7 @@ export class UserActionController {
   addNodesHandler(nodeV?: NodeView) {
     if (nodeV) {
       this.treeController.addNodeHandler([nodeV]);
-    }
-    else if (this.selectedNodes.length > 0) {
+    } else if (this.selectedNodes.length > 0) {
       this.treeController.addNodeHandler(this.selectedNodes);
     }
     this.checkCreateStrategicForm();
@@ -148,8 +147,7 @@ export class UserActionController {
   deleteNodeHandler(nodeV?: NodeView) {
     if (nodeV) {
       this.treeController.deleteNodeHandler([nodeV]);
-    }
-    else if (this.selectedNodes.length > 0) {
+    } else if (this.selectedNodes.length > 0) {
       this.treeController.deleteNodeHandler(this.selectedNodes);
     }
     const deletedNodes = [];
@@ -173,8 +171,7 @@ export class UserActionController {
   assignPlayerToNodeHandler(playerID: number, nodeV?: NodeView) {
     if (nodeV) {
       this.treeController.assignPlayerToNode(playerID, [nodeV]);
-    }
-    else if (this.selectedNodes.length > 0) {
+    } else if (this.selectedNodes.length > 0) {
       this.treeController.assignPlayerToNode(playerID, this.selectedNodes);
     }
     this.checkCreateStrategicForm();
@@ -185,8 +182,7 @@ export class UserActionController {
   assignChancePlayerToNodeHandler(nodeV?: NodeView) {
     if (nodeV) {
       this.treeController.assignChancePlayerToNode([nodeV]);
-    }
-    else if (this.selectedNodes.length > 0) {
+    } else if (this.selectedNodes.length > 0) {
       this.treeController.assignChancePlayerToNode(this.selectedNodes);
     }
     this.checkCreateStrategicForm();
@@ -216,8 +212,7 @@ export class UserActionController {
     if (this.selectedNodes.length > 1) {
       try {
         this.treeController.createISet(this.selectedNodes);
-      }
-      catch (err) {
+      } catch (err) {
         this.errorSignal.dispatch(err);
         return;
       }
@@ -238,11 +233,9 @@ export class UserActionController {
   removeISetsByNodesHandler(nodeV?: NodeView) {
     if (nodeV) {
       this.removeISetHandler(nodeV.node.iSet);
-    }
-    else if (this.selectedNodes.length > 0) {
+    } else if (this.selectedNodes.length > 0) {
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
-    }
-    else {
+    } else {
       return;
     }
     this.checkCreateStrategicForm();
@@ -280,8 +273,7 @@ export class UserActionController {
   initiateCutSpriteHandler(iSetV?: ISetView) {
     if (iSetV) {
       this.cutSpriteHandler.cutInformationSet = iSetV;
-    }
-    else {
+    } else {
       let distinctISetsSelected = this.treeController.getDistinctISetsFromNodes(this.selectedNodes);
       if (distinctISetsSelected.length === 1) {
         this.cutSpriteHandler.cutInformationSet = this.treeController.treeView.findISetView(distinctISetsSelected[0]);
@@ -359,8 +351,7 @@ export class UserActionController {
     try {
       this.treeController.calculateSPNE();
       this.SPNEActive = true;
-    }
-    catch (err) {
+    } catch (err) {
       this.errorSignal.dispatch(err);
       this.SPNEActive = false;
     }
