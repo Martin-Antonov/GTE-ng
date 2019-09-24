@@ -20,13 +20,17 @@ export class SelectionRectangle extends Phaser.Sprite {
     // when we click and hold, we reset the rectangle.
     this.game.input.onDown.add(() => {
       if (this.active) {
-        this.game.canvas.style.cursor = 'crosshair';
         this.width = 0;
         this.height = 0;
         this.start.x = this.game.input.activePointer.position.x;
         this.start.y = this.game.input.activePointer.position.y;
         this.position = this.start;
         this.alpha = 0.3;
+        this.game.time.events.add(101, () => {
+          if (this.game.input.activePointer.isDown) {
+            this.game.canvas.style.cursor = 'crosshair';
+          }
+        }, this);
       }
     }, this);
 

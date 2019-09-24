@@ -1,6 +1,4 @@
 /// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
-
 import {ISET_LINE_WIDTH, LABEL_SIZE, OVERLAY_SCALE} from '../Utils/Constants';
 import {NodeView} from './NodeView';
 import {ISet} from '../Model/ISet';
@@ -12,7 +10,6 @@ export class ISetView extends Phaser.Sprite {
   iSet: ISet;
   label: Phaser.Text;
   nodes: Array<NodeView>;
-  lineWidth: number;
 
   constructor(game: Phaser.Game, iSet: ISet, nodes: Array<NodeView>) {
     super(game, 0, 0, '');
@@ -29,6 +26,13 @@ export class ISetView extends Phaser.Sprite {
     this.input.priorityID = 100;
     this.input.pixelPerfectClick = true;
     this.input.pixelPerfectOver = true;
+
+    this.events.onInputOver.add(() => {
+      this.game.canvas.style.cursor = 'crosshair';
+    });
+    this.events.onInputOut.add(() => {
+      this.game.canvas.style.cursor = 'default';
+    });
   }
 
   removeNode(nodeV: NodeView) {
@@ -48,14 +52,13 @@ export class ISetView extends Phaser.Sprite {
       .from({alpha: 0}, 300, Phaser.Easing.Default, true);
   }
 
-  private updateISetLabel(){
+  private updateISetLabel() {
     if (this.nodes[0].node.player) {
       this.label.setText(this.nodes[0].node.player.label);
     }
     if (!this.iSet.player) {
       this.label.alpha = 0;
-    }
-    else {
+    } else {
       this.label.alpha = 1;
       this.label.fill = Phaser.Color.getWebRGB(this.iSet.player.color);
     }
@@ -91,8 +94,7 @@ export class ISetView extends Phaser.Sprite {
     this.game.add.existing(this);
     if (this.iSet.player) {
       this.tint = this.iSet.player.color;
-    }
-    else {
+    } else {
       this.tint = 0x000000;
     }
     this.alpha = 0.15;
@@ -112,8 +114,7 @@ export class ISetView extends Phaser.Sprite {
     this.label.anchor.set(0.5, 0.5);
     if (!this.iSet.player) {
       this.label.alpha = 0;
-    }
-    else {
+    } else {
       this.label.fill = Phaser.Color.getWebRGB(this.iSet.player.color);
     }
   }
