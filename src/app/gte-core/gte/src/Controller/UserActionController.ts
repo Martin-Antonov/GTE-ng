@@ -93,7 +93,7 @@ export class UserActionController {
     this.cutSpriteHandler.update();
   }
 
-  /** Empties the selected nodes in a better way*/
+  /** Empties the selected nodes*/
   emptySelectedNodes() {
     while (this.selectedNodes.length !== 0) {
       this.selectedNodes.pop();

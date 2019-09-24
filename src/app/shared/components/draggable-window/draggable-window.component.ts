@@ -23,7 +23,7 @@ export class DraggableWindowComponent implements OnInit {
   }
 
   getBody() {
-    return document.getElementsByTagName('BODY')[0];
+    return document.getElementById('phaser-div');
   }
 
   close() {

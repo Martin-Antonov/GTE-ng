@@ -4,7 +4,7 @@
 import {Tree} from '../Model/Tree';
 import {TreeView} from '../View/TreeView';
 import {Player} from '../Model/Player';
-import {NODE_RADIUS, PLAYER_COLORS} from '../Utils/Constants';
+import {CLICK_THRESHOLD, NODE_RADIUS, PLAYER_COLORS} from '../Utils/Constants';
 import {NodeView} from '../View/NodeView';
 import {ISetView} from '../View/ISetView';
 import {ISet} from '../Model/ISet';
@@ -78,35 +78,35 @@ export class TreeController {
   /** The node specific method for attaching handlers
    * Also when we add node we attach the handler for the parent move label*/
   private attachHandlersToNode(nV: NodeView) {
-    nV.events.onInputOver.add(() => {
+    nV.circle.events.onInputOver.add(() => {
       this.handleInputOverNode(nV);
     });
     nV.circle.events.onInputDown.add(() => {
       this.handleInputDownNode(nV);
     });
-    nV.events.onInputOut.add(() => {
+    nV.circle.events.onInputOut.add(() => {
       this.handleInputOutNode(nV);
     });
-    nV.events.onInputUp.add(() => {
+    nV.circle.events.onInputUp.add(() => {
       this.handleInputUpNode(nV);
     });
 
-    nV.ownerLabel.events.onInputDown.add(() => {
-      if (nV.ownerLabel.alpha === 1) {
+    nV.ownerLabel.events.onInputUp.add(() => {
+      if (nV.ownerLabel.alpha === 1 && this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
         this.labelInputSignal.dispatch(nV);
       }
     }, this);
 
-    nV.payoffsLabel.events.onInputDown.add(() => {
-      if (nV.payoffsLabel.alpha === 1) {
+    nV.payoffsLabel.events.onInputUp.add(() => {
+      if (nV.payoffsLabel.alpha === 1 && this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
         this.labelInputSignal.dispatch(nV);
       }
     }, this);
 
     if (nV.node.parentMove) {
       const move = this.treeView.findMoveView(nV.node.parentMove);
-      move.label.events.onInputDown.add(() => {
-        if (move.label.alpha === 1) {
+      move.label.events.onInputUp.add(() => {
+        if (move.label.alpha === 1 && this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
           this.labelInputSignal.dispatch(move);
         }
       }, this);
@@ -115,9 +115,11 @@ export class TreeController {
 
   /**The iSet specific method for attaching handlers*/
   attachHandlersToISet(iSet: ISetView) {
-    iSet.events.onInputDown.add(function () {
+    iSet.events.onInputUp.add(function () {
       let iSetV = <ISetView>arguments[0];
-      this.handleInputDownISet(iSetV);
+      if (this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
+        this.handleInputUpEvent(iSetV);
+      }
     }, this);
   }
 
@@ -131,22 +133,23 @@ export class TreeController {
 
   /**Handler for the signal CLICK on a Node*/
   private handleInputDownNode(nodeV: NodeView) {
-    if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT)) {
+
+  }
+
+  /**Handler for the signal CLICK on a node*/
+  private handleInputUpNode(nodeV?: NodeView) {
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT) &&
+      this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
+
       this.deleteNodeHandler([nodeV]);
-    }
-    else {
+    } else if (this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
       this.addNodeHandler([nodeV]);
     }
     this.treeChangedSignal.dispatch();
   }
 
-  /**Handler for the signal CLICK on a node*/
-  private handleInputUpNode(nodeV?: NodeView) {
-
-  }
-
-  /**Handler for the signal HOVER on an ISet*/
-  private handleInputDownISet(iSetV: ISetView) {
+  /**Handler for the signal UP on an ISet*/
+  private handleInputUpEvent(iSetV: ISetView) {
     this.iSetClickedSignal.dispatch(iSetV);
   }
 
@@ -161,8 +164,7 @@ export class TreeController {
         const child2 = this.treeView.addChildToNode(nV);
         this.attachHandlersToNode(child1);
         this.attachHandlersToNode(child2);
-      }
-      else {
+      } else {
         const child1 = this.treeView.addChildToNode(nV);
         this.attachHandlersToNode(child1);
       }
@@ -183,8 +185,7 @@ export class TreeController {
       }
       if (node.children.length === 0 && node !== this.tree.root) {
         this.deleteNode(node);
-      }
-      else {
+      } else {
         let nodesToDelete = this.tree.getBranchChildren(node);
         nodesToDelete.pop();
         nodesToDelete.forEach((n: Node) => {
@@ -268,8 +269,7 @@ export class TreeController {
         const iSetView = this.treeView.findISetView(nV.node.iSet);
         this.tree.removeISet(nV.node.iSet);
         this.treeView.removeISetView(iSetView);
-      }
-      else {
+      } else {
         iSetNodes.push(nV.node);
       }
 
@@ -316,27 +316,23 @@ export class TreeController {
   cutInformationSet(iSetV: ISetView, x: number, y: number) {
     if (iSetV.nodes.length === 2) {
       this.removeISetHandler(iSetV.iSet);
-    }
-    else {
+    } else {
       const leftNodes = [];
       const rightNodes = [];
       iSetV.nodes.forEach((nV: NodeView) => {
         if (nV.x <= x) {
           leftNodes.push(nV);
-        }
-        else {
+        } else {
           rightNodes.push(nV);
         }
       });
       if (leftNodes.length === 1) {
         iSetV.iSet.removeNode(leftNodes[0].node);
         iSetV.removeNode(leftNodes[0]);
-      }
-      else if (rightNodes.length === 1) {
+      } else if (rightNodes.length === 1) {
         iSetV.iSet.removeNode(rightNodes[0].node);
         iSetV.removeNode(rightNodes[0]);
-      }
-      else {
+      } else {
         this.removeISetHandler(iSetV.iSet);
         this.createISet(leftNodes);
         this.createISet(rightNodes);
@@ -370,8 +366,7 @@ export class TreeController {
     this.treeView.moves.forEach((mV: MoveView) => {
       if (mV.move.isBestInductionMove) {
         mV.tint = mV.from.node.player.color;
-      }
-      else {
+      } else {
         mV.alpha = 0.3;
         mV.label.alpha = 0.3;
         mV.subscript.alpha = 0.3;
@@ -415,7 +410,7 @@ export class TreeController {
     this.resetTree(true, false);
   }
 
-  /**A method for deleting a single! node from the treeView and tree*/
+  /**A method for deleting a !single! node from the treeView and tree*/
   private deleteNode(node: Node) {
     this.treeView.removeNodeView(this.treeView.findNodeView(node));
     this.tree.removeNode(node);

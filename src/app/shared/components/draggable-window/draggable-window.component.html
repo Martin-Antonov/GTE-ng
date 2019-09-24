@@ -1,6 +1,6 @@
 <div class="window-container" ngDraggable [ngResizable]="this.isResizeable" rzHandles="ne, nw, se, sw, n, e, w, s" [handle]="dragHandle"
      [rzMinWidth]="300" [rzMinHeight]="300" [rzMaxHeight]="900" [rzMaxWidth]="1800"
-     [inBounds]="false" [bounds]="this.getBody()" rzContainment="#body-id"
+     [inBounds]="true" [bounds]="this.getBody()" rzContainment="#phaser-div"
      [ngStyle]="{'width':this.width, 'height':this.height, 'top':this.top, 'right':this.right}">
   <div #dragHandle class="top-handle">
     <span class="window-title" >{{this.title}}</span>
