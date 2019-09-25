@@ -4,6 +4,7 @@ import {UserActionControllerService} from '../../../services/user-action-control
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
 import {TreesFileService} from '../../../services/trees-file/trees-file.service';
+import * as math from 'mathjs';
 
 @Component({
   selector: 'app-strategic-form',
@@ -53,19 +54,21 @@ export class StrategicFormComponent implements OnInit {
       const payoffsMatrix = this.userActionController.strategicForm.payoffsMatrix[i];
       for (let j = 0; j < payoffsMatrix.length; j++) {
         const payoffs = payoffsMatrix[j];
-        m1 += payoffs[0][0].outcomes[0] + ' ';
-        m2 += payoffs[0][0].outcomes[1] + ' ';
+        const m1PayoffAsFraction = math.format(math.fraction(payoffs[0][0].outcomes[0]));
+        const m2PayoffAsFraction = math.format(math.fraction(payoffs[0][0].outcomes[1]));
+        m1 += m1PayoffAsFraction + ' ';
+        m2 += m2PayoffAsFraction + ' ';
       }
       m1 += '\n';
       m2 += '\n';
     }
     result += '\n\n' + m1 + '\n' + m2;
-
+    console.log(result);
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
   }
 
-  saveStrategicForm(){
+  saveStrategicForm() {
     this.tts.saveStrategicForm();
   }
 }

@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatrixInput} from './MatrixInput';
-import {parseIntAutoRadix} from '@angular/common/src/i18n/format_number';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
+import * as math from 'mathjs';
 
 @Component({
   selector: 'app-matrix-input',
@@ -76,7 +76,8 @@ export class MatrixInputComponent implements OnInit {
       const childElement = this.p1T.nativeElement.children[0].children[i];
       for (let j = 0; j < childElement.children.length; j++) {
         const child = childElement.children[j];
-        m1 += child.children[0].value + ' ';
+        const fraction = math.format(math.fraction(child.children[0].value));
+        m1 += fraction + ' ';
       }
       m1 += '\n';
     }
@@ -85,7 +86,8 @@ export class MatrixInputComponent implements OnInit {
       const childElement = this.p2T.nativeElement.children[0].children[i];
       for (let j = 0; j < childElement.children.length; j++) {
         const child = childElement.children[j];
-        m2 += child.children[0].value + ' ';
+        const fraction = math.format(math.fraction(child.children[0].value));
+        m2 += fraction + ' ';
       }
       m2 += '\n';
     }
