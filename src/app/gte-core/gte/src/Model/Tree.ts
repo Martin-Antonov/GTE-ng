@@ -1,7 +1,9 @@
 /// <reference path="../../../../../../node_modules/@types/mathjs/index.d.ts" />
 import {
-  BACKWARDS_INDUCTION_NOT_ALL_LABELED, BACKWARDS_INDUCTION_PERFECT_INFORMATION,
-  IMPERFECT_RECALL_ERROR_TEXT, NODES_CONTAIN_CHANCE_PLAYER,
+  BACKWARDS_INDUCTION_NOT_ALL_LABELED,
+  BACKWARDS_INDUCTION_PERFECT_INFORMATION,
+  IMPERFECT_RECALL_ERROR_TEXT,
+  NODES_CONTAIN_CHANCE_PLAYER,
   NODES_DIFFERENT_PLAYERS_ERROR_TEXT,
   NODES_NUMBER_OF_CHILDREN_ERROR_TEXT,
   SAME_PATH_ON_ROOT_ERROR_TEXT
@@ -83,8 +85,7 @@ export class Tree {
       if (n.children.length !== 0 && n.type === NodeType.LEAF) {
         if (n.player) {
           n.convertToLabeled(n.player);
-        }
-        else {
+        } else {
           n.convertToDefault();
         }
       }
@@ -151,9 +152,7 @@ export class Tree {
             allNodesFromISets.push(iN);
           }
         });
-      }
-
-      else {
+      } else {
         allNodesFromISets.push(n);
       }
     });
@@ -363,8 +362,7 @@ export class Tree {
   changeMoveLabel(move: Move, text: string) {
     if (move.from.type === NodeType.CHANCE) {
       this.chanceNodesSetProbabilities(move, text);
-    }
-    else {
+    } else {
       let dashedArray = text.split('_');
       if (dashedArray.length === 1) {
         move.label = text;
@@ -373,8 +371,7 @@ export class Tree {
       if (dashedArray.length === 2) {
         move.label = dashedArray[0];
         move.subscript = dashedArray[1];
-      }
-      else {
+      } else {
         move.label = dashedArray[0];
         dashedArray.splice(0, 1);
         move.subscript = dashedArray.join('');
@@ -401,6 +398,11 @@ export class Tree {
   private chanceNodesSetProbabilities(move: Move, text: string) {
     move.subscript = '';
     let newProb = <number>math.number(<any>(math.fraction(text)));
+
+    // If the user is just tabbing through probabilities
+    if (move.probability === newProb) {
+      return;
+    }
     if (newProb >= 0 && newProb <= 1) {
       move.probability = newProb;
       let probabilities = [];
@@ -418,24 +420,26 @@ export class Tree {
       for (let i = 0; i < currentIndex; i++) {
         probSumBeforeCurrent += probabilities[i];
       }
+      // Rounding errors prevention
+      const totalProbability = parseFloat((probSumBeforeCurrent + newProb).toFixed(4));
 
       // Case 0: Borderline case - if the last element is set with total probability less than 1
       // We reset all previous elements
-      if (probSumBeforeCurrent + newProb < 1 && currentIndex === probabilities.length - 1) {
+      if (totalProbability < 1 && currentIndex === probabilities.length - 1) {
         for (let i = 0; i < currentIndex; i++) {
           move.from.childrenMoves[i].probability = (1 - newProb) / (currentIndex);
         }
       }
       // Case 1: Standard case - the new probabilitiy with the previous does not exceed 1
       // We set the remaining probabilities to be the average of the remaining
-      else if (probSumBeforeCurrent + newProb <= 1) {
+      else if (totalProbability <= 1) {
         for (let i = currentIndex + 1; i < probabilities.length; i++) {
           move.from.childrenMoves[i].probability = (1 - probSumBeforeCurrent - newProb) / (probabilities.length - currentIndex - 1);
         }
       }
       // Case 2: If the previous + the current new probability exceed 1
       // We set all probabilities afterwards to be 0, and the previous will be averaged of the remaining
-      else if (probSumBeforeCurrent + newProb > 1) {
+      else if (totalProbability > 1) {
         for (let i = 0; i < currentIndex; i++) {
           move.from.childrenMoves[i].probability = (1 - newProb) / (currentIndex);
         }
@@ -508,8 +512,7 @@ export class Tree {
           });
           n.convertToLeaf();
 
-        }
-        else if (n.type === NodeType.OWNED) {
+        } else if (n.type === NodeType.OWNED) {
           let maxLeaf: Node = null;
           let maxPayoff = -100000;
           let playerIndex = clonedTree.players.indexOf(n.player);

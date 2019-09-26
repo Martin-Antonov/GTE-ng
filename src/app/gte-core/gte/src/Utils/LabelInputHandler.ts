@@ -54,8 +54,7 @@ export class LabelInputHandler {
       let nextIndex;
       if (next) {
         nextIndex = this.nodesBFSOrder.length !== index + 1 ? index + 1 : 1;
-      }
-      else {
+      } else {
         nextIndex = index === 1 ? this.nodesBFSOrder.length - 1 : index - 1;
       }
       // Activate the next move
@@ -75,8 +74,7 @@ export class LabelInputHandler {
         let nextIndex;
         if (next) {
           nextIndex = this.leavesDFSOrder.length !== index + 1 ? index + 1 : 0;
-        }
-        else {
+        } else {
           nextIndex = index === 0 ? this.leavesDFSOrder.length - 1 : index - 1;
         }
         this.currentlySelected = this.treeController.treeView.findNodeView(this.leavesDFSOrder[nextIndex]);
@@ -142,8 +140,7 @@ export class LabelInputHandler {
             }
           });
 
-        }
-        else {
+        } else {
           nodeV.node.payoffs.saveFromString(newLabel);
           this.treeController.treeView.nodes.forEach((nV: NodeView) => {
             nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
@@ -164,17 +161,14 @@ export class LabelInputHandler {
           stringToReturn += '_' + moveV.move.subscript;
         }
         return stringToReturn;
-      }
-      else {
+      } else {
         return moveV.label.text;
       }
-    }
-    else if (this.currentlySelected instanceof NodeView) {
+    } else if (this.currentlySelected instanceof NodeView) {
       let nodeV = (<NodeView>this.currentlySelected);
       if (nodeV.ownerLabel.alpha === 1) {
         return nodeV.ownerLabel.text;
-      }
-      else if (nodeV.payoffsLabel.alpha === 1) {
+      } else if (nodeV.payoffsLabel.alpha === 1) {
         return nodeV.node.payoffs.toString();
       }
     }
@@ -185,14 +179,12 @@ export class LabelInputHandler {
     if (this.currentlySelected instanceof MoveView) {
       this.fieldX = this.currentlySelected.label.x;
       this.fieldY = this.currentlySelected.label.y;
-    }
-    else if (this.currentlySelected instanceof NodeView) {
+    } else if (this.currentlySelected instanceof NodeView) {
       let nodeV = (<NodeView>this.currentlySelected);
       if (nodeV.ownerLabel.alpha === 1) {
         this.fieldX = nodeV.ownerLabel.x;
         this.fieldY = nodeV.ownerLabel.y;
-      }
-      else if (nodeV.payoffsLabel.alpha === 1) {
+      } else if (nodeV.payoffsLabel.alpha === 1) {
         this.fieldX = nodeV.payoffsLabel.x;
         this.fieldY = nodeV.payoffsLabel.y + 50;
       }
