@@ -229,23 +229,25 @@ export class TreeView {
   }
 
   /** A helper method for finding the nodeView, given a Node*/
-  findNodeView(node: Node) {
+  findNodeView(node: Node): NodeView {
     for (let i = 0; i < this.nodes.length; i++) {
       let nodeView = this.nodes[i];
       if (nodeView.node === node) {
         return nodeView;
       }
     }
+    return null;
   }
 
   /**A helper method for finding the moveView, given a Move*/
-  findMoveView(move: Move) {
+  findMoveView(move: Move): MoveView {
     for (let i = 0; i < this.moves.length; i++) {
       let moveView = this.moves[i];
       if (moveView.move === move) {
         return moveView;
       }
     }
+    return null;
   }
 
   /**A method which removes the given nodeView from the treeView*/
@@ -280,13 +282,14 @@ export class TreeView {
   }
 
   /**A helper method for finding the iSetView, given iSet*/
-  findISetView(iSet: ISet) {
+  findISetView(iSet: ISet): ISetView {
     for (let i = 0; i < this.iSets.length; i++) {
       let iSetView = this.iSets[i];
       if (iSetView.iSet === iSet) {
         return iSetView;
       }
     }
+    return null;
   }
 
   /**A method which removes the given iSetView from the treeView*/

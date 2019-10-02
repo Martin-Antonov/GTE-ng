@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, HostBinding, HostListener, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-square-button',
@@ -7,17 +7,21 @@ import {Component, HostListener, Input, OnInit} from '@angular/core';
 })
 export class SquareButtonComponent implements OnInit {
 
+  @HostBinding('style.background') background;
+
   private PATH_TO_ASSETS = 'assets/images/';
   @Input() imageKey: string;
   @Input() secondImageKey?: string;
   @Input() tooltipText?: string;
   @Input() inactive?: boolean;
+  @Output() clicked: EventEmitter<any>;
 
   shouldShowAnimation: boolean;
 
   pathToImage: string;
 
   constructor() {
+    this.clicked = new EventEmitter();
   }
 
   ngOnInit() {
@@ -30,18 +34,20 @@ export class SquareButtonComponent implements OnInit {
   }
 
   @HostListener('mouseenter') onMouseEnter() {
+    this.background = this.inactive ? '#424242' : '#555';
     if (this.tooltipText) {
       this.shouldShowAnimation = true;
     }
   }
 
   @HostListener('mouseleave') onMouseLeave() {
+    this.background = '#424242';
     if (this.tooltipText) {
       this.shouldShowAnimation = false;
     }
   }
 
-  clickHandler(){
+  clickHandler() {
     if (this.secondImageKey) {
       if (this.pathToImage.length === this.PATH_TO_ASSETS.length + this.imageKey.length) {
         this.pathToImage = this.PATH_TO_ASSETS + this.secondImageKey;
@@ -49,6 +55,9 @@ export class SquareButtonComponent implements OnInit {
       else {
         this.pathToImage = this.PATH_TO_ASSETS + this.imageKey;
       }
+    }
+    if (!this.inactive) {
+      this.clicked.emit();
     }
   }
 }

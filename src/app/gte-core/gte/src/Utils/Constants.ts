@@ -67,5 +67,5 @@ export const STRATEGIC_FORM_DELIMITER = ' ';
 
 // Other constants
 export const MAX_RANDOM_PAYOFFS = 21;
-export const CLICK_THRESHOLD = 100;
+export const CLICK_THRESHOLD = 200;
 

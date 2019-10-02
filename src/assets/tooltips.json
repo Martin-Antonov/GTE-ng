@@ -11,7 +11,9 @@
   "link": "Create information set from nodes   (I)",
   "unlink": "Destroy information set from nodes   (S)",
   "cut": "Split/Cut information set   (C)",
+  "select_children": "Select all children of selected nodes   (L)",
   "zero_sum": "Toggle between zero sum and non-zero sum mode",
   "random_payoffs": "Assign random payoffs",
-  "fraction_decimal": "Toggle between fraction and decimal probabilities"
+  "fraction_decimal": "Toggle between fraction and decimal probabilities",
+
 }

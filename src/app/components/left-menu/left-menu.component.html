@@ -1,9 +1,9 @@
 <ng-container *ngIf="this.tooltips && this.userActionController">
-  <app-square-button [imageKey]="'plus.png'" (click)="this.userActionController.addNodesHandler();"
+  <app-square-button [imageKey]="'plus.png'" (clicked)="this.userActionController.addNodesHandler();"
                      style="margin-top:20px;" [inactive]="this.areNodesSelected()"
                      [tooltipText]="this.tooltips.plus"></app-square-button>
   <app-square-button [imageKey]="'minus.png'"
-                     (click)="this.userActionController.deleteNodeHandler();"
+                     (clicked)="this.userActionController.deleteNodeHandler();"
                      [inactive]="this.areNodesSelected()"
                      [tooltipText]="this.tooltips.minus"></app-square-button>
   <app-square-button [imageKey]="'user.png'" (mouseover)="this.activatePlayerChoice()"
@@ -19,30 +19,36 @@
 
 
   <app-square-button [imageKey]="'chance-node.png'"
-                     (click)="this.userActionController.assignChancePlayerToNodeHandler();"
+                     (clicked)="this.userActionController.assignChancePlayerToNodeHandler();"
                      [inactive]="!this.doSelectedHaveChildren()"
                      [tooltipText]="this.tooltips.chance"></app-square-button>
   <app-square-button [imageKey]="'link.png'"
-                     (click)="this.userActionController.createISetHandler();"
+                     (clicked)="this.userActionController.createISetHandler();"
                      [inactive]="!this.canCreateISet()"
                      [tooltipText]="this.tooltips.link"></app-square-button>
   <app-square-button [imageKey]="'unlink.png'"
-                     (click)="this.userActionController.removeISetsByNodesHandler();"
+                     (clicked)="this.userActionController.removeISetsByNodesHandler();"
                      [inactive]="!this.canUnlinkOrCut()"
                      [tooltipText]="this.tooltips.unlink"></app-square-button>
   <app-square-button [imageKey]="'cut.png'"
-                     (click)="this.userActionController.initiateCutSpriteHandler()"
+                     (clicked)="this.userActionController.initiateCutSpriteHandler()"
                      [inactive]="!this.canUnlinkOrCut()"
                      [tooltipText]="this.tooltips.cut"></app-square-button>
+
+  <app-square-button [imageKey]="'select-children.png'"
+                     (clicked)="this.userActionController.selectChildren()"
+                     [inactive]="this.areNodesSelected()"
+                     [tooltipText]="this.tooltips.select_children"
+  ></app-square-button>
   <hr>
   <app-square-button [imageKey]="'non-zero-sum.png'" [secondImageKey]="'zero-sum.png'"
-                     (click)="this.userActionController.toggleZeroSum();"
+                     (clicked)="this.userActionController.toggleZeroSum();"
                      [tooltipText]="this.tooltips.zero_sum"></app-square-button>
-  <app-square-button [imageKey]="'random-payoffs.png'" (click)="this.userActionController.randomPayoffsHandler();"
+  <app-square-button [imageKey]="'random-payoffs.png'" (clicked)="this.userActionController.randomPayoffsHandler();"
                      style="margin-top:10px; margin-bottom:10px;"
                      [tooltipText]="this.tooltips.random_payoffs"></app-square-button>
   <app-square-button [imageKey]="'fraction.png'" [secondImageKey]="'decimal.png'"
-                     (click)="this.userActionController.toggleFractionDecimal();"
+                     (clicked)="this.userActionController.toggleFractionDecimal();"
                      [tooltipText]="this.tooltips.fraction_decimal"></app-square-button>
   <hr>
 </ng-container>

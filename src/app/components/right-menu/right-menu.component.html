@@ -1,12 +1,12 @@
 <ng-container *ngIf="this.uis">
   <app-square-button #settingsButton [imageKey]="'settings.png'" [secondImageKey]="'settings-pressed.png'"
-                     (click)="this.uis.settingsActive=!this.uis.settingsActive;"></app-square-button>
+                     (clicked)="this.uis.settingsActive=!this.uis.settingsActive;"></app-square-button>
   <app-square-button #shortcutsButton [imageKey]="'shortcuts.png'" [secondImageKey]="'shortcuts-pressed.png'"
-                     (click)="this.uis.shortcutsActive= !this.uis.shortcutsActive;"></app-square-button>
+                     (clicked)="this.uis.shortcutsActive= !this.uis.shortcutsActive;"></app-square-button>
   <app-square-button #consoleButton [imageKey]="'console.png'" [secondImageKey]="'console-pressed.png'"
-                     (click)="this.uis.consoleActive=!this.uis.settingsActive;"></app-square-button>
+                     (clicked)="this.uis.consoleActive=!this.uis.settingsActive;"></app-square-button>
   <app-square-button #tutorialButton [imageKey]="'tutorial.png'" [secondImageKey]="'tutorial-pressed.png'"
-                     (click)="this.uis.tutorialActive=!this.uis.tutorialActive;"></app-square-button>
+                     (clicked)="this.uis.tutorialActive=!this.uis.tutorialActive;"></app-square-button>
 
   <app-shortcuts *ngIf="this.uis.shortcutsActive" [shortcutsButton]="shortcutsButton"></app-shortcuts>
   <app-settings *ngIf="this.uis.settingsActive" [settingsButton]="settingsButton"></app-settings>

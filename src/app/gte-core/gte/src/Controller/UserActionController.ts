@@ -132,6 +132,26 @@ export class UserActionController {
     }
   }
 
+  /**A method for selecting all children of the given node.*/
+  selectChildren() {
+    if (this.selectedNodes.length !== 0) {
+      let nodesToSelect = [];
+      this.selectedNodes.forEach((nV: NodeView) => {
+        const children = this.treeController.tree.getBranchChildren(nV.node);
+        children.forEach((c: Node) => {
+          if (nodesToSelect.indexOf(c) === -1) {
+            nodesToSelect.push(c);
+          }
+        });
+      });
+
+      nodesToSelect.forEach((node: Node) => {
+        const nodeViewToSelect = this.treeController.treeView.findNodeView(node as any);
+        this.selectedNodes.push(nodeViewToSelect);
+      });
+    }
+  }
+
   /**A method for adding children to selected nodes (keyboard N).*/
   addNodesHandler(nodeV?: NodeView) {
     if (nodeV) {

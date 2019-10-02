@@ -51,9 +51,11 @@ export class Payoffs {
 
   /**A method for converting the game into a zero-sum game*/
   convertToZeroSum() {
-    if (this.playersCount === 2) {
-      this.outcomes[1] = -this.outcomes[0];
+    let sum = 0;
+    for (let i = 0; i < this.playersCount - 1; i++) {
+      sum += this.outcomes[i];
     }
+    this.outcomes[this.playersCount - 1] = -sum;
   }
 
   /**A helper method for the functionality of the strategic form*/

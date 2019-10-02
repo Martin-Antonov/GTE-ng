@@ -35,10 +35,14 @@ export class MoveView extends Phaser.Sprite {
     this.label.fontWeight = 200;
     this.label.inputEnabled = true;
     this.label.events.onInputOver.add(() => {
-      this.game.canvas.style.cursor = 'text';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'text';
+      }
     });
     this.label.events.onInputOut.add(() => {
-      this.game.canvas.style.cursor = 'default';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'default';
+      }
     });
 
 

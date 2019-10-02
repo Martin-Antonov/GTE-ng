@@ -24,18 +24,23 @@ export class NodeView extends Phaser.Sprite {
     super(game, x, y, game.cache.getBitmapData('node-circle'));
     this.anchor.set(0.5, 0.5);
     this.inputEnabled = true;
+    this.isSelected = false;
     this.input.priorityID = 2;
     this.events.onInputOver.add(() => {
-      this.game.canvas.style.cursor = 'pointer';
+      if (!this.game.input.activePointer.isDown) {
+        if (this.game.input.keyboard.isDown(Phaser.KeyCode.ALT)) {
+          this.game.canvas.style.cursor = 'no-drop';
+        } else {
+          this.game.canvas.style.cursor = 'pointer';
+        }
+      }
     });
     this.events.onInputOut.add(() => {
-      this.game.canvas.style.cursor = 'default';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'default';
+      }
     });
 
-    this.isSelected = false;
-    this.anchor.set(0.5, 0.5);
-
-    this.inputEnabled = true;
     this.node = node;
     this.level = this.node.depth;
     if (this.node.player) {
@@ -90,10 +95,14 @@ export class NodeView extends Phaser.Sprite {
     // this.ownerLabel.fontWeight = 100;
     this.ownerLabel.input.priorityID = 199;
     this.ownerLabel.events.onInputOver.add(() => {
-      this.game.canvas.style.cursor = 'text';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'text';
+      }
     });
     this.ownerLabel.events.onInputOut.add(() => {
-      this.game.canvas.style.cursor = 'default';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'default';
+      }
     });
 
 
@@ -107,10 +116,14 @@ export class NodeView extends Phaser.Sprite {
     this.payoffsLabel.align = 'right';
     this.payoffsLabel.input.priorityID = 199;
     this.payoffsLabel.events.onInputOver.add(() => {
-      this.game.canvas.style.cursor = 'text';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'text';
+      }
     });
     this.payoffsLabel.events.onInputOut.add(() => {
-      this.game.canvas.style.cursor = 'default';
+      if (!this.game.input.activePointer.isDown) {
+        this.game.canvas.style.cursor = 'default';
+      }
     });
 
   }
@@ -118,12 +131,10 @@ export class NodeView extends Phaser.Sprite {
   updateLabelPosition() {
     if (this.node.parent && this.node.parent.children.indexOf(this.node) < this.node.parent.children.length / 2) {
       this.labelHorizontalOffset = -1;
-      // this.ownerLabel.align = 'right';
       this.ownerLabel.anchor.set(1, 0.5);
     }
     else {
       this.labelHorizontalOffset = 1;
-      // this.ownerLabel.align = 'left';
       this.ownerLabel.anchor.set(0, 0.5);
     }
     this.ownerLabel.position.set(this.x + this.labelHorizontalOffset * this.width * 0.75,

@@ -11,6 +11,7 @@ export interface ITooltips {
   link: string;
   unlink: string;
   cut: string;
+  select_children: string;
   zero_sum: string;
   random_payoffs: string;
   fraction_decimal: string;
