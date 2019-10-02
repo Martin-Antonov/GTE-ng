@@ -6,7 +6,7 @@ import {ISet} from '../Model/ISet';
 import {NodeView} from './NodeView';
 import {Move} from '../Model/Move';
 import {MoveView} from './MoveView';
-import {Node, NodeType} from '../Model/Node';
+import {Node} from '../Model/Node';
 import {Tree} from '../Model/Tree';
 import {TreeViewProperties} from './TreeViewProperties';
 import {TreeTweenManager} from '../Utils/TreeTweenManager';

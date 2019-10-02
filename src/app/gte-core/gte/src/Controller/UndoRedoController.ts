@@ -21,11 +21,9 @@ export class UndoRedoController {
   changeTreeInController(undo: boolean) {
     if (undo && this.currentTreeIndex - 1 >= 0) {
       this.currentTreeIndex--;
-    }
-    else if (!undo && this.currentTreeIndex + 1 < this.treesList.length) {
+    } else if (!undo && this.currentTreeIndex + 1 < this.treesList.length) {
       this.currentTreeIndex++;
-    }
-    else {
+    } else {
       return;
     }
     let newTree = this.treeController.treeParser.parse(this.treeController.treeParser.stringify(this.treesList[this.currentTreeIndex]));
@@ -39,7 +37,9 @@ export class UndoRedoController {
     if (saveCoordinates) {
       const coordsArray = [];
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-        coordsArray.push({x: nV.position.x, y: nV.position.y});
+        const roundedX = Math.round(nV.position.x * 100) / 100;
+        const roundedY = Math.round(nV.position.y * 100) / 100;
+        coordsArray.push({x: roundedX, y: roundedY});
       });
       this.treeCoordinatesList[this.currentTreeIndex + 1] = coordsArray;
     }
