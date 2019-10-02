@@ -94,9 +94,7 @@ export class Tree {
     if (node.type === NodeType.CHANCE) {
       node.convertToChance(this.players[0]);
     }
-
   }
-
   // endregion
 
   // region Information Sets
@@ -348,7 +346,7 @@ export class Tree {
           }
           sum += move.probability;
         }
-
+        sum = parseFloat((sum).toFixed(4));
         if (shouldReset || sum !== 1) {
           n.childrenMoves.forEach((m: Move) => {
             m.probability = 1 / n.childrenMoves.length;

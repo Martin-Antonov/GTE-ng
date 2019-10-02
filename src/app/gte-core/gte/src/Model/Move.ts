@@ -48,10 +48,12 @@ export class Move {
   getProbabilityText(fractional?: boolean) {
     if (fractional && this.probability !== 1 && this.probability !== 0) {
       return math.format(math.fraction(this.probability));
-
-    }
-    else {
-      return math.format(math.round(math.number(this.probability), 2));
+    } else {
+      let result = math.format(math.round(math.number(this.probability), 2)).toString();
+      if (result.length !== 1) {
+        result = result.substr(1);
+      }
+      return result;
     }
   }
 

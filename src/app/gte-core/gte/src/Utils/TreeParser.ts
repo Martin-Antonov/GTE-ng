@@ -84,7 +84,6 @@ export class TreeParser {
 
   stringify(tree: Tree) {
     let decircularTree = this.copyWithoutCircularReferences(tree);
-
     return JSON.stringify(decircularTree);
   }
 
