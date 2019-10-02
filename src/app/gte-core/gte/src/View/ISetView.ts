@@ -110,7 +110,7 @@ export class ISetView extends Phaser.Sprite {
     if (this.nodes[0].node.player) {
       this.label.setText(this.nodes[0].node.player.label);
     }
-    this.label.fontSize = this.nodes[0].width * LABEL_SIZE / OVERLAY_SCALE;
+    this.label.fontSize = this.nodes[0].width * LABEL_SIZE;
     this.label.anchor.set(0.5, 0.5);
     if (!this.iSet.player) {
       this.label.alpha = 0;

@@ -48,7 +48,7 @@ export class MoveView extends Phaser.Sprite {
     this.subscript.align = 'center';
     this.subscript.fontWeight = 200;
     this.subscript.fontStyle = 'normal';
-    this.subscript.fontSize = this.from.width * 0.25;
+    this.subscript.fontSize = this.from.width * 0.75;
 
     this.game.add.existing(this);
     this.game.world.sendToBack(this);
@@ -109,12 +109,12 @@ export class MoveView extends Phaser.Sprite {
       let colorRGB = Phaser.Color.getRGB(this.from.node.player.color);
       this.label.fill = Phaser.Color.RGBtoString(colorRGB.r, colorRGB.g, colorRGB.b);
       this.label.fontStyle = 'italic';
-      this.label.fontSize = this.from.width * 0.42;
+      this.label.fontSize = this.from.width * 1.28;
     }
     else if (this.move.from.type === NodeType.CHANCE) {
       this.label.fill = '#000';
       this.label.fontStyle = 'normal';
-      this.label.fontSize = this.from.width * 0.35;
+      this.label.fontSize = this.from.width * 1.05;
     }
     this.subscript.fill = this.label.fill;
   }

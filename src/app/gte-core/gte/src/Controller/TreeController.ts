@@ -37,7 +37,6 @@ export class TreeController {
     this.iSetClickedSignal = new Phaser.Signal();
     this.setCircleBitmapData(1);
     this.createInitialTree();
-
   }
 
   /**A method which creates the initial 3-node tree in the scene*/
@@ -78,16 +77,16 @@ export class TreeController {
   /** The node specific method for attaching handlers
    * Also when we add node we attach the handler for the parent move label*/
   private attachHandlersToNode(nV: NodeView) {
-    nV.circle.events.onInputOver.add(() => {
+    nV.events.onInputOver.add(() => {
       this.handleInputOverNode(nV);
     });
-    nV.circle.events.onInputDown.add(() => {
+    nV.events.onInputDown.add(() => {
       this.handleInputDownNode(nV);
     });
-    nV.circle.events.onInputOut.add(() => {
+    nV.events.onInputOut.add(() => {
       this.handleInputOutNode(nV);
     });
-    nV.circle.events.onInputUp.add(() => {
+    nV.events.onInputUp.add(() => {
       this.handleInputUpNode(nV);
     });
 

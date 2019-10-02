@@ -15,7 +15,6 @@ export class NodeView extends Phaser.Sprite {
   payoffsLabel: Phaser.Text;
   isSelected: boolean;
   level: number;
-  circle: Phaser.Sprite;
   square: Phaser.Sprite;
   private previewSelected: Phaser.Sprite;
   // Horizontal offset: -1 for left, 1 for right;
@@ -23,11 +22,19 @@ export class NodeView extends Phaser.Sprite {
 
   constructor(game: Phaser.Game, node: Node, x?: number, y?: number) {
     super(game, x, y, game.cache.getBitmapData('node-circle'));
-    this.alpha = 0;
-    this.renderable = false;
+    this.anchor.set(0.5, 0.5);
+    this.inputEnabled = true;
+    this.input.priorityID = 2;
+    this.events.onInputOver.add(() => {
+      this.game.canvas.style.cursor = 'pointer';
+    });
+    this.events.onInputOut.add(() => {
+      this.game.canvas.style.cursor = 'default';
+    });
+
     this.isSelected = false;
     this.anchor.set(0.5, 0.5);
-    this.scale.set(OVERLAY_SCALE, OVERLAY_SCALE);
+
     this.inputEnabled = true;
     this.node = node;
     this.level = this.node.depth;
@@ -42,30 +49,16 @@ export class NodeView extends Phaser.Sprite {
     this.createSprites();
     this.createLabels();
     this.input.priorityID = 1;
-
     this.game.add.existing(this);
   }
 
   /** A method which creates the circle and square sprites*/
   private createSprites() {
-    this.circle = this.game.add.sprite(this.x, this.y, this.game.cache.getBitmapData('node-circle'));
-    this.circle.anchor.set(0.5, 0.5);
-    this.circle.position = this.position;
-    this.circle.tint = this.tint;
-    this.circle.inputEnabled = true;
-    this.circle.input.priorityID = 2;
-    this.circle.events.onInputOver.add(() => {
-      this.game.canvas.style.cursor = 'pointer';
-    });
-    this.circle.events.onInputOut.add(() => {
-      this.game.canvas.style.cursor = 'default';
-    });
-
     this.square = this.game.add.sprite(this.x, this.y, this.game.cache.getBitmapData('line'));
     this.square.position = this.position;
     this.square.tint = 0x000000;
-    this.square.width = this.circle.width;
-    this.square.height = this.circle.height;
+    this.square.width = this.width;
+    this.square.height = this.height;
     this.square.alpha = 0;
     this.square.anchor.set(0.5, 0.5);
 
@@ -79,8 +72,8 @@ export class NodeView extends Phaser.Sprite {
 
   /** A method which creates the label for the Node*/
   private createLabels() {
-    this.ownerLabel = this.game.add.text(this.x + this.labelHorizontalOffset * this.circle.width,
-      this.y - this.circle.width, '', null);
+    this.ownerLabel = this.game.add.text(this.x + this.labelHorizontalOffset * this.width,
+      this.y - this.width, '', null);
 
     if (this.node.player) {
       this.ownerLabel.setText(this.node.player.label, true);
@@ -89,8 +82,8 @@ export class NodeView extends Phaser.Sprite {
       this.ownerLabel.text = '';
     }
 
-    // this.label.position = this.position.add(this.labelHorizontalOffset*this.circle.width,this.y-this.circle.width);
-    this.ownerLabel.fontSize = this.circle.width * LABEL_SIZE;
+    // this.label.position = this.position.add(this.labelHorizontalOffset*this.width,this.y-this.width);
+    this.ownerLabel.fontSize = this.width * LABEL_SIZE;
     this.ownerLabel.fill = this.tint;
     this.ownerLabel.anchor.set(0.5, 0.5);
     this.ownerLabel.inputEnabled = true;
@@ -104,9 +97,9 @@ export class NodeView extends Phaser.Sprite {
     });
 
 
-    this.payoffsLabel = this.game.add.text(this.x, this.y + this.width, '', null);
+    this.payoffsLabel = this.game.add.text(this.x, this.y + this.width * OVERLAY_SCALE, '', null);
     this.payoffsLabel.position = this.position;
-    this.payoffsLabel.fontSize = this.circle.width * PAYOFF_SIZE;
+    this.payoffsLabel.fontSize = this.width * PAYOFF_SIZE;
     this.payoffsLabel.anchor.set(0.5, 0);
     this.payoffsLabel.fontWeight = 100;
     this.payoffsLabel.inputEnabled = true;
@@ -133,16 +126,16 @@ export class NodeView extends Phaser.Sprite {
       // this.ownerLabel.align = 'left';
       this.ownerLabel.anchor.set(0, 0.5);
     }
-    this.ownerLabel.position.set(this.x + this.labelHorizontalOffset * this.circle.width * 0.75,
-      this.y - this.circle.width);
+    this.ownerLabel.position.set(this.x + this.labelHorizontalOffset * this.width * 0.75,
+      this.y - this.width);
   }
 
   /** A method which converts the node, depending on whether it is a chance, owned or default.*/
   resetNodeDrawing(areLeavesActive: boolean, zeroSumOn: boolean) {
     // If Owned
     if (this.node.type === NodeType.OWNED) {
-      this.circle.tint = this.node.player.color;
-      this.circle.alpha = 1;
+      this.tint = this.node.player.color;
+      this.alpha = 1;
       if (this.node.iSet) {
         this.ownerLabel.alpha = 0;
       }
@@ -155,7 +148,7 @@ export class NodeView extends Phaser.Sprite {
       }
     }
     else {
-      this.circle.alpha = 0;
+      this.alpha = 0;
     }
 
     // If Chance
@@ -177,7 +170,7 @@ export class NodeView extends Phaser.Sprite {
         this.node.payoffs.convertToZeroSum();
       }
       if (areLeavesActive) {
-        this.circle.alpha = 0;
+        this.alpha = 0;
         this.payoffsLabel.alpha = 1;
         let payoffsString = this.node.payoffs.toString();
         let labelsArray = payoffsString.split(' ');
@@ -193,15 +186,15 @@ export class NodeView extends Phaser.Sprite {
         this.payoffsLabel.input.enabled = true;
       }
       else {
-        this.circle.alpha = 1;
+        this.alpha = 1;
         this.payoffsLabel.alpha = 0;
       }
     }
 
     // If Default
     if (this.node.type === NodeType.DEFAULT) {
-      this.circle.alpha = 1;
-      this.circle.tint = 0x000000;
+      this.alpha = 1;
+      this.tint = 0x000000;
       this.square.alpha = 0;
       this.ownerLabel.alpha = 0;
       this.payoffsLabel.alpha = 0;
@@ -210,17 +203,17 @@ export class NodeView extends Phaser.Sprite {
     // If Selected
     if (this.isSelected) {
       this.previewSelected.alpha = 0.3;
-      this.circle.tint = NODE_SELECTED_COLOR;
+      this.tint = NODE_SELECTED_COLOR;
       this.square.tint = NODE_SELECTED_COLOR;
     }
     else {
       this.previewSelected.alpha = 0;
       this.square.tint = 0x000000;
       if (this.node.player) {
-        this.circle.tint = this.node.player.color;
+        this.tint = this.node.player.color;
       }
       else {
-        this.circle.tint = 0x000000;
+        this.tint = 0x000000;
       }
     }
 
@@ -230,8 +223,6 @@ export class NodeView extends Phaser.Sprite {
   /** The destroy method of the node which prevents memory-leaks*/
   destroy() {
     this.node = null;
-    this.circle.destroy();
-    this.circle = null;
     this.square.destroy();
     this.square = null;
     this.previewSelected.destroy();

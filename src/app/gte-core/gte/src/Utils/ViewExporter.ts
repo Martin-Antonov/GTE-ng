@@ -1,12 +1,11 @@
 /// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
 
-import {TreeView} from '../View/TreeView';
 import {NodeView} from '../View/NodeView';
 import {NodeType} from '../Model/Node';
 import {MoveView} from '../View/MoveView';
 import {ISetView} from '../View/ISetView';
 import * as SVG from 'svg.js';
-import {ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH} from './Constants';
+import {ISET_LINE_WIDTH, LINE_WIDTH} from './Constants';
 import {TreeController} from '../Controller/TreeController';
 
 
@@ -48,7 +47,7 @@ export class ViewExporter {
         // other styles
         let post = '0 20 0.000 1 0.0000 ';
         let coords = Math.round(nV.world.x * factor) + ' ' + Math.round(nV.world.y * factor) + ' ';
-        let dimensions = Math.round((nV.circle.width * 0.65 / 2) * factor) + ' ' + Math.round((nV.circle.width * 0.65 / 2) * factor) + ' ';
+        let dimensions = Math.round((nV.width * 0.65 / 2) * factor) + ' ' + Math.round((nV.width * 0.65 / 2) * factor) + ' ';
         result += pre + depth + post + coords + dimensions + coords + coords + '\n';
 
         if (playerIndex > 0 && nV.node.iSet === null) {
@@ -256,7 +255,7 @@ export class ViewExporter {
 
     this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
-        draw.circle(nV.circle.width).attr({fill: Phaser.Color.getWebRGB(nV.circle.tint), 'stroke-width': 0}).center(nV.x, nV.y);
+        draw.circle(nV.width).attr({fill: Phaser.Color.getWebRGB(nV.tint), 'stroke-width': 0}).center(nV.x, nV.y);
         if (nV.node.iSet === null) {
           draw.text(nV.ownerLabel.text).move(nV.ownerLabel.x, nV.ownerLabel.y - nV.ownerLabel.height * 0.75).fill(nV.ownerLabel.fill)
             .font({
