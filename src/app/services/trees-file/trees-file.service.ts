@@ -5,6 +5,7 @@ import {TreeFile} from './TreeFile';
 import {saveAs} from 'file-saver';
 import {UiSettingsService} from '../ui-settings/ui-settings.service';
 import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedoController';
+import {Tree} from '../../gte-core/gte/src/Model/Tree';
 
 @Injectable({
   providedIn: 'root'
@@ -152,7 +153,13 @@ export class TreesFileService {
   }
 
   private newTreeFromFile(text: string) {
-    let newTree: TreeFile = JSON.parse(text);
+    const parsedTree: TreeFile = JSON.parse(text);
+    const newTree = new TreeFile(parsedTree.fileName);
+    newTree.currentTree = parsedTree.currentTree;
+    newTree.coordsList = parsedTree.coordsList;
+    newTree.urTreesList = parsedTree.urTreesList;
+    newTree.urCurrentTreeIndex = parsedTree.urCurrentTreeIndex;
+
     this.treeTabs.push(newTree);
     this.changeToTree(this.treeTabs.length - 1);
     // this.userActionController.treeController.treeParser.fromXML(text);
