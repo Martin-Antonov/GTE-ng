@@ -14,6 +14,5 @@
   "select_children": "Select all children of selected nodes   (L)",
   "zero_sum": "Toggle between zero sum and non-zero sum mode",
   "random_payoffs": "Assign random payoffs",
-  "fraction_decimal": "Toggle between fraction and decimal probabilities",
-
+  "fraction_decimal": "Toggle between fraction and decimal probabilities"
 }

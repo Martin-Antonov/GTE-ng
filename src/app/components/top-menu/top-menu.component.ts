@@ -19,7 +19,7 @@ export class TopMenuComponent implements OnInit {
   logoSrc: string;
   strategicFormActive: boolean;
 
-  @ViewChild('loadInput') loadFileField;
+  @ViewChild('loadInput', { static: false }) loadFileField;
 
   constructor(private uac: UserActionControllerService, public tts: TooltipsService,
               public uis: UiSettingsService, private tfs: TreesFileService, private hotkeys: HotkeysService) {

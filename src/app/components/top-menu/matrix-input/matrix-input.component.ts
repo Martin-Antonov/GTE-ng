@@ -16,8 +16,8 @@ export class MatrixInputComponent implements OnInit {
   fromMatricesActive: boolean;
 
   matrixInputModel: MatrixInput;
-  @ViewChild('p1Table') p1T;
-  @ViewChild('p2Table') p2T;
+  @ViewChild('p1Table', { static: false }) p1T;
+  @ViewChild('p2Table', { static: false }) p2T;
 
   constructor(public uis: UiSettingsService, private solver: SolverService) {
   }

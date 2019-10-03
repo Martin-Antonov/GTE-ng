@@ -27,6 +27,7 @@ export class KeyboardController {
   sKey: Phaser.Key;
   rKey: Phaser.Key;
   yKey: Phaser.Key;
+  lKey: Phaser.Key;
   numPlusKey: Phaser.Key;
   numMinusKey: Phaser.Key;
   tabKey: Phaser.Key;
@@ -65,6 +66,7 @@ export class KeyboardController {
     this.sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
     this.rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
     this.yKey = this.game.input.keyboard.addKey(Phaser.Keyboard.Y);
+    this.lKey = this.game.input.keyboard.addKey(Phaser.Keyboard.L);
     this.tabKey = this.game.input.keyboard.addKey(Phaser.Keyboard.TAB);
     this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     this.escapeKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -90,6 +92,7 @@ export class KeyboardController {
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.R);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.Y);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.L);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.NUMPAD_ADD);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.NUMPAD_SUBTRACT);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ZERO);
@@ -185,6 +188,7 @@ export class KeyboardController {
         this.userActionController.undoRedoHandler(false);
       }
     });
+
     // Remove information set
     this.sKey.onDown.add(() => {
       if (!this.userActionController.labelInput.active) {
@@ -207,6 +211,10 @@ export class KeyboardController {
       else {
         // this.userActionController.activateLabelField(true);
       }
+    });
+
+    this.lKey.onDown.add(() => {
+      this.userActionController.selectChildren();
     });
 
     // Exit label

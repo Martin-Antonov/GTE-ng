@@ -3,9 +3,7 @@ import {UserActionControllerService} from '../user-action-controller/user-action
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
 import {TreeFile} from './TreeFile';
 import {saveAs} from 'file-saver';
-import {UiSettingsService} from '../ui-settings/ui-settings.service';
 import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedoController';
-import {Tree} from '../../gte-core/gte/src/Model/Tree';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +14,7 @@ export class TreesFileService {
   treeTabs: Array<TreeFile>;
   currentTabIndex: number;
 
-  constructor(private uac: UserActionControllerService, private uis: UiSettingsService) {
+  constructor(private uac: UserActionControllerService) {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
@@ -146,7 +144,7 @@ export class TreesFileService {
     let reader = new FileReader();
     reader.onload = () => {
       let text = reader.result;
-      this.newTreeFromFile(text);
+      this.newTreeFromFile(text as any);
     };
 
     reader.readAsText((<any>input).files[0]);

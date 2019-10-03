@@ -146,8 +146,16 @@ export class UserActionController {
       });
 
       nodesToSelect.forEach((node: Node) => {
-        const nodeViewToSelect = this.treeController.treeView.findNodeView(node);
-        this.selectedNodes.push(nodeViewToSelect);
+        const nodeViewToSelect = this.treeController.treeView.findNodeView(node as any);
+        if (this.selectedNodes.indexOf(nodeViewToSelect) === -1) {
+          nodeViewToSelect.isSelected = true;
+          nodeViewToSelect.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(),
+            this.treeController.treeView.properties.zeroSumOn);
+          this.selectedNodes.push(nodeViewToSelect);
+        }
+      });
+
+      this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       });
     }
   }

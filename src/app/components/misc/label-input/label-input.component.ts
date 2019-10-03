@@ -9,7 +9,7 @@ import {Hotkey, HotkeysService} from 'angular2-hotkeys';
   styleUrls: ['./label-input.component.scss']
 })
 export class LabelInputComponent implements OnInit {
-  @ViewChild('inputLabel') inputField;
+  @ViewChild('inputLabel', { static: false }) inputField;
 
   userActionController: UserActionController;
 

@@ -11,14 +11,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^6.1.7",
-    "@angular/common": "^6.1.7",
-    "@angular/compiler": "^6.1.7",
-    "@angular/core": "^6.1.7",
-    "@angular/forms": "^6.1.7",
-    "@angular/platform-browser": "^6.1.7",
-    "@angular/platform-browser-dynamic": "^6.1.7",
-    "@angular/router": "^6.1.7",
+    "@angular/animations": "^8.2.9",
+    "@angular/common": "^8.2.9",
+    "@angular/compiler": "^8.2.9",
+    "@angular/core": "^8.2.9",
+    "@angular/forms": "^8.2.9",
+    "@angular/platform-browser": "^8.2.9",
+    "@angular/platform-browser-dynamic": "^8.2.9",
+    "@angular/router": "^8.2.9",
     "@types/mathjs": "^4.4.1",
     "angular2-draggable": "^2.3.2",
     "angular2-hotkeys": "^2.1.4",
@@ -27,7 +27,7 @@
     "mathjs": "^5.1.2",
     "ng-click-outside": "^4.0.0",
     "phaser-ce": "^2.11.0",
-    "rxjs": "^6.0.0",
+    "rxjs": "^6.5.3",
     "serve": "^10.0.1",
     "svg.js": "^2.7.0",
     "tslib": "^1.10.0",
@@ -37,8 +37,9 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.7",
     "@angular/cli": "~8.3.7",
-    "@angular/compiler-cli": "^6.1.7",
-    "@angular/language-service": "^6.1.7",
+    "@angular/compiler-cli": "^8.2.9",
+    "@angular/language-service": "^8.2.9",
+    "@types/file-saver": "^2.0.1",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
@@ -53,6 +54,6 @@
     "protractor": "~5.3.0",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
-    "typescript": "~2.7.2"
+    "typescript": "~3.5.3"
   }
 }
