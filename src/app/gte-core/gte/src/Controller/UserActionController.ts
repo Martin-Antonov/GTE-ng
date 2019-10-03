@@ -146,7 +146,7 @@ export class UserActionController {
       });
 
       nodesToSelect.forEach((node: Node) => {
-        const nodeViewToSelect = this.treeController.treeView.findNodeView(node as any);
+        const nodeViewToSelect = this.treeController.treeView.findNodeView(node);
         this.selectedNodes.push(nodeViewToSelect);
       });
     }
