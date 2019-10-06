@@ -1,10 +1,10 @@
 <div class="grid-wrapper">
   <app-gte-core ngResizable rzHandles="e, se, s" (rzResizing)="this.resizeMiddleElement()" [rzMinWidth]="500"
                 [rzMinHeight]="500"></app-gte-core>
-  <app-top-menu (clickOutside)="this.closeSaveFile()"></app-top-menu>
+  <app-top-menu (clickOutside)="this.closeSaveFile()" (click)="this.userActionController.deselectNodesHandler()"></app-top-menu>
   <app-left-menu></app-left-menu>
-  <app-right-menu></app-right-menu>
-  <app-bottom-menu></app-bottom-menu>
+  <app-right-menu (click)="this.userActionController.deselectNodesHandler()"></app-right-menu>
+  <app-bottom-menu (click)="this.userActionController.deselectNodesHandler()"></app-bottom-menu>
   <app-label-input></app-label-input>
 </div>
 <app-error-log></app-error-log>

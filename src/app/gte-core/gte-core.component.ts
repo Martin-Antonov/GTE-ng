@@ -33,10 +33,4 @@ export class GteCoreComponent implements OnInit {
       }
     }, 100);
   }
-
-  onClickOutside(e: Event) {
-    if (this.game && this.game.state && this.game.state.states.MainScene && this.game.state.states.MainScene.userActionController) {
-      this.game.state.states.MainScene.userActionController.deselectNodesHandler();
-    }
-  }
 }
