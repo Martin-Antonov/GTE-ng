@@ -155,7 +155,7 @@ export class ViewExporter {
       // line, type arc-box, default style and thickness
       let pre = '2 4 0 3 ' + color + ' ' + color + ' ';
       let depth = 20 + playerIndex + ' ';
-      let post = '-1 -1 0.000 0 0 27 0 0 5\n';
+      let post = '-1 -1 0.000 0 0 8 0 0 5\n';
       let leftNodeX = Math.round(firstNode.x * factor);
       let leftNodeY = Math.round(firstNode.y * factor);
       let rightNodeX = Math.round(lastNode.x * factor);

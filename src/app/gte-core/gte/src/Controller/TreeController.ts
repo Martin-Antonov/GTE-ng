@@ -405,8 +405,10 @@ export class TreeController {
       }
 
       this.treeView.drawISets();
+      this.resetTree(false, false);
+    } else {
+      this.resetTree(true, false);
     }
-    this.resetTree(true, false);
   }
 
   /**A method for deleting a !single! node from the treeView and tree*/

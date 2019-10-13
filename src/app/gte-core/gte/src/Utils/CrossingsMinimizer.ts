@@ -1,8 +1,7 @@
 /// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
 
 import {TreeView} from '../View/TreeView';
-import {Node, NodeType} from '../Model/Node';
-import {ISet} from '../Model/ISet';
+import {Node} from '../Model/Node';
 import {ISetView} from '../View/ISetView';
 import {NodeView} from '../View/NodeView';
 
@@ -14,11 +13,10 @@ export class CrossingsMinimizer {
   }
 
   equalizeInfoSetsLevels() {
-    // For each ISet, check how many nodes in the DFS order of the tree are "between" the nodes in the iSet (not including children)
-    // of the iSet Nodes. Find the largest depth of among these nodes, and push the iSet down.
     this.treeView.nodes.forEach((nV: NodeView) => {
       nV.level = nV.node.depth;
     });
+
     this.treeView.iSets.forEach((iSetV: ISetView) => {
       let maxDepth = -1;
       iSetV.nodes.forEach((nV: NodeView) => {

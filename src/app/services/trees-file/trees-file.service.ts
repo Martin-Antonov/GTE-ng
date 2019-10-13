@@ -23,7 +23,7 @@ export class TreesFileService {
   }
 
   initiateFirstTree() {
-    let initialTree = new TreeFile('My Tree 1');
+    let initialTree = new TreeFile('MyTree1');
     this.treeTabs.push(initialTree);
     this.currentTabIndex = 0;
   }
@@ -32,7 +32,7 @@ export class TreesFileService {
     this.saveCurrentTree();
     this.userActionController.emptySelectedNodes();
     // Create the new tree and push it to tree tabs
-    let newTree = new TreeFile('My Tree ' + (this.treeTabs.length + 1));
+    let newTree = new TreeFile('MyTree' + (this.treeTabs.length + 1));
     this.treeTabs.push(newTree);
     this.currentTabIndex = this.treeTabs.length - 1;
     this.userActionController.createNewTree();
