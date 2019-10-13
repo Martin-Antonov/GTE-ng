@@ -60,9 +60,10 @@ export class TreeView {
   // region Tree Drawing Algorithm
   /**This method contains the algorithm for drawing the tree in different scenarios*/
   drawTree(fullReset: boolean, startAnimations: boolean) {
+    console.log('method called');
     this.treeTweenManager.oldCoordinates = this.getOldCoordinates();
 
-    if (this.properties.automaticLevelAdjustment && fullReset) {
+    if (this.properties.automaticLevelAdjustment && fullReset && this.iSets.length !== 0) {
       this.crossingsMinimizer.equalizeInfoSetsLevels();
     }
 
@@ -81,7 +82,7 @@ export class TreeView {
       this.setYCoordinates();
       this.updateLeavesPositions();
       this.centerParents();
-      if (this.properties.automaticLevelAdjustment) {
+      if (this.properties.automaticLevelAdjustment && this.iSets.length > 0) {
         this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
       }
       this.centerGroupOnScreen();
