@@ -82,7 +82,7 @@ export class TreeView {
       this.updateLeavesPositions();
       this.centerParents();
       if (this.properties.automaticLevelAdjustment) {
-        this.crossingsMinimizer.adjustHorizontally();
+        this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
       }
       this.centerGroupOnScreen();
       this.drawISets();
@@ -318,7 +318,7 @@ export class TreeView {
 
   // endregion
 
-  private getMaxDepth() {
+  getMaxDepth() {
     let maxDepth = -1;
     this.nodes.forEach((nV: NodeView) => {
       if (maxDepth < nV.level) {

@@ -16,38 +16,22 @@ export class CrossingsMinimizer {
   equalizeInfoSetsLevels() {
     // For each ISet, check how many nodes in the DFS order of the tree are "between" the nodes in the iSet (not including children)
     // of the iSet Nodes. Find the largest depth of among these nodes, and push the iSet down.
+    this.treeView.nodes.forEach((nV: NodeView) => {
+      nV.level = nV.node.depth;
+    });
     this.treeView.tree.iSets.forEach((iSet: ISet) => {
-      // debugger;
-      let DFSnodes = this.treeView.tree.DFSOnTree();
-      let maxIndex = -1;
-      let minIndex = 1000000;
       let maxDepth = -1;
-      let allChildren = [];
       iSet.nodes.forEach((n: Node) => {
-        let index = DFSnodes.indexOf(n);
-        if (index > maxIndex) {
-          maxIndex = index;
-        }
-
-        if (index < minIndex) {
-          minIndex = index;
-        }
         if (maxDepth < n.depth) {
           maxDepth = n.depth;
         }
-        allChildren = allChildren.concat(this.treeView.tree.getBranchChildren(n));
       });
-      let maxDepthNotInInfoSet = -1;
-      for (let i = minIndex + 1; i < maxIndex; i++) {
-        let current = DFSnodes[i];
-        if (allChildren.indexOf(current) === -1 && maxDepthNotInInfoSet < current.depth) {
-          maxDepthNotInInfoSet = current.depth;
-        }
-      }
-      let newLevelForInfoSetNodes = maxDepthNotInInfoSet >= maxDepth ? maxDepthNotInInfoSet + 1 : maxDepth;
 
       iSet.nodes.forEach((n: Node) => {
-        this.pushBranchDown(n, newLevelForInfoSetNodes);
+        const newLevelForInfoSetNodes = maxDepth - n.depth;
+        if (newLevelForInfoSetNodes !== 0) {
+          this.pushBranchDown(n, newLevelForInfoSetNodes);
+        }
       });
     });
   }
@@ -55,11 +39,32 @@ export class CrossingsMinimizer {
   private pushBranchDown(n: Node, newLevel: number) {
     let branchNodes = this.treeView.tree.getBranchChildren(n);
     branchNodes.forEach((bNode: Node) => {
-      this.treeView.findNodeView(bNode).level = newLevel + bNode.depth - n.depth;
+      const bNodeView = this.treeView.findNodeView(bNode);
+      bNodeView.level = newLevel + bNodeView.level;
     });
   }
 
-  adjustHorizontally() {
+  minimizeCrossingsBetweenInfoSets() {
+    this.treeView.iSets.forEach((iSetV: ISetView) => {
+      const levelsToPushDown = this.getNumberOfLevelsToPushDown(iSetV);
+      iSetV.nodes.forEach((nV: NodeView) => {
+        this.pushBranchDown(nV.node, levelsToPushDown);
+      });
+    });
+
+    let maxDepth = this.treeView.getMaxDepth();
+    if (maxDepth * this.treeView.properties.levelHeight > this.treeView.game.height * 0.75) {
+      this.treeView.properties.levelHeight = ((1 / (maxDepth + 2)) * this.treeView.game.height);
+    }
+
+    this.treeView.setYCoordinates();
+    this.treeView.updateLeavesPositions();
+    this.treeView.centerParents();
+
+    this.adjustHorizontally();
+  }
+
+  private adjustHorizontally() {
     let leavesLength = this.treeView.tree.getLeaves().length;
     this.treeView.iSets.forEach((iSetV: ISetView) => {
       iSetV.nodes.forEach((nV: NodeView) => {
@@ -86,5 +91,51 @@ export class CrossingsMinimizer {
         });
       });
     });
+  }
+
+  private getNumberOfLevelsToPushDown(iSetV: ISetView) {
+    let nodesViewFromISet = [];
+    let leftMostX = iSetV.nodes[0].x;
+    let rightMostX = iSetV.nodes[0].x;
+    iSetV.nodes.forEach((nV: NodeView) => {
+      // Get the leftMost and RightMost x coordinate of the infoSet
+      if (nV.x < leftMostX) {
+        leftMostX = nV.x;
+      }
+      if (nV.x > rightMostX) {
+        rightMostX = nV.x;
+      }
+      // Get Branch children as Node
+      const branchChildren = this.treeView.tree.getBranchChildren(nV.node);
+      nodesViewFromISet = nodesViewFromISet.concat(branchChildren);
+    });
+    // Convert to NodeView
+    for (let i = 0; i < nodesViewFromISet.length; i++) {
+      nodesViewFromISet[i] = this.treeView.findNodeView(nodesViewFromISet[i]);
+    }
+
+    // Get all nodes which are between and under the iSet nodes
+    const iSetLevel = iSetV.nodes[0].level;
+    let maxLevelDifference = -1;
+    let shouldPushDown = false;
+    this.treeView.nodes.forEach((nV: NodeView) => {
+        // If the node is not part of the iset AND the node is between the iset
+        if (!nodesViewFromISet.includes(nV) && nV.x >= leftMostX && nV.x <= rightMostX) {
+          // If the level is the same as the iSet level, then we should push down
+          if (nV.level === iSetLevel) {
+            shouldPushDown = true;
+          }
+          // If the level is bigger, we calculate the number of levels to push down
+          if (nV.level > iSetLevel && maxLevelDifference < nV.level - iSetLevel) {
+            maxLevelDifference = nV.level - iSetLevel;
+          }
+        }
+      }
+    );
+    if (!shouldPushDown || maxLevelDifference === -1) {
+      return 0;
+    } else {
+      return maxLevelDifference + 1;
+    }
   }
 }
