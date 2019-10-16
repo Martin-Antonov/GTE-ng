@@ -146,27 +146,25 @@ export class ViewExporter {
     });
 
     result += '#isets\n';
-
     this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
       let firstNode = iSetV.nodes[0];
       let lastNode = iSetV.nodes[iSetV.nodes.length - 1];
       let playerIndex = this.treeController.treeView.tree.players.indexOf(iSetV.iSet.player);
       let color = this.getColorFromPlayerIndex(playerIndex);
-      // line, type arc-box, default style and thickness
-      let pre = '2 4 0 3 ' + color + ' ' + color + ' ';
-      let depth = 20 + playerIndex + ' ';
-      let post = '-1 -1 0.000 0 0 8 0 0 5\n';
-      let leftNodeX = Math.round(firstNode.x * factor);
-      let leftNodeY = Math.round(firstNode.y * factor);
-      let rightNodeX = Math.round(lastNode.x * factor);
-      let rightNodeY = Math.round(lastNode.y * factor);
-      let offset = Math.round(iSetV.nodes[0].width * factor / 3);
-      let topLeft = (leftNodeX - offset) + ' ' + (leftNodeY - offset) + ' ';
-      let topRight = (rightNodeX + offset) + ' ' + (rightNodeY - offset) + ' ';
-      let bottomLeft = (leftNodeX - offset) + ' ' + (leftNodeY + offset) + ' ';
-      let bottomRight = (rightNodeX + offset) + ' ' + (rightNodeY + offset) + ' ';
+      // line, type polyline, default style and thickness. first line is white
+      let pre1 = '2 1 0 35 ' + 7 + ' ' + 7 + ' ';
+      // Second line is with the player color and higher depth
+      let pre2 = '2 1 0 38 ' + color + ' ' + color + ' ';
+      let depth1 = 120 + playerIndex + ' ';
+      let depth2 = 121 + playerIndex + ' ';
+      let post = '-1 -1 0.000 1 1 -1 0 0 2\n';
+      let leftNodeX = Math.round(firstNode.x * factor) + ' ';
+      let leftNodeY = Math.round(firstNode.y * factor) + ' ';
+      let rightNodeX = Math.round(lastNode.x * factor) + ' ';
+      let rightNodeY = Math.round(lastNode.y * factor) + ' ';
 
-      result += pre + depth + post + topLeft + topRight + bottomRight + bottomLeft + topLeft + '\n';
+      result += pre1 + depth1 + post + leftNodeX + leftNodeY + rightNodeX + rightNodeY + '\n';
+      result += pre2 + depth2 + post + leftNodeX + leftNodeY + rightNodeX + rightNodeY + '\n';
 
       playerLabels.push({
         text: iSetV.label.text,

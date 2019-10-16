@@ -61,7 +61,7 @@ export class SettingsComponent implements OnInit {
   toggleAutoLevels() {
     let properties = this.userActionController.treeController.treeView.properties;
     properties.automaticLevelAdjustment = !properties.automaticLevelAdjustment;
-    this.userActionController.treeController.resetTree(true, true);
+    // this.userActionController.treeController.resetTree(true, true);
   }
 
   toggleBestResponses(){
