@@ -26,9 +26,9 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.treeWidth = 50 * this.userActionController.treeController.treeView.properties.treeWidth
-      / (this.userActionController.game.width * INITIAL_TREE_WIDTH);
+      / (this.userActionController.scene.sys.canvas.width * INITIAL_TREE_WIDTH);
     this.treeHeight = 50 * this.userActionController.treeController.treeView.properties.levelHeight
-      / (this.userActionController.game.height * INITIAL_TREE_HEIGHT);
+      / (this.userActionController.scene.sys.canvas.height * INITIAL_TREE_HEIGHT);
     this.playerLists = [];
     for (let i = 0; i < this.userActionController.treeController.tree.labelSetter.labels.length; i++) {
       const label = this.userActionController.treeController.tree.labelSetter.labels[i];
@@ -43,13 +43,13 @@ export class SettingsComponent implements OnInit {
 
   updateTreeWidth() {
     this.userActionController.treeController.treeView.properties.treeWidth =
-      this.userActionController.game.width * INITIAL_TREE_WIDTH * this.treeWidth * 2 / 100;
+      this.userActionController.scene.sys.canvas.width * INITIAL_TREE_WIDTH * this.treeWidth * 2 / 100;
     this.userActionController.treeController.resetTree(true, true);
   }
 
   updateTreeHeight() {
     this.userActionController.treeController.treeView.properties.levelHeight =
-      this.userActionController.game.height * INITIAL_TREE_HEIGHT * this.treeHeight * 2 / 100;
+      this.userActionController.scene.sys.canvas.height * INITIAL_TREE_HEIGHT * this.treeHeight * 2 / 100;
     this.userActionController.treeController.resetTree(true, true);
   }
 
@@ -59,12 +59,12 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleAutoLevels() {
-    let properties = this.userActionController.treeController.treeView.properties;
+    const properties = this.userActionController.treeController.treeView.properties;
     properties.automaticLevelAdjustment = !properties.automaticLevelAdjustment;
     // this.userActionController.treeController.resetTree(true, true);
   }
 
-  toggleBestResponses(){
+  toggleBestResponses() {
     this.uis.bestResponsesActive = !this.uis.bestResponsesActive;
   }
 }

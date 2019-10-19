@@ -1,27 +1,27 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
 import {TREE_TWEEN_DURATION} from './Constants';
 import {NodeView} from '../View/NodeView';
 import {MoveView} from '../View/MoveView';
 import {TreeViewProperties} from '../View/TreeViewProperties';
 
 export class TreeTweenManager {
-  game: Phaser.Game;
+  scene: Phaser.Scene;
   oldCoordinates: Array<{ x, y }>;
 
-  constructor(game: Phaser.Game) {
-    this.game = game;
+  constructor(scene: Phaser.Scene) {
+    this.scene = scene;
   }
 
   startTweens(nodes: Array<NodeView>, moves: Array<MoveView>, allNodesLabeled: boolean, properties: TreeViewProperties) {
     for (let i = 0; i < this.oldCoordinates.length; i++) {
-      let clonedCoords = this.oldCoordinates[i];
-      let nodeV = nodes[i];
-      this.game.add.tween(nodeV).from({
+      const clonedCoords = this.oldCoordinates[i];
+      const nodeV = nodes[i];
+      this.scene.tweens.add({
+        targets: nodeV,
         x: clonedCoords.x,
-        y: clonedCoords.y
-      }, TREE_TWEEN_DURATION, Phaser.Easing.Quartic.Out, true)
-        .onUpdateCallback(() => {
+        y: clonedCoords.y,
+        duration: TREE_TWEEN_DURATION,
+        ease: 'quarticOut',
+        onUpdate: () => {
           nodes.forEach(n => {
             n.resetNodeDrawing(allNodesLabeled, properties.zeroSumOn);
           });
@@ -29,7 +29,8 @@ export class TreeTweenManager {
             m.updateMovePosition();
             m.updateLabel(properties.fractionOn, properties.levelHeight);
           });
-        }, this);
+        }
+      });
     }
   }
 }

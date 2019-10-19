@@ -26,7 +26,7 @@ export class UndoRedoController {
     } else {
       return;
     }
-    let newTree = this.treeController.treeParser.parse(this.treeController.treeParser.stringify(this.treesList[this.currentTreeIndex]));
+    const newTree = this.treeController.treeParser.parse(this.treeController.treeParser.stringify(this.treesList[this.currentTreeIndex]));
 
     this.treeController.reloadTreeFromJSON(newTree, this.treeCoordinatesList[this.currentTreeIndex]);
   }
@@ -37,8 +37,8 @@ export class UndoRedoController {
     if (saveCoordinates) {
       const coordsArray = [];
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-        const roundedX = Math.round(nV.position.x * 100) / 100;
-        const roundedY = Math.round(nV.position.y * 100) / 100;
+        const roundedX = Math.round(nV.x * 100) / 100;
+        const roundedY = Math.round(nV.y * 100) / 100;
         coordsArray.push({x: roundedX, y: roundedY});
       });
       this.treeCoordinatesList[this.currentTreeIndex + 1] = coordsArray;

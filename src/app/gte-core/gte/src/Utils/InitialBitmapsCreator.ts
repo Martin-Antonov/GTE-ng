@@ -1,76 +1,70 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
 import {
-  CELL_STROKE_WIDTH, CELL_WIDTH,
   INTRO_RADIUS,
   LINE_WIDTH,
-  NODE_RADIUS,
-  NODE_SCALE
 } from './Constants';
 
 /** A class for the initial animation of the GTE software
  * This class shows a very simple usage of the Phaser Engine - sprites, colours, bitmaps, repositioning and tweens
  * Here we also preload all sprites that will be used*/
 export class InitialBitmapsCreator {
-  game: Phaser.Game;
-  bmd: Phaser.BitmapData;
-  text: Phaser.Text;
-  distance: number;
+  scene: Phaser.Scene;
+  graphics: Phaser.GameObjects.Graphics;
+  text: Phaser.GameObjects.Text;
   radius: number;
+  width: number;
+  height: number;
 
-  constructor(game: Phaser.Game) {
-    this.game = game;
-    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.game.stage.backgroundColor = '#fff';
-    this.radius = this.game.height * INTRO_RADIUS;
+  constructor(scene: Phaser.Scene) {
+    this.scene = scene;
+    this.width = this.scene.sys.canvas.width;
+    this.height = this.scene.sys.canvas.height;
+    this.radius = this.height * INTRO_RADIUS;
     this.createTextures();
-    this.createBitmapPoint();
-    this.createBitmapLine();
-    this.createCell();
-    this.createHoverCircle();
-  }
-
-
-  createBitmapPoint() {
-    this.bmd = this.game.make.bitmapData(this.game.height * 0.04, this.game.height * 0.04, 'point', true);
-    this.bmd.ctx.fillStyle = '#000000';
-    this.bmd.ctx.arc(this.bmd.width / 2, this.bmd.height / 2, this.radius, 0, Math.PI * 2);
-    this.bmd.ctx.fill();
-  }
-
-
-  createBitmapLine() {
-    this.bmd = this.game.make.bitmapData(1, 1, 'line', true);
-    this.bmd.ctx.fillStyle = '#ffffff';
-    this.bmd.ctx.fillRect(0, 0, 1, 1);
   }
 
   createTextures() {
-    this.bmd = this.game.make.bitmapData(this.game.height * NODE_RADIUS * NODE_SCALE,
-      this.game.height * NODE_RADIUS * NODE_SCALE, 'node-square', true);
-    this.bmd.ctx.fillStyle = '#fff';
-    this.bmd.ctx.fillRect(0, 0, this.game.height * NODE_RADIUS * NODE_SCALE,
-      this.game.height * NODE_RADIUS * NODE_SCALE);
+    // Nodes (originally node-circle, also check hover-circle)
+    const nodeRadius = this.height * 0.04;
+    this.graphics = this.scene.make.graphics({x: 0, y: 0});
+    this.graphics.fillStyle(0x000000);
+    this.graphics.fillCircle(nodeRadius / 2, nodeRadius / 2, this.radius);
+    this.graphics.generateTexture('circle-black', nodeRadius, nodeRadius);
+    this.graphics.fillStyle(0xff0000);
+    this.graphics.generateTexture('circle-red', nodeRadius, nodeRadius);
+    this.graphics.fillStyle(0x0000ff);
+    this.graphics.generateTexture('circle-blue', nodeRadius, nodeRadius);
+    this.graphics.fillStyle(0x00ff00);
+    this.graphics.generateTexture('circle-green', nodeRadius, nodeRadius);
+    this.graphics.fillStyle(0xff00ff);
+    this.graphics.generateTexture('circle-purple', nodeRadius, nodeRadius);
+    this.graphics.fillStyle(0x0389df);
+    this.graphics.generateTexture('circle-preview', nodeRadius, nodeRadius);
+    this.graphics.clear();
 
-    this.bmd = this.game.make.bitmapData(Math.round(this.game.height * LINE_WIDTH),
-      Math.round(this.game.height * LINE_WIDTH), 'move-line', true);
-    this.bmd.ctx.fillStyle = '#fff';
-    this.bmd.ctx.fillRect(0, 0, this.bmd.height, this.bmd.height);
-  }
+    // Square
+    this.graphics.fillStyle(0x000000);
+    this.graphics.fillRect(0, 0, nodeRadius, nodeRadius);
+    this.graphics.generateTexture('square', nodeRadius, nodeRadius);
+    this.graphics.clear();
 
-  createHoverCircle() {
-    this.bmd = this.game.make.bitmapData(300, 300, 'hover-circle', true);
-    this.bmd.ctx.fillStyle = '#ffffff';
-    this.bmd.ctx.arc(this.bmd.width / 2, this.bmd.height / 2, 150, 0, Math.PI * 2);
-    this.bmd.ctx.fill();
-  }
+    // Dot
+    this.graphics.fillStyle(0x0389df);
+    this.graphics.fillRect(0, 0, 1, 1);
+    this.graphics.generateTexture('dot', 1, 1);
+    this.graphics.clear();
 
-  createCell() {
-    const cellWidth = CELL_WIDTH * this.game.width;
-    this.bmd = this.game.make.bitmapData(cellWidth, cellWidth, 'cell', true);
-    this.bmd.ctx.strokeStyle = '#000000';
-    this.bmd.ctx.lineWidth = cellWidth * CELL_STROKE_WIDTH;
-    this.bmd.ctx.strokeRect(0, 0, cellWidth, cellWidth);
+    // Line (originally move-line)
+    this.graphics.fillStyle(0x000000);
+    this.graphics.fillRect(0, 0, this.height * LINE_WIDTH, this.height * LINE_WIDTH);
+    this.graphics.generateTexture('line-black', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
+    this.graphics.fillStyle(0xff0000);
+    this.graphics.generateTexture('line-red', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
+    this.graphics.fillStyle(0x0000ff);
+    this.graphics.generateTexture('line-blue', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
+    this.graphics.fillStyle(0x00ff00);
+    this.graphics.generateTexture('line-green', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
+    this.graphics.fillStyle(0xff00ff);
+    this.graphics.generateTexture('line-purple', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
   }
 }
 

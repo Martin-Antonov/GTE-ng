@@ -42,7 +42,7 @@ export class ErrorLogComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this.userActionController.errorSignal.add((err) => {
+      this.userActionController.events.on(('show-error'), (err) => {
         this.showError(err);
       });
     }, 2000);

@@ -9,7 +9,7 @@ import {Hotkey, HotkeysService} from 'angular2-hotkeys';
   styleUrls: ['./label-input.component.scss']
 })
 export class LabelInputComponent implements OnInit {
-  @ViewChild('inputLabel', { static: false }) inputField;
+  @ViewChild('inputLabel', {static: false}) inputField;
 
   userActionController: UserActionController;
 
@@ -22,7 +22,7 @@ export class LabelInputComponent implements OnInit {
       this.userActionController = value;
     });
     setTimeout(() => {
-      this.userActionController.labelInput.selectTextSignal.add(() => {
+      this.userActionController.labelInput.events.on('select-text', () => {
         this.selectInputText();
       }, this);
     }, 2000);

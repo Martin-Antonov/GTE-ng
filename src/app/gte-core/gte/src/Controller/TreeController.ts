@@ -1,6 +1,3 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
-
 import {Tree} from '../Model/Tree';
 import {TreeView} from '../View/TreeView';
 import {Player} from '../Model/Player';
@@ -16,25 +13,22 @@ import {TreeParser} from '../Utils/TreeParser';
 /**A class which connects the TreeView and the Tree Model.
  * This class is used mainly through UserActionController.ts*/
 export class TreeController {
-  game: Phaser.Game;
-  bmd: Phaser.BitmapData;
+  scene: Phaser.Scene;
   tree: Tree;
   treeView: TreeView;
+  // P3: USE THIS INSTEAD OF THE OTHER ONES
 
-  // An array used to list all nodes that need to be deleted
-  // A signal for the external HTML input label to be activated
-  labelInputSignal: Phaser.Signal;
-  // A signal for the external UndoRedoController to save the current tree
-  treeChangedSignal: Phaser.Signal;
-  iSetClickedSignal: Phaser.Signal;
+  events: Phaser.Events.EventEmitter;
   treeParser: TreeParser;
+  altKey: Phaser.Input.Keyboard.Key;
 
-  constructor(game: Phaser.Game) {
-    this.game = game;
+  constructor(scene: Phaser.Scene) {
+    this.scene = scene;
     this.treeParser = new TreeParser();
-    this.labelInputSignal = new Phaser.Signal();
-    this.treeChangedSignal = new Phaser.Signal();
-    this.iSetClickedSignal = new Phaser.Signal();
+
+    // P3: DELETE
+    this.events = new Phaser.Events.EventEmitter();
+    this.altKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
     this.setCircleBitmapData(1);
     this.createInitialTree();
   }
@@ -47,7 +41,7 @@ export class TreeController {
     this.tree.addPlayer(new Player(1, '1', PLAYER_COLORS[0]));
     this.tree.addPlayer(new Player(2, '2', PLAYER_COLORS[1]));
 
-    this.treeView = new TreeView(this.game, this.tree);
+    this.treeView = new TreeView(this.scene, this.tree);
 
     this.attachHandlersToNode(this.treeView.nodes[0]);
     this.addNodeHandler([this.treeView.nodes[0]]);
@@ -58,12 +52,12 @@ export class TreeController {
   /**A method for creating the circle for the nodes.
    * This method will imitate the zoom-in/zoom-out functionality*/
   setCircleBitmapData(scale: number) {
-    this.bmd = this.game.make.bitmapData(this.game.height * NODE_RADIUS * scale,
-      this.game.height * NODE_RADIUS * scale, 'node-circle', true);
-    this.bmd.ctx.fillStyle = '#ffffff';
-    this.bmd.ctx.beginPath();
-    this.bmd.ctx.arc(this.bmd.width / 2, this.bmd.width / 2, this.bmd.width * 0.45, 0, Math.PI * 2);
-    this.bmd.ctx.fill();
+    // this.bmd = this.game.make.bitmapData(this.game.height * NODE_RADIUS * scale,
+    //   this.game.height * NODE_RADIUS * scale, 'node-circle', true);
+    // this.bmd.ctx.fillStyle = '#ffffff';
+    // this.bmd.ctx.beginPath();
+    // this.bmd.ctx.arc(this.bmd.width / 2, this.bmd.width / 2, this.bmd.width * 0.45, 0, Math.PI * 2);
+    // this.bmd.ctx.fill();
   }
 
   // region Input Handlers and Signals
@@ -77,79 +71,103 @@ export class TreeController {
   /** The node specific method for attaching handlers
    * Also when we add node we attach the handler for the parent move label*/
   private attachHandlersToNode(nV: NodeView) {
-    nV.events.onInputOver.add(() => {
-      this.handleInputOverNode(nV);
+    nV.on('pointerover', () => {
+      if (!this.scene.input.activePointer.isDown) {
+        if (this.altKey.isDown) {
+          this.scene.sys.canvas.style.cursor = 'no-drop';
+        } else {
+          this.scene.sys.canvas.style.cursor = 'pointer';
+        }
+      }
     });
-    nV.events.onInputDown.add(() => {
-      this.handleInputDownNode(nV);
+    nV.on('pointerdown', () => {
+      // You can add input down on node here
     });
-    nV.events.onInputOut.add(() => {
-      this.handleInputOutNode(nV);
+    nV.on('pointerout', () => {
+      if (!this.scene.input.activePointer.isDown) {
+        this.scene.sys.canvas.style.cursor = 'default';
+      }
     });
-    nV.events.onInputUp.add(() => {
-      this.handleInputUpNode(nV);
+    nV.on('pointerup', () => {
+      if (this.altKey.isDown && this.clickCheck()) {
+        this.deleteNodeHandler([nV]);
+      } else if (this.clickCheck()) {
+        this.addNodeHandler([nV]);
+      }
+      this.events.emit('tree-changed');
     });
 
-    nV.ownerLabel.events.onInputUp.add(() => {
-      if (nV.ownerLabel.alpha === 1 && this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
-        this.labelInputSignal.dispatch(nV);
+    nV.ownerLabel.on('pointerup', () => {
+      // P3: Check
+      if (nV.ownerLabel.alpha === 1 && this.clickCheck()) {
+        this.events.emit('label-clicked', nV);
       }
-    }, this);
+    });
+    nV.ownerLabel.on('pointerover', () => {
+      if (!this.scene.input.activePointer.isDown) {
+        this.scene.sys.canvas.style.cursor = 'text';
+      }
+    });
+    nV.ownerLabel.on('pointerout', () => {
+      if (!this.scene.input.activePointer.isDown) {
+        this.scene.sys.canvas.style.cursor = 'default';
+      }
+    });
 
-    nV.payoffsLabel.events.onInputUp.add(() => {
-      if (nV.payoffsLabel.alpha === 1 && this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
-        this.labelInputSignal.dispatch(nV);
+    nV.payoffsLabel.on('pointerup', () => {
+      if (nV.payoffsLabel.alpha === 1 && this.clickCheck()) {
+        this.events.emit('label-clicked', nV);
       }
-    }, this);
+    });
+
+    nV.payoffsLabel.on('pointerover', () => {
+      if (!this.scene.input.activePointer.isDown) {
+        this.scene.sys.canvas.style.cursor = 'text';
+      }
+    });
+
+    nV.payoffsLabel.on('pointerout', () => {
+      if (!this.scene.input.activePointer.isDown) {
+        this.scene.sys.canvas.style.cursor = 'default';
+      }
+    });
 
     if (nV.node.parentMove) {
       const move = this.treeView.findMoveView(nV.node.parentMove);
-      move.label.events.onInputUp.add(() => {
-        if (move.label.alpha === 1 && this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
-          this.labelInputSignal.dispatch(move);
+      move.label.on('pointerup', () => {
+        if (move.label.alpha === 1 && this.clickCheck()) {
+          this.events.emit('label-clicked', nV);
         }
-      }, this);
+      });
+      move.label.on('pointerover', () => {
+        if (!this.scene.input.activePointer.isDown) {
+          this.scene.sys.canvas.style.cursor = 'text';
+        }
+      });
+
+      move.label.on('pointerout', () => {
+        if (!this.scene.input.activePointer.isDown) {
+          this.scene.sys.canvas.style.cursor = 'default';
+        }
+      });
     }
   }
 
   /**The iSet specific method for attaching handlers*/
   attachHandlersToISet(iSet: ISetView) {
-    iSet.events.onInputUp.add(function () {
-      let iSetV = <ISetView>arguments[0];
-      if (this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
-        this.handleInputUpEvent(iSetV);
+    iSet.on('pointerup', () => {
+      if (this.clickCheck()) {
+        this.events.emit('iset-clicked', iSet);
       }
-    }, this);
-  }
+    });
 
-  /**Handler for the signal HOVER on a Node*/
-  private handleInputOverNode(nodeV: NodeView) {
-  }
+    iSet.on('pointerover', () => {
+      this.scene.sys.canvas.style.cursor = 'crosshair';
+    });
 
-  /**Handler for the signal HOVER_OUT on a Node*/
-  private handleInputOutNode(nodeV?: NodeView) {
-  }
-
-  /**Handler for the signal CLICK on a Node*/
-  private handleInputDownNode(nodeV: NodeView) {
-
-  }
-
-  /**Handler for the signal CLICK on a node*/
-  private handleInputUpNode(nodeV?: NodeView) {
-    if (this.game.input.keyboard.isDown(Phaser.Keyboard.ALT) &&
-      this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
-
-      this.deleteNodeHandler([nodeV]);
-    } else if (this.game.input.activePointer.timeUp - this.game.input.activePointer.timeDown < CLICK_THRESHOLD) {
-      this.addNodeHandler([nodeV]);
-    }
-    this.treeChangedSignal.dispatch();
-  }
-
-  /**Handler for the signal UP on an ISet*/
-  private handleInputUpEvent(iSetV: ISetView) {
-    this.iSetClickedSignal.dispatch(iSetV);
+    iSet.on('pointerout', () => {
+      this.scene.sys.canvas.style.cursor = 'default';
+    });
   }
 
   // endregion
@@ -185,7 +203,7 @@ export class TreeController {
       if (node.children.length === 0 && node !== this.tree.root) {
         this.deleteNode(node);
       } else {
-        let nodesToDelete = this.tree.getBranchChildren(node);
+        const nodesToDelete = this.tree.getBranchChildren(node);
         nodesToDelete.pop();
         nodesToDelete.forEach((n: Node) => {
           this.deleteNode(n);
@@ -215,7 +233,8 @@ export class TreeController {
       // If the node is in an iset, change the owner of the iSet to the new player
       if (nV.node.iSet && nV.node.iSet.nodes.length > 1) {
         nV.node.iSet.player = this.tree.players[playerID];
-        let iSetView = this.treeView.findISetView(nV.node.iSet);
+        const iSetView = this.treeView.findISetView(nV.node.iSet);
+        // P3: what to do here?
         iSetView.tint = iSetView.iSet.player.color;
       }
     });
@@ -364,7 +383,8 @@ export class TreeController {
     this.tree.backwardInduction(clonedTree);
     this.treeView.moves.forEach((mV: MoveView) => {
       if (mV.move.isBestInductionMove) {
-        mV.tint = mV.from.node.player.color;
+        // P3: What to do here?
+        // mV.tint = mV.from.node.player.color;
       } else {
         mV.alpha = 0.3;
         mV.label.alpha = 0.3;
@@ -388,7 +408,7 @@ export class TreeController {
     // 2. Change it with the corresponding one in treelist
     this.tree = newTree;
     this.tree.resetPayoffsPlayers();
-    this.treeView = new TreeView(this.game, this.tree);
+    this.treeView = new TreeView(this.scene, this.tree);
     this.treeView.nodes.forEach((nV: NodeView) => {
       nV.resetNodeDrawing(this.tree.checkAllNodesLabeled(), this.treeView.properties.zeroSumOn);
     });
@@ -400,8 +420,8 @@ export class TreeController {
 
     if (treeCoordinates) {
       for (let i = 0; i < treeCoordinates.length; i++) {
-        this.treeView.nodes[i].position.x = treeCoordinates[i].x;
-        this.treeView.nodes[i].position.y = treeCoordinates[i].y;
+        this.treeView.nodes[i].x = treeCoordinates[i].x;
+        this.treeView.nodes[i].y = treeCoordinates[i].y;
       }
 
       this.treeView.drawISets();
@@ -415,6 +435,10 @@ export class TreeController {
   private deleteNode(node: Node) {
     this.treeView.removeNodeView(this.treeView.findNodeView(node));
     this.tree.removeNode(node);
+  }
+
+  private clickCheck(): boolean {
+    return this.scene.input.activePointer.upTime - this.scene.input.activePointer.upTime < CLICK_THRESHOLD;
   }
 }
 

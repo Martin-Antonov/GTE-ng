@@ -1,5 +1,3 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
 import {TreeController} from './TreeController';
 import {StrategicForm} from '../Model/StrategicForm';
 import {UndoRedoController} from './UndoRedoController';
@@ -15,7 +13,7 @@ import {ViewExporter} from '../Utils/ViewExporter';
 import {MoveView} from '../View/MoveView';
 
 export class UserActionController {
-  game: Phaser.Game;
+  scene: Phaser.Scene;
 
   treeController: TreeController;
   strategicForm: StrategicForm;
@@ -24,39 +22,42 @@ export class UserActionController {
   // Used for going to the next node on tab pressed
   labelInput: LabelInputHandler;
   cutSpriteHandler: CutSpriteHandler;
-  errorSignal: Phaser.Signal;
+  events: Phaser.Events.EventEmitter;
 
   selectedNodes: Array<NodeView>;
   selectionRectangle: SelectionRectangle;
-  backgroundInputSprite: Phaser.Sprite;
+  backgroundInputSprite: Phaser.GameObjects.Sprite;
 
   viewExporter: ViewExporter;
   SPNEActive: boolean;
 
   private resizeLocked: boolean;
+  private shift: Phaser.Input.Keyboard.Key;
 
-  constructor(game: Phaser.Game, treeController: TreeController) {
-    this.game = game;
+  constructor(scene: Phaser.Scene, treeController: TreeController) {
+    this.scene = scene;
     this.treeController = treeController;
     this.viewExporter = new ViewExporter(this.treeController);
     this.undoRedoController = new UndoRedoController(this.treeController);
     this.selectedNodes = [];
 
-    this.labelInput = new LabelInputHandler(this.game, this.treeController);
-    this.cutSpriteHandler = new CutSpriteHandler(this.game);
+    this.shift = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
-    this.selectionRectangle = new SelectionRectangle(this.game);
+    this.labelInput = new LabelInputHandler(this.scene, this.treeController);
+    this.cutSpriteHandler = new CutSpriteHandler(this.scene);
+
+    this.selectionRectangle = new SelectionRectangle(this.scene);
     this.resizeLocked = false;
 
-    this.errorSignal = new Phaser.Signal();
+    this.events = new Phaser.Events.EventEmitter();
     this.SPNEActive = false;
 
-    this.treeController.treeChangedSignal.add(() => {
+    this.treeController.events.on('tree-changed', () => {
       this.checkCreateStrategicForm();
       this.undoRedoController.saveNewTree();
     });
 
-    this.treeController.iSetClickedSignal.add((iSetV: ISetView) => {
+    this.treeController.events.on('iset-clicked', (iSetV: ISetView) => {
       this.selectionRectangle.active = false;
       iSetV.nodes.forEach((nV: NodeView) => {
         nV.isSelected = true;
@@ -74,15 +75,15 @@ export class UserActionController {
   /**The update method is built-into Phaser and is called 60 times a second.
    * It handles the selection of nodes, while holding the mouse button*/
   update() {
-    if (this.game.input.activePointer.isDown && this.selectionRectangle.active) {
+    if (this.scene.input.activePointer.isDown && this.selectionRectangle.active) {
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-        if (this.selectionRectangle.overlap(nV) && this.selectedNodes.indexOf(nV) === -1) {
+        if (Phaser.Geom.Rectangle.Overlaps(this.selectionRectangle.getBounds(), nV.getBounds()) && this.selectedNodes.indexOf(nV) === -1) {
           nV.isSelected = true;
           nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.push(nV);
         }
-        if (!this.selectionRectangle.overlap(nV) && this.selectedNodes.indexOf(nV) !== -1 &&
-          !this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT)) {
+        if (!Phaser.Geom.Rectangle.Overlaps(this.selectionRectangle.getBounds(), nV.getBounds()) && this.selectedNodes.indexOf(nV) !== -1 &&
+          !this.shift.isDown) {
           nV.isSelected = false;
           nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.splice(this.selectedNodes.indexOf(nV), 1);
@@ -102,13 +103,13 @@ export class UserActionController {
 
   /**This sprite resets the input and node selection if someone clicks on a sprite which does not have input*/
   private createBackgroundForInputReset() {
-    this.backgroundInputSprite = this.game.add.sprite(0, 0, '');
-    this.backgroundInputSprite.width = this.game.width;
-    this.backgroundInputSprite.height = this.game.height;
-    this.backgroundInputSprite.inputEnabled = true;
-    this.backgroundInputSprite.sendToBack();
-    this.backgroundInputSprite.events.onInputDown.add(() => {
-      if (!this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT)) {
+    this.backgroundInputSprite = this.scene.add.sprite(0, 0, '');
+    this.backgroundInputSprite.width = this.scene.sys.canvas.width;
+    this.backgroundInputSprite.height = this.scene.sys.canvas.height;
+    this.backgroundInputSprite.setInteractive();
+    this.backgroundInputSprite.setDepth(-1);
+    this.backgroundInputSprite.on('pointerdown', () => {
+      if (!this.shift.isDown) {
         this.deselectNodesHandler();
       }
     });
@@ -135,7 +136,7 @@ export class UserActionController {
   /**A method for selecting all children of the given node.*/
   selectChildren() {
     if (this.selectedNodes.length !== 0) {
-      let nodesToSelect = [];
+      const nodesToSelect = [];
       this.selectedNodes.forEach((nV: NodeView) => {
         const children = this.treeController.tree.getBranchChildren(nV.node);
         children.forEach((c: Node) => {
@@ -219,7 +220,7 @@ export class UserActionController {
 
   /**A method which removes the last player from the list of players*/
   removeLastPlayerHandler() {
-    let numberOfPlayers = this.treeController.tree.players.length - 1;
+    const numberOfPlayers = this.treeController.tree.players.length - 1;
     if (numberOfPlayers > 1) {
       this.treeController.tree.removePlayer(this.treeController.tree.players[numberOfPlayers]);
       this.treeController.resetTree(false, false);
@@ -229,7 +230,7 @@ export class UserActionController {
   }
 
   addPlayerHandler() {
-    let numberOfPlayers = this.treeController.tree.players.length - 1;
+    const numberOfPlayers = this.treeController.tree.players.length - 1;
     if (numberOfPlayers < 4) {
       this.treeController.addPlayer(numberOfPlayers + 1);
     }
@@ -241,7 +242,7 @@ export class UserActionController {
       try {
         this.treeController.createISet(this.selectedNodes);
       } catch (err) {
-        this.errorSignal.dispatch(err);
+        this.events.emit('show-error', err);
         return;
       }
     }
@@ -302,7 +303,7 @@ export class UserActionController {
     if (iSetV) {
       this.cutSpriteHandler.cutInformationSet = iSetV;
     } else {
-      let distinctISetsSelected = this.treeController.getDistinctISetsFromNodes(this.selectedNodes);
+      const distinctISetsSelected = this.treeController.getDistinctISetsFromNodes(this.selectedNodes);
       if (distinctISetsSelected.length === 1) {
         this.cutSpriteHandler.cutInformationSet = this.treeController.treeView.findISetView(distinctISetsSelected[0]);
       }
@@ -311,27 +312,32 @@ export class UserActionController {
       return;
     }
 
-    this.cutSpriteHandler.cutSprite.bringToTop();
+    this.cutSpriteHandler.cutSprite.setDepth(100);
     this.deselectNodesHandler();
-    this.game.add.tween(this.cutSpriteHandler.cutSprite).to({alpha: 1}, 300, Phaser.Easing.Default, true);
-    this.game.input.keyboard.enabled = false;
-    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-      nV.inputEnabled = false;
-    });
-    this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
-      iSetView.inputEnabled = false;
+    this.scene.tweens.add({
+      targets: this.cutSpriteHandler.cutSprite,
+      alpha: 1,
+      duration: 300,
     });
 
-    this.game.input.onDown.addOnce(() => {
+    this.scene.input.keyboard.enabled = false;
+    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+      nV.input.enabled = false;
+    });
+    this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
+      iSetView.input.enabled = false;
+    });
+
+    this.scene.input.once('pointerdown', () => {
       this.cutSpriteHandler.cutSprite.alpha = 0;
 
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-        nV.inputEnabled = true;
+        nV.input.enabled = true;
       });
       this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
-        iSetView.inputEnabled = true;
+        iSetView.input.enabled = true;
       });
-      this.game.input.keyboard.enabled = true;
+      this.scene.input.keyboard.enabled = true;
 
       this.treeController.cutInformationSet(this.cutSpriteHandler.cutInformationSet,
         this.cutSpriteHandler.cutSprite.x, this.cutSpriteHandler.cutSprite.y);
@@ -365,7 +371,7 @@ export class UserActionController {
   /**Moves a node manually and does not move the children*/
   moveNodeManually(directionX: number, directionY: number, distance: number) {
     this.selectedNodes.forEach((nV: NodeView) => {
-      nV.position.add(directionX * distance, directionY * distance);
+      nV.setPosition(nV.x + directionX * distance, nV.y + directionY * distance);
       nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
     });
     this.treeController.treeView.moves.forEach((mV: MoveView) => {
@@ -380,7 +386,7 @@ export class UserActionController {
       this.treeController.calculateSPNE();
       this.SPNEActive = true;
     } catch (err) {
-      this.errorSignal.dispatch(err);
+      this.events.emit('show-error', err);
       this.SPNEActive = false;
     }
   }
@@ -410,16 +416,19 @@ export class UserActionController {
   gameResize() {
     if (!this.resizeLocked) {
       this.resizeLocked = true;
-      this.game.time.events.add(100, () => {
-        let element = document.getElementById('phaser-div');
-        let boundingRect = element.getBoundingClientRect();
-        let width = boundingRect.width;
-        let height = boundingRect.height;
-        this.game.scale.setGameSize(width, height);
-        this.treeController.treeView.properties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT,
-          this.game.width * INITIAL_TREE_WIDTH);
-        this.treeController.resetTree(true, false);
-        this.resizeLocked = false;
+      this.scene.time.addEvent({
+        delay: 100,
+        callback: () => {
+          const element = document.getElementById('phaser-div');
+          const boundingRect = element.getBoundingClientRect();
+          const width = boundingRect.width;
+          const height = boundingRect.height;
+          this.scene.scale.setGameSize(width, height);
+          this.treeController.treeView.properties = new TreeViewProperties(this.scene.sys.canvas.height * INITIAL_TREE_HEIGHT,
+            this.scene.sys.canvas.height * INITIAL_TREE_WIDTH);
+          this.treeController.resetTree(true, false);
+          this.resizeLocked = false;
+        }
       });
     }
   }

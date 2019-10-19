@@ -1,8 +1,11 @@
-/// <reference path="../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
+/// <reference path="../../../node_modules/phaser/types/phaser.d.ts" />
 import {Component, ElementRef, OnInit} from '@angular/core';
-import {GTE} from './gte/GTE';
 import {UserActionControllerService} from '../services/user-action-controller/user-action-controller.service';
 import {TreesFileService} from '../services/trees-file/trees-file.service';
+import GameConfig = Phaser.Types.Core.GameConfig;
+import {MainScene} from './gte/src/Controller/MainScene';
+
+declare var Phaser: any;
 
 @Component({
   selector: 'app-gte-core',
@@ -10,7 +13,6 @@ import {TreesFileService} from '../services/trees-file/trees-file.service';
   styleUrls: ['./gte-core.component.scss']
 })
 export class GteCoreComponent implements OnInit {
-  game: Phaser.Game;
 
   constructor(
     private userActionControllerService: UserActionControllerService,
@@ -19,18 +21,31 @@ export class GteCoreComponent implements OnInit {
   }
 
   ngOnInit() {
-    let div = this.el.nativeElement.querySelector('#phaser-div');
-    let boundingRect = div.getBoundingClientRect();
-    let width = boundingRect.width;
-    let height = boundingRect.height;
-    this.game = new GTE(width, height);
+    const div = this.el.nativeElement.querySelector('#phaser-div');
+    const boundingRect = div.getBoundingClientRect();
+    const width = boundingRect.width;
+    const height = boundingRect.height;
 
-    let interval = setInterval(() => {
-      if (this.game && this.game.state && this.game.state.states.MainScene && this.game.state.states.MainScene.userActionController) {
-        this.userActionControllerService.setUAC(this.game.state.states.MainScene.userActionController);
-        this.tfs.initiateFirstTree();
-        clearInterval(interval);
-      }
-    }, 100);
+    const config: GameConfig = {
+      type: Phaser.CANVAS,
+      title: 'Game Theory Explorer',
+      backgroundColor: '#fff',
+      width: width,
+      height: height,
+      parent: 'phaser-div'
+    };
+
+    const game = new GTE(config);
+    game.scene.add('main', MainScene, true, {uac: this.userActionControllerService, tfs: this.tfs});
+    // game.scene.scenes[0].on('scene-loaded', () => {
+    //   this.userActionControllerService.setUAC((game.scene.scenes[0] as MainScene).userActionController);
+    //   this.tfs.initiateFirstTree();
+    // });
+  }
+}
+
+export class GTE extends Phaser.Game {
+  constructor(config: GameConfig) {
+    super(config);
   }
 }
