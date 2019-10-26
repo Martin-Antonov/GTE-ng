@@ -1,6 +1,5 @@
 import {
-  INTRO_RADIUS,
-  LINE_WIDTH,
+  CHANCE_NODE_SCALE, LINE_WIDTH, NODE_RADIUS, PREVIEW_CIRCLE_COLOR, PREVIEW_CIRCLE_SCALE,
 } from './Constants';
 
 /** A class for the initial animation of the GTE software
@@ -18,53 +17,61 @@ export class InitialBitmapsCreator {
     this.scene = scene;
     this.width = this.scene.sys.canvas.width;
     this.height = this.scene.sys.canvas.height;
-    this.radius = this.height * INTRO_RADIUS;
+
+    this.radius = this.height * NODE_RADIUS;
     this.createTextures();
   }
 
   createTextures() {
-    // Nodes (originally node-circle, also check hover-circle)
-    const nodeRadius = this.height * 0.04;
+    // 1 extra pixel on each side, just in case
     this.graphics = this.scene.make.graphics({x: 0, y: 0});
-    this.graphics.fillStyle(0x000000);
-    this.graphics.fillCircle(nodeRadius / 2, nodeRadius / 2, this.radius);
-    this.graphics.generateTexture('circle-black', nodeRadius, nodeRadius);
-    this.graphics.fillStyle(0xff0000);
-    this.graphics.generateTexture('circle-red', nodeRadius, nodeRadius);
-    this.graphics.fillStyle(0x0000ff);
-    this.graphics.generateTexture('circle-blue', nodeRadius, nodeRadius);
-    this.graphics.fillStyle(0x00ff00);
-    this.graphics.generateTexture('circle-green', nodeRadius, nodeRadius);
-    this.graphics.fillStyle(0xff00ff);
-    this.graphics.generateTexture('circle-purple', nodeRadius, nodeRadius);
-    this.graphics.fillStyle(0x0389df);
-    this.graphics.generateTexture('circle-preview', nodeRadius, nodeRadius);
+    this.generateCircle(0x000000, 'circle-black');
+    this.generateCircle(0xff0000, 'circle-red');
+    this.generateCircle(0x0000ff, 'circle-blue');
+    this.generateCircle(0x00bb00, 'circle-green');
+    this.generateCircle(0xff00ff, 'circle-purple');
+
     this.graphics.clear();
+    const previewRadius = this.radius * PREVIEW_CIRCLE_SCALE;
+    const diameter = previewRadius * 2 + 4;
+    this.graphics.fillStyle(PREVIEW_CIRCLE_COLOR);
+    this.graphics.fillCircle(previewRadius + 2, previewRadius + 2, previewRadius);
+    this.graphics.generateTexture('circle-preview', diameter, diameter);
 
     // Square
-    this.graphics.fillStyle(0x000000);
-    this.graphics.fillRect(0, 0, nodeRadius, nodeRadius);
-    this.graphics.generateTexture('square', nodeRadius, nodeRadius);
     this.graphics.clear();
+    const squareWidth = this.radius * CHANCE_NODE_SCALE;
+    this.graphics.fillStyle(0x000000);
+    this.graphics.fillRect(1, 1, squareWidth, squareWidth);
+    this.graphics.generateTexture('square', squareWidth + 1, squareWidth + 1);
 
     // Dot
+    this.graphics.clear();
     this.graphics.fillStyle(0x0389df);
     this.graphics.fillRect(0, 0, 1, 1);
     this.graphics.generateTexture('dot', 1, 1);
-    this.graphics.clear();
 
     // Line (originally move-line)
-    this.graphics.fillStyle(0x000000);
+    this.generateLine(0x000000, 'line-black');
+    this.generateLine(0xff0000, 'line-red');
+    this.generateLine(0x0000ff, 'line-blue');
+    this.generateLine(0x00bb00, 'line-green');
+    this.generateLine(0xff00ff, 'line-purple');
+  }
+
+  private generateCircle(color: number, texture: string) {
+    const diameter = this.radius * 2 + 4;
+    this.graphics.clear();
+    this.graphics.fillStyle(color);
+    this.graphics.fillCircle(this.radius + 2, this.radius + 2, this.radius);
+    this.graphics.generateTexture(texture, diameter, diameter);
+  }
+
+  private generateLine(color: number, texture: string) {
+    this.graphics.clear();
+    this.graphics.fillStyle(color);
     this.graphics.fillRect(0, 0, this.height * LINE_WIDTH, this.height * LINE_WIDTH);
-    this.graphics.generateTexture('line-black', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
-    this.graphics.fillStyle(0xff0000);
-    this.graphics.generateTexture('line-red', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
-    this.graphics.fillStyle(0x0000ff);
-    this.graphics.generateTexture('line-blue', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
-    this.graphics.fillStyle(0x00ff00);
-    this.graphics.generateTexture('line-green', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
-    this.graphics.fillStyle(0xff00ff);
-    this.graphics.generateTexture('line-purple', this.height * LINE_WIDTH, this.height * LINE_WIDTH);
+    this.graphics.generateTexture(texture, this.height * LINE_WIDTH, this.height * LINE_WIDTH);
   }
 }
 

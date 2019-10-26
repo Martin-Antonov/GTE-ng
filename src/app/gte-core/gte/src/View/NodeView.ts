@@ -1,4 +1,4 @@
-import {LABEL_SIZE, NODE_SELECTED_COLOR, OVERLAY_SCALE, PAYOFF_SIZE, PLAYER_COLORS, SELECTION_INNER_COLOR} from '../Utils/Constants';
+import {LABEL_SIZE, OVERLAY_SCALE, PAYOFF_SIZE, PLAYER_COLORS, SELECTION_INNER_COLOR} from '../Utils/Constants';
 import {Node, NodeType} from '../Model/Node';
 
 /** A class for the graphical representation of the Node. The inherited sprite from Phaser.Sprite will not be visible
@@ -22,53 +22,50 @@ export class NodeView extends Phaser.GameObjects.Sprite {
 
     this.setInteractive();
     this.isSelected = false;
-    // P3: What to do here?
-    // this.input.priorityID = 2;
 
     this.node = node;
     this.level = this.node.depth;
-    if (this.node.player) {
-      // P3: What to do here?
-      this.tint = node.player.color;
-    } else {
-      // P3: What to do here?
-      this.tint = 0x000000;
-    }
 
     this.labelHorizontalOffset = 1;
     this.createSprites();
     this.createLabels();
-    // P3: What to do here?
-    // this.input.priorityID = 1;
+
     this.scene.add.existing(this);
   }
 
   /** A method which creates the circle and square sprites*/
   private createSprites() {
     this.previewSelected = this.scene.add.sprite(this.x, this.y, 'circle-preview')
-      .setScale(1.8, 1.8)
       .setPosition(this.x, this.y)
-      .setAlpha(0);
+      .setAlpha(0)
+      .setDepth(1);
   }
 
   /** A method which creates the label for the Node*/
   private createLabels() {
     const text = this.node.player ? this.node.player.label : '';
-    const color = this.node.player ? this.node.player.color : 0x000000;
-    this.ownerLabel = this.scene.add.text(this.x + this.labelHorizontalOffset * this.displayWidth, this.y - this.displayWidth, text)
-      .setFontSize(this.displayWidth * LABEL_SIZE)
-      .setColor(color.toString());
+    const color = this.node.player ? this.node.player.color : '#000000';
+
+    this.ownerLabel = this.scene.add.text(this.x + this.labelHorizontalOffset * this.displayWidth,
+      this.y - this.displayWidth, text, {
+        fontSize: this.displayWidth * LABEL_SIZE,
+        color: color,
+        fontStyle: 'bold',
+        fontFamily: 'Arial',
+      });
+
     this.ownerLabel.setInteractive();
 
-    this.payoffsLabel = this.scene.add.text(this.x, this.y + this.displayWidth * OVERLAY_SCALE, '',)
-      .setFontSize(this.displayWidth * PAYOFF_SIZE)
-      .setOrigin(0.5, 0)
-      .setFontStyle('bolder')
-      .setAlign('right');
+    this.payoffsLabel = this.scene.add.text(this.x, this.y + this.displayWidth * OVERLAY_SCALE, '', {
+      fontSize: this.displayWidth * PAYOFF_SIZE,
+      fontStyle: 'bold',
+      align: 'right',
+      fontFamily: 'Arial',
+      color: '#000'
+    }).setOrigin(0.5, 0);
+
     this.payoffsLabel.setInteractive();
-    this.payoffsLabel.lineSpacing = -10;
-    // P3: What to do?
-    // this.payoffsLabel.input.priorityID = 199;
+    this.payoffsLabel.lineSpacing = -5;
   }
 
   updateLabelPosition() {
@@ -80,10 +77,21 @@ export class NodeView extends Phaser.GameObjects.Sprite {
       this.ownerLabel.setOrigin(0, 0.5);
     }
     this.ownerLabel.setPosition(this.x + this.labelHorizontalOffset * this.displayWidth * 0.75, this.y - this.displayWidth);
+    this.payoffsLabel.setPosition(this.x, this.y);
+
+    this.previewSelected.x = this.x;
+    this.previewSelected.y = this.y;
   }
 
   /** A method which converts the node, depending on whether it is a chance, owned or default.*/
   resetNodeDrawing(areLeavesActive: boolean, zeroSumOn: boolean) {
+    // If Selected
+    if (this.isSelected) {
+      this.previewSelected.alpha = 0.3;
+    } else {
+      this.previewSelected.alpha = 0;
+    }
+
     // If Owned
     if (this.node.type === NodeType.OWNED) {
       this.setTexture(this.getColorFromPlayerId());
@@ -93,8 +101,7 @@ export class NodeView extends Phaser.GameObjects.Sprite {
       } else {
         this.ownerLabel.alpha = 1;
         this.ownerLabel.setText(this.node.player.label);
-        // P3: Check
-        this.ownerLabel.setColor(this.node.player.color.toString());
+        this.ownerLabel.setColor(this.node.player.color);
         this.ownerLabel.setScale(1);
       }
     }
@@ -106,8 +113,6 @@ export class NodeView extends Phaser.GameObjects.Sprite {
       this.ownerLabel.alpha = 1;
       this.ownerLabel.setText('chance');
       this.ownerLabel.setColor('#000000');
-    } else {
-      this.setTexture('circle-black');
     }
 
     // If Leaf
@@ -129,7 +134,7 @@ export class NodeView extends Phaser.GameObjects.Sprite {
           // this.payoffsLabel.addColor(Phaser.Color.getWebRGB(PLAYER_COLORS[i]),
           //   (this.payoffsLabel.text.length - labelsArray[i].length - i - 1));
         }
-        this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
+        // this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
         this.payoffsLabel.alpha = 1;
         this.payoffsLabel.input.enabled = true;
       } else {
@@ -144,18 +149,6 @@ export class NodeView extends Phaser.GameObjects.Sprite {
       this.setTexture('circle-black');
       this.ownerLabel.alpha = 0;
       this.payoffsLabel.alpha = 0;
-    }
-
-    // If Selected
-    if (this.isSelected) {
-      this.previewSelected.alpha = 0.3;
-    } else {
-      this.previewSelected.alpha = 0;
-      if (this.node.player) {
-        this.setTexture(this.getColorFromPlayerId());
-      } else {
-        this.setTexture('circle-black');
-      }
     }
 
     this.updateLabelPosition();
@@ -192,9 +185,6 @@ export class NodeView extends Phaser.GameObjects.Sprite {
     this.ownerLabel = null;
     this.payoffsLabel.destroy();
     this.payoffsLabel = null;
-    this.tint = null;
-    this.scale = null;
-    this.labelHorizontalOffset = null;
     super.destroy();
   }
 }

@@ -103,16 +103,16 @@ export class UserActionController {
 
   /**This sprite resets the input and node selection if someone clicks on a sprite which does not have input*/
   private createBackgroundForInputReset() {
-    this.backgroundInputSprite = this.scene.add.sprite(0, 0, '');
-    this.backgroundInputSprite.width = this.scene.sys.canvas.width;
-    this.backgroundInputSprite.height = this.scene.sys.canvas.height;
-    this.backgroundInputSprite.setInteractive();
-    this.backgroundInputSprite.setDepth(-1);
-    this.backgroundInputSprite.on('pointerdown', () => {
-      if (!this.shift.isDown) {
-        this.deselectNodesHandler();
-      }
-    });
+    // this.backgroundInputSprite = this.scene.add.sprite(0, 0, null);
+    // this.backgroundInputSprite.displayWidth = this.scene.sys.canvas.width;
+    // this.backgroundInputSprite.displayHeight = this.scene.sys.canvas.height;
+    // this.backgroundInputSprite.setInteractive();
+    // this.backgroundInputSprite.setDepth(-1);
+    // this.backgroundInputSprite.on('pointerdown', () => {
+    //   if (!this.shift.isDown) {
+    //     this.deselectNodesHandler();
+    //   }
+    // });
   }
 
   /**Resets the current Tree*/

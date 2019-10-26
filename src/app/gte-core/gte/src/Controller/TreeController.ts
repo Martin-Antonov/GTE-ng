@@ -16,8 +16,6 @@ export class TreeController {
   scene: Phaser.Scene;
   tree: Tree;
   treeView: TreeView;
-  // P3: USE THIS INSTEAD OF THE OTHER ONES
-
   events: Phaser.Events.EventEmitter;
   treeParser: TreeParser;
   altKey: Phaser.Input.Keyboard.Key;
@@ -29,7 +27,6 @@ export class TreeController {
     // P3: DELETE
     this.events = new Phaser.Events.EventEmitter();
     this.altKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
-    this.setCircleBitmapData(1);
     this.createInitialTree();
   }
 
@@ -37,7 +34,7 @@ export class TreeController {
   createInitialTree() {
     this.tree = new Tree();
     this.tree.addNode();
-    this.tree.addPlayer(new Player(0, 'chance', 0x000000));
+    this.tree.addPlayer(new Player(0, 'chance', '#000000'));
     this.tree.addPlayer(new Player(1, '1', PLAYER_COLORS[0]));
     this.tree.addPlayer(new Player(2, '2', PLAYER_COLORS[1]));
 
@@ -98,7 +95,6 @@ export class TreeController {
     });
 
     nV.ownerLabel.on('pointerup', () => {
-      // P3: Check
       if (nV.ownerLabel.alpha === 1 && this.clickCheck()) {
         this.events.emit('label-clicked', nV);
       }
@@ -235,7 +231,7 @@ export class TreeController {
         nV.node.iSet.player = this.tree.players[playerID];
         const iSetView = this.treeView.findISetView(nV.node.iSet);
         // P3: what to do here?
-        iSetView.tint = iSetView.iSet.player.color;
+        // iSetView.tint = iSetView.iSet.player.color;
       }
     });
 
@@ -383,8 +379,7 @@ export class TreeController {
     this.tree.backwardInduction(clonedTree);
     this.treeView.moves.forEach((mV: MoveView) => {
       if (mV.move.isBestInductionMove) {
-        // P3: What to do here?
-        // mV.tint = mV.from.node.player.color;
+        mV.setOwnerColor();
       } else {
         mV.alpha = 0.3;
         mV.label.alpha = 0.3;

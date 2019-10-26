@@ -2,12 +2,12 @@
 export class Player {
   id: number;
   label: string;
-  color: number;
+  color: string;
 
-  constructor(id?: number, label?: string, color?: number) {
+  constructor(id?: number, label?: string, color?: string) {
     this.id = id || 0;
     this.label = label || '';
-    this.color = color || 0x000000;
+    this.color = color || '#000';
   }
 
   destroy() {

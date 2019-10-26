@@ -70,9 +70,9 @@ export class ISetView extends Phaser.GameObjects.Sprite {
 
   /**Create e very thick line that goes through all the points*/
   private createISetBMD() {
-    const color = this.iSet.player ? this.iSet.player.color : 0x000000;
+    const color = this.iSet.player ? this.iSet.player.color : '#000000';
     this.graphics.clear();
-    this.graphics.lineStyle(this.scene.sys.canvas.height * ISET_LINE_WIDTH, color, 0.15);
+    this.graphics.lineStyle(this.scene.sys.canvas.height * ISET_LINE_WIDTH, Number(color), 0.15);
 
     // P3: What to do here?
     // this.graphics.lineCap = 'round';

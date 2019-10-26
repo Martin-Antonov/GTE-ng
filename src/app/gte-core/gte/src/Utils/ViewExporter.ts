@@ -52,7 +52,7 @@ export class ViewExporter {
             text: nV.ownerLabel.text,
             color: color,
             x: nV.ownerLabel.x,
-            y: nV.y + nV.ownerLabel.height * 0.2,
+            y: nV.y + nV.ownerLabel.displayHeight * 0.2,
             index: playerIndex,
             justify: nV.labelHorizontalOffset === 1 ? 0 : 2,
           });
@@ -72,7 +72,7 @@ export class ViewExporter {
           text: nV.ownerLabel.text,
           color: 0,
           x: nV.ownerLabel.x,
-          y: nV.y + nV.ownerLabel.height * 0.2,
+          y: nV.y + nV.ownerLabel.displayHeight * 0.2,
           index: 0,
           justify: nV.labelHorizontalOffset === 1 ? 0 : 2,
         });
@@ -165,7 +165,7 @@ export class ViewExporter {
         text: iSetV.label.text,
         color: color,
         x: iSetV.label.x,
-        y: iSetV.label.y + iSetV.label.height * 4 / factor,
+        y: iSetV.label.y + iSetV.label.displayHeight * 4 / factor,
         index: playerIndex,
         justify: 1
       });

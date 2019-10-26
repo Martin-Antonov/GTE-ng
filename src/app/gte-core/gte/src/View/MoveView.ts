@@ -22,36 +22,37 @@ export class MoveView extends Phaser.GameObjects.Sprite {
 
     this.setOrigin(0.5, 0);
 
-    this.rotation = Phaser.Math.Angle.Between(this.from.x, this.from.y, this.to.x, this.to.y) + Math.PI / 2;
-    this.height = Phaser.Math.Distance.Between(this.from.x, this.from.y, this.to.x, this.to.y);
+    this.rotation = Phaser.Math.Angle.Between(this.from.x, this.from.y, this.to.x, this.to.y) - Math.PI / 2;
+    this.displayHeight = Phaser.Math.Distance.Between(this.from.x, this.from.y, this.to.x, this.to.y);
 
     this.label = this.scene.add.text(0, 0, this.move.label, {
       align: 'center',
-      fontWeight: 200,
-
-    })
-      .setPadding(0, 0, 3, 0);
+      fontFamily: 'Arial',
+      fontStyle: 'bold italics',
+      fontSize: this.from.displayWidth
+    }).setOrigin(0.5, 0.5)
+      .setPadding(3, 0, 3, 0);
 
     this.label.setInteractive();
 
     this.subscript = this.scene.add.text(0, 0, this.move.subscript, {
       align: 'center',
-      fontWeight: 200,
       fontStyle: 'normal',
       fontSize: this.from.displayWidth * 0.75
     })
       .setOrigin(0, 0.5)
       .setPadding(0, 0, 3, 0);
 
-    this.setDepth(0);
+    this.setDepth(-1);
     this.scene.add.existing(this);
 
   }
 
   /** A method for repositioning the Move, once we have changed the position of the start or finish node */
   updateMovePosition() {
-    this.rotation = Phaser.Math.Angle.Between(this.from.x, this.from.y, this.to.x, this.to.y) + Math.PI / 2;
-    this.height = Phaser.Math.Distance.Between(this.from.x, this.from.y, this.to.x, this.to.y);
+    this.rotation = Phaser.Math.Angle.Between(this.from.x, this.from.y, this.to.x, this.to.y) - Math.PI / 2;
+    this.displayHeight = Phaser.Math.Distance.Between(this.from.x, this.from.y, this.to.x, this.to.y);
+    this.setPosition(this.from.x, this.from.y);
     this.alpha = 1;
     this.label.alpha = 1;
     this.subscript.alpha = 1;
@@ -81,7 +82,7 @@ export class MoveView extends Phaser.GameObjects.Sprite {
     // Calculate positions of texts
     let labelPos = new Phaser.Math.Vector2(this.from.x, this.from.y);
     let direction = new Phaser.Math.Vector2(this.to.x - this.from.x, this.to.y - this.from.y);
-    direction.normalize();
+    direction = direction.normalize();
     direction = direction.scale(levelHeight * 0.6);
     labelPos = labelPos.add(direction);
     if (this.rotation > 0) {
@@ -108,6 +109,28 @@ export class MoveView extends Phaser.GameObjects.Sprite {
         .setFontSize(this.from.displayWidth * 1.05);
     }
     this.subscript.setColor(color);
+  }
+
+  setOwnerColor() {
+    let result = '';
+    switch (this.from.node.player.id) {
+      case 1:
+        result = 'line-red';
+        break;
+      case 2:
+        result = 'line-blue';
+        break;
+      case 3:
+        result = 'line-green';
+        break;
+      case 4:
+        result = 'line-purple';
+        break;
+      default:
+        result = 'line-black';
+        break;
+    }
+    this.setTexture(result);
   }
 
   destroy() {

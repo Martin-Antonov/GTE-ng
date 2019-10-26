@@ -17,10 +17,10 @@ export class TreeTweenManager {
       const nodeV = nodes[i];
       this.scene.tweens.add({
         targets: nodeV,
-        x: clonedCoords.x,
-        y: clonedCoords.y,
+        x: {start: clonedCoords.x, from: clonedCoords.x, to: nodeV.x},
+        y: {start: clonedCoords.x, from: clonedCoords.y, to: nodeV.y},
         duration: TREE_TWEEN_DURATION,
-        ease: 'quarticOut',
+        ease: 'Quart.easeOut',
         onUpdate: () => {
           nodes.forEach(n => {
             n.resetNodeDrawing(allNodesLabeled, properties.zeroSumOn);

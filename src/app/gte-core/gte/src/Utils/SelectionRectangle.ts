@@ -12,10 +12,9 @@ export class SelectionRectangle extends Phaser.GameObjects.Sprite {
     this.setTexture('dot');
 
     this.start = new Phaser.Math.Vector2;
-    this.tint = SELECTION_INNER_COLOR;
 
     this.alpha = 0;
-
+    this.setOrigin(0, 0);
     this.active = true;
     // when we click and hold, we reset the rectangle.
     this.scene.input.on('pointerdown', () => {
@@ -47,11 +46,10 @@ export class SelectionRectangle extends Phaser.GameObjects.Sprite {
       }
     });
     // On dragging, update the transform of the rectangle*/
-    this.scene.input.on('drag', () => {
+    this.scene.input.on('pointermove', () => {
       if (this.scene.input.activePointer.isDown && this.active && this.alpha !== 0) {
         this.displayWidth = this.scene.input.activePointer.x - this.start.x;
         this.displayHeight = this.scene.input.activePointer.y - this.start.y;
-
       }
     });
     this.scene.add.existing(this);

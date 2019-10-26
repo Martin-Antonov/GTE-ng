@@ -1,5 +1,5 @@
 /**The class which will calculate the strategic form from the given tree */
-import {STRATEGIC_FORM_DELIMITER, STRATEGIC_NOT_LABELED_ERROR_TEXT, STRATEGIC_PLAYERS_ERROR_TEXT} from '../Utils/Constants';
+import {STRATEGIC_FORM_DELIMITER, STRATEGIC_NOT_LABELED_ERROR_TEXT} from '../Utils/Constants';
 import {Move} from './Move';
 import {Node, NodeType} from './Node';
 import {Tree} from './Tree';
@@ -49,43 +49,36 @@ export class StrategicForm {
     this.checkStrategicFormPossible();
 
     // The order of information sets is breadth-first. If at some point we wish to change this - swap with dfs.
-    let nodes = this.tree.BFSOnTree();
-    let p1InfoSets = [];
-    let p2InfoSets = [];
-    let p3InfoSets = [];
-    let p4InfoSets = [];
+    const nodes = this.tree.BFSOnTree();
+    const p1InfoSets = [];
+    const p2InfoSets = [];
+    const p3InfoSets = [];
+    const p4InfoSets = [];
 
     // Get all P1 and P2 information sets and singletons from the BFS order
     nodes.forEach((n: Node) => {
       if (n.player === this.tree.players[1]) {
         if (n.iSet && p1InfoSets.indexOf(n.iSet) === -1) {
           p1InfoSets.push(n.iSet);
-        }
-        else if (!n.iSet) {
+        } else if (!n.iSet) {
           p1InfoSets.push(n);
         }
-      }
-      else if (n.player === this.tree.players[2]) {
+      } else if (n.player === this.tree.players[2]) {
         if (n.iSet && p2InfoSets.indexOf(n.iSet) === -1) {
           p2InfoSets.push(n.iSet);
-        }
-        else if (!n.iSet) {
+        } else if (!n.iSet) {
           p2InfoSets.push(n);
         }
-      }
-      else if (n.player === this.tree.players[3]) {
+      } else if (n.player === this.tree.players[3]) {
         if (n.iSet && p3InfoSets.indexOf(n.iSet) === -1) {
           p3InfoSets.push(n.iSet);
-        }
-        else if (!n.iSet) {
+        } else if (!n.iSet) {
           p3InfoSets.push(n);
         }
-      }
-      else if (n.player === this.tree.players[4]) {
+      } else if (n.player === this.tree.players[4]) {
         if (n.iSet && p4InfoSets.indexOf(n.iSet) === -1) {
           p4InfoSets.push(n.iSet);
-        }
-        else if (!n.iSet) {
+        } else if (!n.iSet) {
           p4InfoSets.push(n);
         }
       }
@@ -120,7 +113,7 @@ export class StrategicForm {
 
   /**A method which generates the strategies for a specific player, given his collection of iSets*/
   generateStrategies(iSets: Array<any>) {
-    let currentStrategy = [];
+    const currentStrategy = [];
     this.recurseStrategies(iSets, 0, currentStrategy);
   }
 
@@ -132,14 +125,11 @@ export class StrategicForm {
     if (index === iSets.length) {
       if (iSets[0] && iSets[0].player === this.tree.players[1]) {
         this.p1Strategies.push(strategy.slice(0));
-      }
-      else if (iSets[0] && iSets[0].player === this.tree.players[2]) {
+      } else if (iSets[0] && iSets[0].player === this.tree.players[2]) {
         this.p2Strategies.push(strategy.slice(0));
-      }
-      else if (iSets[0] && iSets[0].player === this.tree.players[3]) {
+      } else if (iSets[0] && iSets[0].player === this.tree.players[3]) {
         this.p3Strategies.push(strategy.slice(0));
-      }
-      else if (iSets[0] && iSets[0].player === this.tree.players[4]) {
+      } else if (iSets[0] && iSets[0].player === this.tree.players[4]) {
         this.p4Strategies.push(strategy.slice(0));
       }
       return;
@@ -153,8 +143,7 @@ export class StrategicForm {
     if (iSets[index] instanceof Node) {
       currentISet = [iSets[index]];
       moves = currentISet[0].childrenMoves;
-    }
-    else if (iSets[index] instanceof ISet) {
+    } else if (iSets[index] instanceof ISet) {
       currentISet = iSets[index].nodes;
       moves = currentISet[0].childrenMoves;
     }
@@ -162,13 +151,12 @@ export class StrategicForm {
     // We perform a check of whether the node is reachable from the previously played moves by the player
     let isReachable = false;
     if (index !== 0) {
-      let nodesToCheckReachability = [];
+      const nodesToCheckReachability = [];
       strategy.forEach((m: Move) => {
         if (m !== null) {
           if (m.from.iSet === null) {
             nodesToCheckReachability.push(m.to);
-          }
-          else {
+          } else {
             m.from.iSet.nodes.forEach((n: Node) => {
               n.childrenMoves.forEach((cM: Move) => {
                 if (cM.label === m.label) {
@@ -189,9 +177,8 @@ export class StrategicForm {
         this.recurseStrategies(iSets, index + 1, strategy);
         strategy.pop();
       }
-    }
-    // If the move is not reachable, we push "null" which will later be transformed into a "*"
-    else {
+      // If the move is not reachable, we push "null" which will later be transformed into a "*"
+    } else {
       strategy.push(null);
       this.recurseStrategies(iSets, index + 1, strategy);
       strategy.pop();
@@ -224,9 +211,9 @@ export class StrategicForm {
   // "From" is the lower (in terms of the tree) move
   private isReachable(from: Array<Node>, to: Array<Node>) {
     for (let i = 0; i < from.length; i++) {
-      let fromNode = from[i];
+      const fromNode = from[i];
       for (let j = 0; j < to.length; j++) {
-        let toNode = to[j];
+        const toNode = to[j];
         if (this.checkTwoNodesReachable(fromNode, toNode)) {
           return true;
         }
@@ -285,7 +272,7 @@ export class StrategicForm {
         }
       }
     }
-    let leaves = this.tree.getLeaves();
+    const leaves = this.tree.getLeaves();
     leaves.forEach((leaf: Node) => {
       this.getMovesPathToRoot(leaf);
       this.reachableP1Rows = [];
@@ -300,7 +287,7 @@ export class StrategicForm {
       this.getReachableVectors(this.reachableP4Cols, this.p4Strategies, this.movesToReachLeafP4);
 
 
-      let payoffsToAdd = leaf.payoffs.outcomes.slice(0);
+      const payoffsToAdd = leaf.payoffs.outcomes.slice(0);
       for (let i = 0; i < payoffsToAdd.length; i++) {
         payoffsToAdd[i] = payoffsToAdd[i] * this.probabilityPerPath;
       }
@@ -325,10 +312,10 @@ export class StrategicForm {
         for (let j = 0; j < colsP2Length; j++) {
           for (let k = 0; k < rowsP3Length; k++) {
             for (let l = 0; l < colsP4Length; l++) {
-              let p1Index = this.reachableP1Rows.length !== 0 ? this.reachableP1Rows[i] : i;
-              let p2Index = this.reachableP2Cols.length !== 0 ? this.reachableP2Cols[j] : j;
-              let p3Index = this.reachableP3Rows.length !== 0 ? this.reachableP3Rows[k] : k;
-              let p4Index = this.reachableP4Cols.length !== 0 ? this.reachableP4Cols[l] : l;
+              const p1Index = this.reachableP1Rows.length !== 0 ? this.reachableP1Rows[i] : i;
+              const p2Index = this.reachableP2Cols.length !== 0 ? this.reachableP2Cols[j] : j;
+              const p3Index = this.reachableP3Rows.length !== 0 ? this.reachableP3Rows[k] : k;
+              const p4Index = this.reachableP4Cols.length !== 0 ? this.reachableP4Cols[l] : l;
               this.payoffsMatrix[p1Index][p2Index][p3Index][p4Index].add(payoffsToAdd);
             }
           }
@@ -357,18 +344,14 @@ export class StrategicForm {
     while (current.parent) {
       if (current.parent.type === NodeType.CHANCE) {
         this.probabilityPerPath *= current.parentMove.probability;
-      }
-      else if (current.parent.type === NodeType.OWNED) {
+      } else if (current.parent.type === NodeType.OWNED) {
         if (current.parent.player === this.tree.players[1]) {
           this.movesToReachLeafP1.push(current.parentMove);
-        }
-        else if (current.parent.player === this.tree.players[2]) {
+        } else if (current.parent.player === this.tree.players[2]) {
           this.movesToReachLeafP2.push(current.parentMove);
-        }
-        else if (current.parent.player === this.tree.players[3]) {
+        } else if (current.parent.player === this.tree.players[3]) {
           this.movesToReachLeafP3.push(current.parentMove);
-        }
-        else if (current.parent.player === this.tree.players[4]) {
+        } else if (current.parent.player === this.tree.players[4]) {
           this.movesToReachLeafP4.push(current.parentMove);
         }
       }
@@ -379,10 +362,10 @@ export class StrategicForm {
   /**A helper method for the generation of payoffs matrices*/
   private getReachableVectors(vector: Array<number>, allStrategies: Array<Array<Move>>, strategiesOnPath: Array<Move>) {
     for (let i = 0; i < allStrategies.length; i++) {
-      let currentStrategy = allStrategies[i];
+      const currentStrategy = allStrategies[i];
       let containsAllOnPath = true;
       for (let j = 0; j < strategiesOnPath.length; j++) {
-        let moveOnPath = strategiesOnPath[j];
+        const moveOnPath = strategiesOnPath[j];
         if (this.checkUnreachableMove(currentStrategy, moveOnPath)) {
           containsAllOnPath = false;
           break;
@@ -404,13 +387,11 @@ export class StrategicForm {
   private checkUnreachableMove(strategy: Array<Move>, move: Move) {
     if (strategy.indexOf(move) !== -1) {
       return false;
-    }
-    else if (move.from.iSet === null) {
+    } else if (move.from.iSet === null) {
       return true;
-    }
-    else {
-      let moveIndex = move.from.childrenMoves.indexOf(move);
-      let iSetNodes = move.from.iSet.nodes;
+    } else {
+      const moveIndex = move.from.childrenMoves.indexOf(move);
+      const iSetNodes = move.from.iSet.nodes;
       for (let i = 0; i < iSetNodes.length; i++) {
         if (strategy.indexOf(iSetNodes[i].childrenMoves[moveIndex]) !== -1) {
           return false;
@@ -431,8 +412,7 @@ export class StrategicForm {
             if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[3]) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[3];
               maxIndices = [l];
-            }
-            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[3]) {
+            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[3]) {
               maxIndices.push(l);
             }
           }
@@ -453,8 +433,7 @@ export class StrategicForm {
             if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[2]) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[2];
               maxIndices = [k];
-            }
-            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[2]) {
+            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[2]) {
               maxIndices.push(k);
             }
           }
@@ -474,8 +453,7 @@ export class StrategicForm {
             if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[1]) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[1];
               maxIndices = [j];
-            }
-            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[1]) {
+            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[1]) {
               maxIndices.push(j);
             }
           }
@@ -495,8 +473,7 @@ export class StrategicForm {
             if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[0]) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[0];
               maxIndices = [i];
-            }
-            else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[0]) {
+            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[0]) {
               maxIndices.push(i);
             }
           }
@@ -514,19 +491,18 @@ export class StrategicForm {
     if (strategies.length === 0) {
       return [' '];
     }
-    let strategyAsString = [];
+    const strategyAsString = [];
     for (let i = 0; i < strategies.length; i++) {
       let str = '';
       for (let j = 0; j < strategies[i].length; j++) {
-        let current = strategies[i][j];
+        const current = strategies[i][j];
         if (current) {
           str += current.label;
           if (current.subscript) {
             str += '_' + current.subscript;
           }
           str += STRATEGIC_FORM_DELIMITER;
-        }
-        else {
+        } else {
           str += '*' + STRATEGIC_FORM_DELIMITER;
         }
       }
