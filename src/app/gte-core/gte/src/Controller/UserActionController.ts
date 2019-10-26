@@ -77,12 +77,13 @@ export class UserActionController {
   update() {
     if (this.scene.input.activePointer.isDown && this.selectionRectangle.active) {
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-        if (Phaser.Geom.Rectangle.Overlaps(this.selectionRectangle.getBounds(), nV.getBounds()) && this.selectedNodes.indexOf(nV) === -1) {
+        const selectionCheck = Phaser.Geom.Rectangle.Overlaps(this.selectionRectangle.getBounds(), nV.circle.getBounds());
+        if (selectionCheck && this.selectedNodes.indexOf(nV) === -1) {
           nV.isSelected = true;
           nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.push(nV);
         }
-        if (!Phaser.Geom.Rectangle.Overlaps(this.selectionRectangle.getBounds(), nV.getBounds()) && this.selectedNodes.indexOf(nV) !== -1 &&
+        if (!selectionCheck && this.selectedNodes.indexOf(nV) !== -1 &&
           !this.shift.isDown) {
           nV.isSelected = false;
           nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);

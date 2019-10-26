@@ -86,10 +86,7 @@ export class TreeView {
     }
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);
-
-      // this.game.time.events.add(TREE_TWEEN_DURATION +, () => {
       this.resetNodesAndMovesDisplay();
-      // });
     } else {
       this.updateMoves();
       this.resetNodesAndMovesDisplay();
@@ -166,7 +163,6 @@ export class TreeView {
         mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
       });
     }
-
   }
 
   /**Re-centers the tree on the screen*/

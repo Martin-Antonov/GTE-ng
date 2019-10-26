@@ -29,7 +29,7 @@ export class MoveView extends Phaser.GameObjects.Sprite {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'bold italics',
-      fontSize: this.from.displayWidth
+      fontSize: this.from.circle.displayWidth
     }).setOrigin(0.5, 0.5)
       .setPadding(3, 0, 3, 0);
 
@@ -38,7 +38,7 @@ export class MoveView extends Phaser.GameObjects.Sprite {
     this.subscript = this.scene.add.text(0, 0, this.move.subscript, {
       align: 'center',
       fontStyle: 'normal',
-      fontSize: this.from.displayWidth * 0.75
+      fontSize: this.from.circle.displayWidth * 0.75
     })
       .setOrigin(0, 0.5)
       .setPadding(0, 0, 3, 0);
@@ -101,12 +101,12 @@ export class MoveView extends Phaser.GameObjects.Sprite {
     if (this.move.from.type === NodeType.OWNED) {
       this.label.setColor(this.from.node.player.color.toString())
         .setFontStyle('italic')
-        .setFontSize(this.from.displayWidth * 1.28);
+        .setFontSize(this.from.circle.displayWidth * 1.28);
       color = this.from.node.player.color.toString();
     } else if (this.move.from.type === NodeType.CHANCE) {
       this.label.setColor('#000')
         .setFontStyle('normal')
-        .setFontSize(this.from.displayWidth * 1.05);
+        .setFontSize(this.from.circle.displayWidth * 1.05);
     }
     this.subscript.setColor(color);
   }

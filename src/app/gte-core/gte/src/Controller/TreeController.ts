@@ -68,7 +68,7 @@ export class TreeController {
   /** The node specific method for attaching handlers
    * Also when we add node we attach the handler for the parent move label*/
   private attachHandlersToNode(nV: NodeView) {
-    nV.on('pointerover', () => {
+    nV.circle.on('pointerover', () => {
       if (!this.scene.input.activePointer.isDown) {
         if (this.altKey.isDown) {
           this.scene.sys.canvas.style.cursor = 'no-drop';
@@ -77,15 +77,15 @@ export class TreeController {
         }
       }
     });
-    nV.on('pointerdown', () => {
+    nV.circle.on('pointerdown', () => {
       // You can add input down on node here
     });
-    nV.on('pointerout', () => {
+    nV.circle.on('pointerout', () => {
       if (!this.scene.input.activePointer.isDown) {
         this.scene.sys.canvas.style.cursor = 'default';
       }
     });
-    nV.on('pointerup', () => {
+    nV.circle.on('pointerup', () => {
       if (this.altKey.isDown && this.clickCheck()) {
         this.deleteNodeHandler([nV]);
       } else if (this.clickCheck()) {
@@ -433,7 +433,7 @@ export class TreeController {
   }
 
   private clickCheck(): boolean {
-    return this.scene.input.activePointer.upTime - this.scene.input.activePointer.upTime < CLICK_THRESHOLD;
+    return this.scene.input.activePointer.upTime - this.scene.input.activePointer.downTime < CLICK_THRESHOLD;
   }
 }
 

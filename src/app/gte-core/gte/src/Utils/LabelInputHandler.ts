@@ -7,7 +7,7 @@ export class LabelInputHandler {
   scene: Phaser.Scene;
   active: boolean;
   shouldRecalculateOrder: boolean;
-  currentlySelected: Phaser.GameObjects.Sprite;
+  currentlySelected: Phaser.GameObjects.Sprite | NodeView;
   nodesBFSOrder: Array<Node>;
   leavesDFSOrder: Array<Node>;
   treeController: TreeController;
@@ -178,11 +178,11 @@ export class LabelInputHandler {
     } else if (this.currentlySelected instanceof NodeView) {
       const nodeV = (<NodeView>this.currentlySelected);
       if (nodeV.ownerLabel.alpha === 1) {
-        this.fieldX = nodeV.ownerLabel.x;
-        this.fieldY = nodeV.ownerLabel.y;
+        this.fieldX = nodeV.ownerLabel.x + nodeV.x;
+        this.fieldY = nodeV.ownerLabel.y + nodeV.y;
       } else if (nodeV.payoffsLabel.alpha === 1) {
-        this.fieldX = nodeV.payoffsLabel.x;
-        this.fieldY = nodeV.payoffsLabel.y + 50;
+        this.fieldX = nodeV.payoffsLabel.x + nodeV.x;
+        this.fieldY = nodeV.payoffsLabel.y + +nodeV.y + 50;
       }
     }
   }

@@ -48,8 +48,11 @@ export class SelectionRectangle extends Phaser.GameObjects.Sprite {
     // On dragging, update the transform of the rectangle*/
     this.scene.input.on('pointermove', () => {
       if (this.scene.input.activePointer.isDown && this.active && this.alpha !== 0) {
-        this.displayWidth = this.scene.input.activePointer.x - this.start.x;
-        this.displayHeight = this.scene.input.activePointer.y - this.start.y;
+        this.displayWidth = Math.abs(this.scene.input.activePointer.x - this.start.x);
+        this.displayHeight = Math.abs(this.scene.input.activePointer.y - this.start.y);
+
+        this.displayOriginX = (this.scene.input.activePointer.x - this.start.x) < 0 ? 1 : 0;
+        this.displayOriginY = (this.scene.input.activePointer.y - this.start.y) < 0 ? 1 : 0;
       }
     });
     this.scene.add.existing(this);

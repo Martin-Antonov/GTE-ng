@@ -4,23 +4,22 @@ import {Node, NodeType} from '../Model/Node';
 /** A class for the graphical representation of the Node. The inherited sprite from Phaser.Sprite will not be visible
  * and will only detect input on the node. The private fields circle and square are the visible ones, depending on whether
  * the node (of type Node) is chance or not. */
-export class NodeView extends Phaser.GameObjects.Sprite {
+export class NodeView extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
   node: Node;
 
-  // The input handler will fire signals when the node is pressed, hovered and hovered-out
+  circle: Phaser.GameObjects.Sprite;
   ownerLabel: Phaser.GameObjects.Text;
   payoffsLabel: Phaser.GameObjects.Text;
   isSelected: boolean;
   level: number;
   private previewSelected: Phaser.GameObjects.Sprite;
+
   // Horizontal offset: -1 for left, 1 for right;
   labelHorizontalOffset: number;
 
   constructor(scene: Phaser.Scene, node: Node, x?: number, y?: number) {
-    super(scene, x, y, 'circle-black');
-
-    this.setInteractive();
+    super(scene, x, y);
     this.isSelected = false;
 
     this.node = node;
@@ -35,10 +34,14 @@ export class NodeView extends Phaser.GameObjects.Sprite {
 
   /** A method which creates the circle and square sprites*/
   private createSprites() {
-    this.previewSelected = this.scene.add.sprite(this.x, this.y, 'circle-preview')
-      .setPosition(this.x, this.y)
+    this.circle = this.scene.add.sprite(0, 0, 'circle-black');
+    this.circle.setInteractive();
+
+    this.previewSelected = this.scene.add.sprite(0, 0, 'circle-preview')
       .setAlpha(0)
       .setDepth(1);
+
+    this.add([this.circle, this.previewSelected]);
   }
 
   /** A method which creates the label for the Node*/
@@ -46,18 +49,17 @@ export class NodeView extends Phaser.GameObjects.Sprite {
     const text = this.node.player ? this.node.player.label : '';
     const color = this.node.player ? this.node.player.color : '#000000';
 
-    this.ownerLabel = this.scene.add.text(this.x + this.labelHorizontalOffset * this.displayWidth,
-      this.y - this.displayWidth, text, {
-        fontSize: this.displayWidth * LABEL_SIZE,
-        color: color,
-        fontStyle: 'bold',
-        fontFamily: 'Arial',
-      });
+    this.ownerLabel = this.scene.add.text(this.labelHorizontalOffset * this.circle.displayWidth * 0.75, -this.circle.displayWidth, text, {
+      fontSize: this.circle.displayWidth * LABEL_SIZE,
+      color: color,
+      fontStyle: 'bold',
+      fontFamily: 'Arial',
+    });
 
     this.ownerLabel.setInteractive();
 
-    this.payoffsLabel = this.scene.add.text(this.x, this.y + this.displayWidth * OVERLAY_SCALE, '', {
-      fontSize: this.displayWidth * PAYOFF_SIZE,
+    this.payoffsLabel = this.scene.add.text(0, 0, '', {
+      fontSize: this.circle.displayWidth * PAYOFF_SIZE,
       fontStyle: 'bold',
       align: 'right',
       fontFamily: 'Arial',
@@ -66,6 +68,8 @@ export class NodeView extends Phaser.GameObjects.Sprite {
 
     this.payoffsLabel.setInteractive();
     this.payoffsLabel.lineSpacing = -5;
+
+    this.add([this.payoffsLabel, this.ownerLabel]);
   }
 
   updateLabelPosition() {
@@ -76,11 +80,6 @@ export class NodeView extends Phaser.GameObjects.Sprite {
       this.labelHorizontalOffset = 1;
       this.ownerLabel.setOrigin(0, 0.5);
     }
-    this.ownerLabel.setPosition(this.x + this.labelHorizontalOffset * this.displayWidth * 0.75, this.y - this.displayWidth);
-    this.payoffsLabel.setPosition(this.x, this.y);
-
-    this.previewSelected.x = this.x;
-    this.previewSelected.y = this.y;
   }
 
   /** A method which converts the node, depending on whether it is a chance, owned or default.*/
@@ -94,8 +93,8 @@ export class NodeView extends Phaser.GameObjects.Sprite {
 
     // If Owned
     if (this.node.type === NodeType.OWNED) {
-      this.setTexture(this.getColorFromPlayerId());
-      this.alpha = 1;
+      this.circle.setTexture(this.getColorFromPlayerId());
+      this.circle.alpha = 1;
       if (this.node.iSet) {
         this.ownerLabel.alpha = 0;
       } else {
@@ -108,7 +107,7 @@ export class NodeView extends Phaser.GameObjects.Sprite {
 
     // If Chance
     if (this.node.type === NodeType.CHANCE) {
-      this.setTexture('square');
+      this.circle.setTexture('square');
       this.ownerLabel.setScale(0.5);
       this.ownerLabel.alpha = 1;
       this.ownerLabel.setText('chance');
@@ -122,7 +121,7 @@ export class NodeView extends Phaser.GameObjects.Sprite {
         this.node.payoffs.convertToZeroSum();
       }
       if (areLeavesActive) {
-        this.alpha = 0;
+        this.circle.alpha = 0;
         this.payoffsLabel.alpha = 1;
         const payoffsString = this.node.payoffs.toString();
         const labelsArray = payoffsString.split(' ');
@@ -138,15 +137,15 @@ export class NodeView extends Phaser.GameObjects.Sprite {
         this.payoffsLabel.alpha = 1;
         this.payoffsLabel.input.enabled = true;
       } else {
-        this.alpha = 1;
+        this.circle.alpha = 1;
         this.payoffsLabel.alpha = 0;
       }
     }
 
     // If Default
     if (this.node.type === NodeType.DEFAULT) {
-      this.alpha = 1;
-      this.setTexture('circle-black');
+      this.circle.alpha = 1;
+      this.circle.setTexture('circle-black');
       this.ownerLabel.alpha = 0;
       this.payoffsLabel.alpha = 0;
     }

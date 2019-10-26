@@ -80,35 +80,7 @@ export class KeyboardController {
     });
 
     this.deleteKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DELETE);
-
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.C);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.N);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.I);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.Z);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.D);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.U);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.R);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.S);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.Y);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.L);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.PLUS);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.MINUS);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.ZERO);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.ONE);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.TWO);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.THREE);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.FOUR);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.ENTER);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.TAB);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.CTRL);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.SHIFT);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.ALT);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.DELETE);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.UP);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.DOWN);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    // this.scene.input.keyboard.removeKeyCapture(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.scene.input.keyboard.disableGlobalCapture();
   }
 
   /**A method which assigns action to each key via the UserActionController*/
@@ -273,7 +245,6 @@ export class KeyboardController {
     });
 
     // P3: What to do here?
-
 
 
     // this.upKey.onHoldCallback = function () {
