@@ -30,7 +30,7 @@ export class TreesFileService {
 
   addNewTree() {
     this.saveCurrentTree();
-    this.userActionController.emptySelectedNodes();
+    // this.userActionController.deselectNodesHandler();
     // Create the new tree and push it to tree tabs
     const newTree = new TreeFile('MyTree' + (this.treeTabs.length + 1));
     this.treeTabs.push(newTree);
@@ -43,7 +43,7 @@ export class TreesFileService {
   changeToTree(index: number) {
     if (index !== this.currentTabIndex) {
       this.saveCurrentTree();
-      this.userActionController.emptySelectedNodes();
+      // this.userActionController.deselectNodesHandler();
       this.userActionController.treeController.reloadTreeFromJSON(
         this.userActionController.treeController.treeParser.parse(this.treeTabs[index].currentTree),
         this.treeTabs[index].coordsList
@@ -71,7 +71,7 @@ export class TreesFileService {
     } else {
       this.currentTabIndex = this.treeTabs.length - 1;
     }
-    this.userActionController.emptySelectedNodes();
+    // this.userActionController.deselectNodesHandler();
     this.userActionController.treeController.reloadTreeFromJSON(
       this.userActionController.treeController.treeParser.parse(this.treeTabs[this.currentTabIndex].currentTree)
     );

@@ -60,36 +60,31 @@ export class LeftMenuComponent implements OnInit {
         }
       });
       return result;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   canCreateISet() {
     if (this.userActionController && this.userActionController.selectedNodes.length > 1) {
-      let selectedNodes = this.userActionController.selectedNodes;
-      let nodes = [];
+      const selectedNodes = this.userActionController.selectedNodes;
+      const nodes = [];
       selectedNodes.forEach((nV: NodeView) => {
         nodes.push(nV.node);
       });
 
       try {
         this.userActionController.treeController.tree.canCreateISet(nodes);
-      }
-      catch {
+      } catch {
         return false;
-      }
-      let distinctISets = this.userActionController.treeController
-        .getDistinctISetsFromNodes(selectedNodes).length;
+      } const distinctISets = this.userActionController.treeController.getDistinctISetsFromNodes(selectedNodes).length;
       for (let i = 0; i < selectedNodes.length; i++) {
         if (!selectedNodes[i].node.iSet) {
           return true;
         }
       }
       return distinctISets !== 1;
-    }
-    else {
+    } else {
       return false;
     }
   }

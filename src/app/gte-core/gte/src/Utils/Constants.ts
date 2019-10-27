@@ -31,9 +31,6 @@ export const BACKWARDS_INDUCTION_PERFECT_INFORMATION = 'Cannot calculate SPNE fo
 // ISets
 export const ISET_LINE_WIDTH = 0.05;
 
-// Hover Button Colors
-export const CUT_SPRITE_TINT = 0x444444;
-
 // Misc
 export const TREE_TWEEN_DURATION = 600;
 

@@ -1,5 +1,5 @@
 import {ISetView} from '../View/ISetView';
-import {CUT_SPRITE_TINT, ISET_LINE_WIDTH} from './Constants';
+import {ISET_LINE_WIDTH} from './Constants';
 
 export class CutSpriteHandler {
   scene: Phaser.Scene;
@@ -12,10 +12,10 @@ export class CutSpriteHandler {
 
     this.cutSprite = this.scene.add.sprite(0, 0, 'scissors');
     this.cutSprite.alpha = 0;
-    // P3: What to do?
-    // this.cutSprite.tint = CUT_SPRITE_TINT;
+    this.cutSprite.setDepth(3);
+
     this.cutSprite.displayWidth = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
-    this.cutSprite.displayWidth = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
+    this.cutSprite.displayHeight = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
   }
 
   update() {

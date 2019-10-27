@@ -132,7 +132,7 @@ export class TreeController {
       const move = this.treeView.findMoveView(nV.node.parentMove);
       move.label.on('pointerup', () => {
         if (move.label.alpha === 1 && this.clickCheck()) {
-          this.events.emit('label-clicked', nV);
+          this.events.emit('label-clicked', move);
         }
       });
       move.label.on('pointerover', () => {

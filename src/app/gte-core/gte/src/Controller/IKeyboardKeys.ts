@@ -1,0 +1,31 @@
+export interface IKeyboardKeys {
+  SHIFT: Phaser.Input.Keyboard.Key;
+  CTRL: Phaser.Input.Keyboard.Key;
+  ALT: Phaser.Input.Keyboard.Key;
+  N: Phaser.Input.Keyboard.Key;
+  ZERO: Phaser.Input.Keyboard.Key;
+  I: Phaser.Input.Keyboard.Key;
+  PLUS: Phaser.Input.Keyboard.Key;
+  MINUS: Phaser.Input.Keyboard.Key;
+  SPACE: Phaser.Input.Keyboard.Key;
+  Z: Phaser.Input.Keyboard.Key;
+  D: Phaser.Input.Keyboard.Key;
+  U: Phaser.Input.Keyboard.Key;
+  C: Phaser.Input.Keyboard.Key;
+  S: Phaser.Input.Keyboard.Key;
+  R: Phaser.Input.Keyboard.Key;
+  Y: Phaser.Input.Keyboard.Key;
+  L: Phaser.Input.Keyboard.Key;
+  TAB: Phaser.Input.Keyboard.Key;
+  ENTER: Phaser.Input.Keyboard.Key;
+  ESC: Phaser.Input.Keyboard.Key;
+  UP: Phaser.Input.Keyboard.Key;
+  DOWN: Phaser.Input.Keyboard.Key;
+  LEFT: Phaser.Input.Keyboard.Key;
+  RIGHT: Phaser.Input.Keyboard.Key;
+  ONE: Phaser.Input.Keyboard.Key;
+  TWO: Phaser.Input.Keyboard.Key;
+  THREE: Phaser.Input.Keyboard.Key;
+  FOUR: Phaser.Input.Keyboard.Key;
+  DELETE: Phaser.Input.Keyboard.Key;
+}

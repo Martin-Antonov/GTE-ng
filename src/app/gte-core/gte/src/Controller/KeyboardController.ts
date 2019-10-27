@@ -1,45 +1,18 @@
 import {UserActionController} from './UserActionController';
 import {NODES_HORIZONTAL_STEP_POSITIONING, NODES_VERTICAL_STEP_POSITIONING} from '../Utils/Constants';
+import {IKeyboardKeys} from './IKeyboardKeys';
 
 /** A class for controlling the input of the application. If there is a confusion over the functionality of each button
  * you can check the attachHandlersToKeysMethod*/
 
 export class KeyboardController {
   scene: Phaser.Scene;
-  // There is a reference to the User , so that whenever a key is pressed we can call the corresponding method
   userActionController: UserActionController;
-  shiftKey: Phaser.Input.Keyboard.Key;
-  controlKey: Phaser.Input.Keyboard.Key;
-  altKey: Phaser.Input.Keyboard.Key;
-  nKey: Phaser.Input.Keyboard.Key;
-  playersKeys: Array<Phaser.Input.Keyboard.Key>;
-  zeroKey: Phaser.Input.Keyboard.Key;
-  deleteKey: Phaser.Input.Keyboard.Key;
-  dKey: Phaser.Input.Keyboard.Key;
-  testButton: Phaser.Input.Keyboard.Key;
-  zKey: Phaser.Input.Keyboard.Key;
-  iKey: Phaser.Input.Keyboard.Key;
-  uKey: Phaser.Input.Keyboard.Key;
-  cKey: Phaser.Input.Keyboard.Key;
-  sKey: Phaser.Input.Keyboard.Key;
-  rKey: Phaser.Input.Keyboard.Key;
-  yKey: Phaser.Input.Keyboard.Key;
-  lKey: Phaser.Input.Keyboard.Key;
-  numPlusKey: Phaser.Input.Keyboard.Key;
-  numMinusKey: Phaser.Input.Keyboard.Key;
-  tabKey: Phaser.Input.Keyboard.Key;
-  enterKey: Phaser.Input.Keyboard.Key;
-  escapeKey: Phaser.Input.Keyboard.Key;
-  upKey: Phaser.Input.Keyboard.Key;
-  downKey: Phaser.Input.Keyboard.Key;
-  leftKey: Phaser.Input.Keyboard.Key;
-  rightKey: Phaser.Input.Keyboard.Key;
+  keys: IKeyboardKeys;
 
   constructor(scene: Phaser.Scene, userActionController: UserActionController) {
     this.scene = scene;
     this.userActionController = userActionController;
-
-    this.playersKeys = [];
 
     this.addKeys();
     this.attachHandlersToKeys();
@@ -47,237 +20,206 @@ export class KeyboardController {
 
   /**Assigning all keys to the corresponding properties in the class*/
   addKeys() {
-    this.shiftKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
-    this.controlKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
-    this.altKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
-    this.nKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
-    this.zeroKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ZERO);
-    this.iKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.I);
-    this.numPlusKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PLUS);
-    this.numMinusKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.MINUS);
-    this.testButton = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    this.zKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-    this.dKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    this.uKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
-    this.cKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
-    this.sKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    this.rKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-    this.yKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Y);
-    this.lKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
-    this.tabKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
-    this.enterKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
-    this.escapeKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-    this.upKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-    this.downKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-    this.leftKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    this.rightKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.keys =
+      this.scene.input.keyboard.addKeys('SHIFT,CTRL,ALT,N,ZERO,I,PLUS,MINUS,SPACE,Z,D,U,C,S,R,Y,L,' +
+        'TAB,ENTER,ESC,UP,DOWN,LEFT,RIGHT,ONE,TWO,THREE,FOUR,DELETE') as IKeyboardKeys;
 
-    const keys = [Phaser.Input.Keyboard.KeyCodes.ONE, Phaser.Input.Keyboard.KeyCodes.TWO,
-      Phaser.Input.Keyboard.KeyCodes.THREE, Phaser.Input.Keyboard.KeyCodes.FOUR];
-
-    keys.forEach((k: number) => {
-      this.playersKeys.push(this.scene.input.keyboard.addKey(k));
-    });
-
-    this.deleteKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DELETE);
-    this.scene.input.keyboard.disableGlobalCapture();
+    this.scene.input.keyboard.removeCapture('ZERO,ONE,TWO,THREE,FOUR,N,I,SPACE,Z,D,U,C,S,R,Y,L,LEFT,RIGHT,DOWN,UP,SHIFT');
   }
 
   /**A method which assigns action to each key via the UserActionController*/
   attachHandlersToKeys() {
     // Add Children
+    this.keys.N.on('down', () => {
+      if (!this.keys.CTRL.isDown && !this.keys.ALT.isDown && !this.userActionController.labelInput.active) {
+        this.userActionController.addNodesHandler();
+      }
+    });
+    // Phaser 3 not working
+    // this.keys.PLUS.on('down', () => {
+    //   if (!this.keys.CTRL.isDown && !this.keys.ALT.isDown && !this.userActionController.labelInput.active) {
+    //     this.userActionController.addNodesHandler();
+    //   }
+    // });
 
-    this.nKey.on('down', () => {
-      if (!this.controlKey.isDown && !this.altKey.isDown && !this.userActionController.labelInput.active) {
-        this.userActionController.addNodesHandler();
-      }
-    });
-    this.numPlusKey.on('down', () => {
-      if (!this.controlKey.isDown && !this.altKey.isDown) {
-        this.userActionController.addNodesHandler();
-      }
-    });
     // Delete nodes
-    this.deleteKey.on('down', () => {
+    this.keys.DELETE.on('down', () => {
       this.userActionController.deleteNodeHandler();
     });
-    this.dKey.on('down', () => {
+    this.keys.D.on('down', () => {
       if (!this.userActionController.labelInput.active) {
         this.userActionController.deleteNodeHandler();
       }
     });
-    this.numMinusKey.on('down', () => {
-      this.userActionController.deleteNodeHandler();
-    });
+    // MINUS KEY NOT WORKING ON P3
+    // this.keys.MINUS.on('down', () => {
+    //   this.userActionController.deleteNodeHandler();
+    // });
 
     // Assigning players
-    this.playersKeys.forEach((k: Phaser.Input.Keyboard.Key) => {
-      const playerID = this.playersKeys.indexOf(k) + 1;
-      k.on('down', () => {
-        if (!this.userActionController.labelInput.active) {
-          this.userActionController.assignPlayerToNodeHandler(playerID);
-        }
-      });
-    });
-    this.zeroKey.on('down', () => {
+    this.keys.ZERO.on('down', () => {
       if (!this.userActionController.labelInput.active) {
         this.userActionController.assignChancePlayerToNodeHandler();
       }
     });
+    this.keys.ONE.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.assignPlayerToNodeHandler(1);
+      }
+    });
+    this.keys.TWO.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.assignPlayerToNodeHandler(2);
+      }
+    });
+    this.keys.THREE.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.assignPlayerToNodeHandler(3);
+      }
+    });
+    this.keys.FOUR.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        this.userActionController.assignPlayerToNodeHandler(4);
+      }
+    });
 
     // Create an information set
-    this.iKey.on('down', () => {
-      if (!this.controlKey.isDown && !this.altKey.isDown && !this.userActionController.labelInput.active) {
+    this.keys.I.on('down', () => {
+      if (!this.keys.CTRL.isDown && !this.keys.ALT.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.createISetHandler();
       }
     });
 
     // Undo and redo
-    this.zKey.on('down', () => {
-      if (this.controlKey.isDown && !this.shiftKey.isDown && !this.userActionController.labelInput.active) {
+    this.keys.Z.on('down', () => {
+      if (this.keys.CTRL.isDown && !this.keys.SHIFT.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(true);
       }
-      if (this.controlKey.isDown && this.shiftKey.isDown && !this.userActionController.labelInput.active) {
+      if (this.keys.CTRL.isDown && this.keys.SHIFT.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(false);
       }
     });
 
-    this.uKey.on('down', () => {
+    this.keys.U.on('down', () => {
       if (!this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(true);
       }
     });
 
-    this.rKey.on('down', () => {
+    this.keys.R.on('down', () => {
       if (!this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(false);
       }
     });
 
-    this.yKey.on('down', () => {
-      if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
+    this.keys.Y.on('down', () => {
+      if (this.keys.CTRL.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.undoRedoHandler(false);
       }
     });
 
     // Remove information set
-    this.sKey.on('down', () => {
+    this.keys.S.on('down', () => {
       if (!this.userActionController.labelInput.active) {
         this.userActionController.removeISetsByNodesHandler();
       }
     });
 
     // Cut information set
-    this.cKey.on('down', () => {
+    this.keys.C.on('down', () => {
       if (!this.userActionController.labelInput.active) {
         this.userActionController.initiateCutSpriteHandler();
       }
     });
 
     // Change to the next label
-    this.tabKey.on('down', () => {
-      if (this.shiftKey.isDown) {
+    this.keys.TAB.on('down', () => {
+      if (this.keys.SHIFT.isDown) {
         this.userActionController.activateLabelField(false);
       } else {
         // this.userActionController.activateLabelField(true);
       }
     });
 
-    this.lKey.on('down', () => {
+    this.keys.L.on('down', () => {
       this.userActionController.selectChildren();
     });
 
     // Exit label
-    this.escapeKey.on('down', () => {
+    this.keys.ESC.on('down', () => {
       this.userActionController.hideInputLabel();
     });
 
 
     // Arrow Keys Moving nodes
-    this.upKey.on('up', () => {
+    this.keys.UP.on('up', () => {
       this.userActionController.undoRedoController.saveNewTree(true);
     });
 
-    this.downKey.on('up', () => {
+    this.keys.DOWN.on('up', () => {
       this.userActionController.undoRedoController.saveNewTree(true);
     });
 
-    this.leftKey.on('up', () => {
+    this.keys.LEFT.on('up', () => {
       this.userActionController.undoRedoController.saveNewTree(true);
     });
 
-    this.rightKey.on('up', () => {
+    this.keys.RIGHT.on('up', () => {
       this.userActionController.undoRedoController.saveNewTree(true);
     });
 
 
-    this.upKey.on('down', () => {
-      const verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
-
-      if (!this.controlKey.isDown) {
-        this.userActionController.moveNodeManually(0, -1, verticalDistance);
+    this.keys.UP.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        if (this.keys.CTRL.isDown) {
+          this.userActionController.moveNodeManually(0, -1, 1);
+          this.keys.UP.emitOnRepeat = true;
+        } else {
+          this.keys.UP.emitOnRepeat = false;
+          const verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
+          this.userActionController.moveNodeManually(0, -1, verticalDistance);
+        }
       }
     });
 
-    this.downKey.on('down', () => {
-      const verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
-
-      if (!this.controlKey.isDown) {
-        this.userActionController.moveNodeManually(0, 1, verticalDistance);
+    this.keys.DOWN.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        if (this.keys.CTRL.isDown) {
+          this.userActionController.moveNodeManually(0, 1, 1);
+          this.keys.DOWN.emitOnRepeat = true;
+        } else {
+          this.keys.DOWN.emitOnRepeat = false;
+          const verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
+          this.userActionController.moveNodeManually(0, 1, verticalDistance);
+        }
       }
     });
 
-    this.leftKey.on('down', () => {
-      const horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
-        this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
-
-      if (!this.controlKey.isDown) {
-        this.userActionController.moveNodeManually(-1, 0, horizontalDistance);
+    this.keys.LEFT.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        if (this.keys.CTRL.isDown) {
+          this.userActionController.moveNodeManually(-1, 0, 1);
+          this.keys.LEFT.emitOnRepeat = true;
+        } else {
+          this.keys.LEFT.emitOnRepeat = false;
+          const horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
+            this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
+          this.userActionController.moveNodeManually(-1, 0, horizontalDistance);
+        }
       }
     });
-    this.rightKey.on('down', () => {
-      const horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
-        this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
-
-      if (!this.controlKey.isDown) {
-        this.userActionController.moveNodeManually(1, 0, horizontalDistance);
+    this.keys.RIGHT.on('down', () => {
+      if (!this.userActionController.labelInput.active) {
+        if (this.keys.CTRL.isDown) {
+          this.userActionController.moveNodeManually(1, 0, 1);
+          this.keys.RIGHT.emitOnRepeat = true;
+        } else {
+          this.keys.RIGHT.emitOnRepeat = false;
+          const horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
+            this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
+          this.userActionController.moveNodeManually(1, 0, horizontalDistance);
+        }
       }
-    });
-
-    // P3: What to do here?
-
-
-    // this.upKey.onHoldCallback = function () {
-    //   if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
-    //     this.userActionController.moveNodeManually(0, -1, 1);
-    //   }
-    // };
-    //
-    // this.downKey.onHoldCallback = function () {
-    //   if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
-    //     this.userActionController.moveNodeManually(0, 1, 1);
-    //   }
-    // };
-    //
-    // this.leftKey.onHoldCallback = function () {
-    //   if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
-    //     this.userActionController.moveNodeManually(-1, 0, 1);
-    //   }
-    // };
-    //
-    // this.rightKey.onHoldCallback = function () {
-    //   if (this.controlKey.isDown && !this.userActionController.labelInput.active) {
-    //     this.userActionController.moveNodeManually(1, 0, 1);
-    //   }
-    // };
-    //
-    // this.upKey.onHoldContext = this;
-    // this.downKey.onHoldContext = this;
-    // this.leftKey.onHoldContext = this;
-    // this.rightKey.onHoldContext = this;
-
-
-    this.testButton.on('down', () => {
     });
   }
 }

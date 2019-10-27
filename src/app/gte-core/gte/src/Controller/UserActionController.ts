@@ -26,7 +26,6 @@ export class UserActionController {
 
   selectedNodes: Array<NodeView>;
   selectionRectangle: SelectionRectangle;
-  backgroundInputSprite: Phaser.GameObjects.Sprite;
 
   viewExporter: ViewExporter;
   SPNEActive: boolean;
@@ -58,24 +57,20 @@ export class UserActionController {
     });
 
     this.treeController.events.on('iset-clicked', (iSetV: ISetView) => {
-      this.selectionRectangle.active = false;
+      this.selectionRectangle.isActive = false;
       iSetV.nodes.forEach((nV: NodeView) => {
         nV.isSelected = true;
         nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
         this.selectedNodes.push(nV);
       });
-
-      this.selectionRectangle.active = true;
-
+      this.selectionRectangle.isActive = true;
     });
-
-    this.createBackgroundForInputReset();
   }
 
   /**The update method is built-into Phaser and is called 60 times a second.
    * It handles the selection of nodes, while holding the mouse button*/
   update() {
-    if (this.scene.input.activePointer.isDown && this.selectionRectangle.active) {
+    if (this.scene.input.activePointer.isDown && this.selectionRectangle.isActive) {
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
         const selectionCheck = Phaser.Geom.Rectangle.Overlaps(this.selectionRectangle.getBounds(), nV.circle.getBounds());
         if (selectionCheck && this.selectedNodes.indexOf(nV) === -1) {
@@ -83,8 +78,7 @@ export class UserActionController {
           nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.push(nV);
         }
-        if (!selectionCheck && this.selectedNodes.indexOf(nV) !== -1 &&
-          !this.shift.isDown) {
+        if (!selectionCheck && this.selectedNodes.indexOf(nV) !== -1 && !this.shift.isDown) {
           nV.isSelected = false;
           nV.resetNodeDrawing(this.treeController.tree.checkAllNodesLabeled(), this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.splice(this.selectedNodes.indexOf(nV), 1);
@@ -96,24 +90,10 @@ export class UserActionController {
   }
 
   /** Empties the selected nodes*/
-  emptySelectedNodes() {
+  private emptySelectedNodes() {
     while (this.selectedNodes.length !== 0) {
       this.selectedNodes.pop();
     }
-  }
-
-  /**This sprite resets the input and node selection if someone clicks on a sprite which does not have input*/
-  private createBackgroundForInputReset() {
-    // this.backgroundInputSprite = this.scene.add.sprite(0, 0, null);
-    // this.backgroundInputSprite.displayWidth = this.scene.sys.canvas.width;
-    // this.backgroundInputSprite.displayHeight = this.scene.sys.canvas.height;
-    // this.backgroundInputSprite.setInteractive();
-    // this.backgroundInputSprite.setDepth(-1);
-    // this.backgroundInputSprite.on('pointerdown', () => {
-    //   if (!this.shift.isDown) {
-    //     this.deselectNodesHandler();
-    //   }
-    // });
   }
 
   /**Resets the current Tree*/
@@ -323,7 +303,7 @@ export class UserActionController {
 
     this.scene.input.keyboard.enabled = false;
     this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-      nV.input.enabled = false;
+      nV.circle.input.enabled = false;
     });
     this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
       iSetView.input.enabled = false;
@@ -333,7 +313,7 @@ export class UserActionController {
       this.cutSpriteHandler.cutSprite.alpha = 0;
 
       this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-        nV.input.enabled = true;
+        nV.circle.input.enabled = true;
       });
       this.treeController.treeView.iSets.forEach((iSetView: ISetView) => {
         iSetView.input.enabled = true;
@@ -348,7 +328,6 @@ export class UserActionController {
       this.treeController.resetTree(true, true);
       this.undoRedoController.saveNewTree();
     }, this);
-
   }
 
   /**If the label input is active, go to the next label

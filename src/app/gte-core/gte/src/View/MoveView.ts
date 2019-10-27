@@ -37,6 +37,7 @@ export class MoveView extends Phaser.GameObjects.Sprite {
 
     this.subscript = this.scene.add.text(0, 0, this.move.subscript, {
       align: 'center',
+      fontFamily: 'Arial',
       fontStyle: 'normal',
       fontSize: this.from.circle.displayWidth * 0.75
     })

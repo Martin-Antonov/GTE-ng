@@ -20,7 +20,7 @@ export class AppComponent {
 
     // confirm on reload page
     window.addEventListener('beforeunload', function (e) {
-      let confirmationMessage = '';
+      const confirmationMessage = '';
       e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
       return confirmationMessage;              // Gecko, WebKit, Chrome <34
     });
