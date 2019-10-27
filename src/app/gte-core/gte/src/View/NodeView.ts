@@ -80,6 +80,7 @@ export class NodeView extends Phaser.GameObjects.Container {
       this.labelHorizontalOffset = 1;
       this.ownerLabel.setOrigin(0, 0.5);
     }
+    this.ownerLabel.setPosition(this.labelHorizontalOffset * this.circle.displayWidth * 0.75, -this.circle.displayWidth);
   }
 
   /** A method which converts the node, depending on whether it is a chance, owned or default.*/

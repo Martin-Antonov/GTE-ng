@@ -36,6 +36,10 @@ export class BottomMenuComponent implements OnInit {
       this.confirmationActive = true;
       this.currentTabIndex = index;
     }
-
   }
+
+  getFPS(){
+    return Math.round(this.tfs.userActionController.scene.game.loop.actualFps);
+  }
+
 }

@@ -1,29 +1,30 @@
-import {ISET_LINE_WIDTH, LABEL_SIZE, OVERLAY_SCALE} from '../Utils/Constants';
+import {ISET_LINE_WIDTH, LABEL_SIZE, TREE_TWEEN_DURATION} from '../Utils/Constants';
 import {NodeView} from './NodeView';
 import {ISet} from '../Model/ISet';
 
 /**A class for drawing the iSet */
 export class ISetView extends Phaser.GameObjects.Sprite {
   scene: Phaser.Scene;
-  graphics: Phaser.GameObjects.Graphics;
+  canvasTexture: Phaser.Textures.CanvasTexture;
   iSet: ISet;
   label: Phaser.GameObjects.Text;
   nodes: Array<NodeView>;
+  uuid: string;
 
   constructor(scene: Phaser.Scene, iSet: ISet, nodes: Array<NodeView>) {
-    super(scene, 0, 0, '');
+    super(scene, scene.sys.canvas.width / 2, scene.sys.canvas.height / 2, '');
     this.scene = scene;
     this.iSet = iSet;
     this.nodes = nodes;
 
-    this.graphics = this.scene.make.graphics({});
+    this.uuid = this.getUUID();
+    this.canvasTexture = this.scene.textures.createCanvas(this.uuid, this.scene.sys.canvas.width, this.scene.sys.canvas.height);
     this.sortNodesLeftToRight();
     this.createISetBMD();
     this.createLabel();
-
+    this.setTexture(this.uuid);
     this.setInteractive(this.scene.input.makePixelPerfect());
-    // P3: What to do here
-    // this.input.priorityID = 100;
+    this.scene.add.existing(this);
   }
 
   removeNode(nodeV: NodeView) {
@@ -42,7 +43,8 @@ export class ISetView extends Phaser.GameObjects.Sprite {
     this.alpha = 0;
     this.scene.tweens.add({
       targets: this,
-      alpha: 1,
+      alpha: 0.15,
+      duration: TREE_TWEEN_DURATION / 2,
     });
   }
 
@@ -54,7 +56,7 @@ export class ISetView extends Phaser.GameObjects.Sprite {
       this.label.alpha = 0;
     } else {
       this.label.alpha = 1;
-      this.label.setColor(this.iSet.player.color.toString());
+      this.label.setColor(this.iSet.player.color);
     }
     this.nodes.forEach((nV: NodeView) => {
       nV.ownerLabel.alpha = 0;
@@ -70,24 +72,19 @@ export class ISetView extends Phaser.GameObjects.Sprite {
 
   /**Create e very thick line that goes through all the points*/
   private createISetBMD() {
+    const ctx = this.canvasTexture.getContext();
     const color = this.iSet.player ? this.iSet.player.color : '#000000';
-    this.graphics.clear();
-    this.graphics.lineStyle(this.scene.sys.canvas.height * ISET_LINE_WIDTH, Number(color), 0.15);
-
-    // P3: What to do here?
-    // this.graphics.lineCap = 'round';
-    // this.graphics.lineJoin = 'round';
-    this.graphics.beginPath();
-    this.graphics.moveTo(this.nodes[0].x, this.nodes[0].y);
+    this.canvasTexture.clear();
+    ctx.lineWidth = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(this.nodes[0].x, this.nodes[0].y);
     for (let i = 1; i < this.nodes.length; i++) {
-      this.graphics.lineTo(this.nodes[i].x, this.nodes[i].y);
+      ctx.lineTo(this.nodes[i].x, this.nodes[i].y);
     }
-
-    this.graphics.stroke();
-    this.graphics.generateTexture('iSet');
-
-    this.setTexture('iSet');
-    this.scene.add.existing(this);
+    ctx.stroke();
   }
 
   private createLabel() {
@@ -97,19 +94,31 @@ export class ISetView extends Phaser.GameObjects.Sprite {
     const text = this.nodes[0].node.player ? this.nodes[0].node.player.label : '';
     this.label = this.scene.add.text((rightNode.x + leftNode.x) * 0.5,
       (rightNode.y + leftNode.y) * 0.5, text, {
-      fontSize: this.nodes[0].displayWidth * LABEL_SIZE,
-
-      });
+        fontSize: this.nodes[0].circle.displayWidth * LABEL_SIZE,
+        fontStyle: 'bold',
+        fontFamily: 'Arial',
+      }).setOrigin(0.5, 0.5);
     if (!this.iSet.player) {
       this.label.alpha = 0;
     } else {
-      this.label.setColor(this.iSet.player.color.toString());
+      this.label.setColor(this.iSet.player.color);
     }
   }
 
+  private getUUID() {
+    let dt = new Date().getTime();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      // tslint:disable-next-line:no-bitwise
+      const r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      // tslint:disable-next-line:no-bitwise
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
   destroy() {
-    this.graphics.destroy();
-    this.graphics = null;
+    this.canvasTexture.destroy();
+    this.canvasTexture = null;
     this.nodes = [];
     this.nodes = null;
     this.label.destroy();
