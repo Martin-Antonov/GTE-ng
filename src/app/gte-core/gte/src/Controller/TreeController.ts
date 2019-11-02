@@ -1,14 +1,13 @@
 import {Tree} from '../Model/Tree';
 import {TreeView} from '../View/TreeView';
 import {Player} from '../Model/Player';
-import {CLICK_THRESHOLD, NODE_RADIUS, PLAYER_COLORS} from '../Utils/Constants';
+import {CLICK_THRESHOLD, PLAYER_COLORS} from '../Utils/Constants';
 import {NodeView} from '../View/NodeView';
 import {ISetView} from '../View/ISetView';
 import {ISet} from '../Model/ISet';
 import {Node} from '../Model/Node';
 import {MoveView} from '../View/MoveView';
 import {TreeParser} from '../Utils/TreeParser';
-
 
 /**A class which connects the TreeView and the Tree Model.
  * This class is used mainly through UserActionController.ts*/
@@ -24,7 +23,6 @@ export class TreeController {
     this.scene = scene;
     this.treeParser = new TreeParser();
 
-    // P3: DELETE
     this.events = new Phaser.Events.EventEmitter();
     this.altKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ALT);
     this.createInitialTree();
@@ -44,17 +42,6 @@ export class TreeController {
     this.addNodeHandler([this.treeView.nodes[0]]);
 
     this.resetTree(true, true);
-  }
-
-  /**A method for creating the circle for the nodes.
-   * This method will imitate the zoom-in/zoom-out functionality*/
-  setCircleBitmapData(scale: number) {
-    // this.bmd = this.game.make.bitmapData(this.game.height * NODE_RADIUS * scale,
-    //   this.game.height * NODE_RADIUS * scale, 'node-circle', true);
-    // this.bmd.ctx.fillStyle = '#ffffff';
-    // this.bmd.ctx.beginPath();
-    // this.bmd.ctx.arc(this.bmd.width / 2, this.bmd.width / 2, this.bmd.width * 0.45, 0, Math.PI * 2);
-    // this.bmd.ctx.fill();
   }
 
   // region Input Handlers and Signals
@@ -366,7 +353,6 @@ export class TreeController {
    * soft=true means only changing labels and isets, false redraws the full tree*/
   resetTree(fullReset: boolean, startAnimations: boolean) {
     this.treeView.drawTree(fullReset, startAnimations);
-
   }
 
   /**A method for calculating SPNE with backwards induction*/

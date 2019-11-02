@@ -128,7 +128,7 @@ export class NodeView extends Phaser.GameObjects.Container {
         const payoffsString = this.node.payoffs.toString();
         const labelsArray = payoffsString.split(' ');
         this.payoffsLabel.text = '';
-        // P3: TODO
+
         // this.payoffsLabel.clearColors();
         for (let i = 0; i < labelsArray.length; i++) {
           this.payoffsLabel.text += labelsArray[i] + '\n';
@@ -140,7 +140,7 @@ export class NodeView extends Phaser.GameObjects.Container {
         this.payoffsLabel.input.enabled = true;
       } else {
         this.circle.alpha = 1;
-        this.payoffsLabel.alpha = 0;
+        this.payoffsLabel.setAlpha(0);
       }
     }
 

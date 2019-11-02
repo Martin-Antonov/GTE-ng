@@ -41,28 +41,16 @@ export class LeftMenuComponent implements OnInit {
     this.playerIsActive = true;
   }
 
-  areNodesSelected() {
+  areNodesSelected(): boolean {
     if (this.userActionController) {
       return this.userActionController.selectedNodes.length === 0;
-    }
-    else {
+    } else {
       return true;
     }
-
   }
 
-  doSelectedHaveChildren() {
-    if (this.userActionController) {
-      let result = false;
-      this.userActionController.selectedNodes.forEach((nV: NodeView) => {
-        if (nV.node.children.length > 0) {
-          result = true;
-        }
-      });
-      return result;
-    } else {
-      return false;
-    }
+  doSelectedHaveChildren(): boolean {
+    return this.userActionController && this.userActionController.doSelectedHaveChildren();
   }
 
   canCreateISet() {

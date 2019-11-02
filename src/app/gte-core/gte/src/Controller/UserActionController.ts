@@ -115,6 +115,15 @@ export class UserActionController {
     }
   }
 
+  doSelectedHaveChildren(): boolean {
+    for (let i = 0; i < this.selectedNodes.length; i++) {
+      if (this.selectedNodes[i].node.children.length !== 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**A method for selecting all children of the given node.*/
   selectChildren() {
     if (this.selectedNodes.length !== 0) {
@@ -136,9 +145,6 @@ export class UserActionController {
             this.treeController.treeView.properties.zeroSumOn);
           this.selectedNodes.push(nodeViewToSelect);
         }
-      });
-
-      this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       });
     }
   }
@@ -180,24 +186,28 @@ export class UserActionController {
 
   /**A method for assigning players to nodes (keyboard 1,2,3,4)*/
   assignPlayerToNodeHandler(playerID: number, nodeV?: NodeView) {
-    if (nodeV) {
+    if (nodeV && nodeV.node.children.length !== 0) {
       this.treeController.assignPlayerToNode(playerID, [nodeV]);
-    } else if (this.selectedNodes.length > 0) {
+      this.checkCreateStrategicForm();
+      this.undoRedoController.saveNewTree();
+    } else if (this.selectedNodes.length > 0 && this.doSelectedHaveChildren()) {
       this.treeController.assignPlayerToNode(playerID, this.selectedNodes);
+      this.checkCreateStrategicForm();
+      this.undoRedoController.saveNewTree();
     }
-    this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
   }
 
   /**A method for assigning chance player to a node (keyboard 0)*/
   assignChancePlayerToNodeHandler(nodeV?: NodeView) {
-    if (nodeV) {
+    if (nodeV && nodeV.node.children.length !== 0) {
       this.treeController.assignChancePlayerToNode([nodeV]);
-    } else if (this.selectedNodes.length > 0) {
+      this.checkCreateStrategicForm();
+      this.undoRedoController.saveNewTree();
+    } else if (this.selectedNodes.length > 0 && this.doSelectedHaveChildren()) {
       this.treeController.assignChancePlayerToNode(this.selectedNodes);
+      this.checkCreateStrategicForm();
+      this.undoRedoController.saveNewTree();
     }
-    this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
   }
 
   /**A method which removes the last player from the list of players*/
@@ -395,7 +405,6 @@ export class UserActionController {
   }
 
   gameResize() {
-
     const element = document.getElementById('phaser-div');
     const boundingRect = element.getBoundingClientRect();
     const width = boundingRect.width;

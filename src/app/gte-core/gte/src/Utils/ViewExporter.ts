@@ -267,6 +267,7 @@ export class ViewExporter {
 
       } else if (nV.node.type === NodeType.LEAF) {
         draw.text((add) => {
+          // P3: TODO
           const payoffsShown = nV.payoffsLabel.text.split('\n');
           for (let i = 0; i < payoffsShown.length; i++) {
             const payoff = payoffsShown[i];

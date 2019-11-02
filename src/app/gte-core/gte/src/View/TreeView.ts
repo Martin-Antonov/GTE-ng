@@ -83,6 +83,8 @@ export class TreeView {
       }
       this.centerGroupOnScreen();
       this.drawISets();
+    } else {
+      this.updateMoves();
     }
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);

@@ -182,7 +182,7 @@ export class LabelInputHandler {
         this.fieldY = nodeV.ownerLabel.y + nodeV.y;
       } else if (nodeV.payoffsLabel.alpha === 1) {
         this.fieldX = nodeV.payoffsLabel.x + nodeV.x;
-        this.fieldY = nodeV.payoffsLabel.y + +nodeV.y + 50;
+        this.fieldY = nodeV.payoffsLabel.y + nodeV.y + 50;
       }
     }
   }
