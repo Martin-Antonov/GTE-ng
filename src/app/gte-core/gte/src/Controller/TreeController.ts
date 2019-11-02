@@ -87,11 +87,12 @@ export class TreeController {
     });
     nV.circle.on('pointerup', () => {
       if (this.altKey.isDown && this.clickCheck()) {
-        this.deleteNodeHandler([nV]);
+        this.events.emit('delete-node', nV);
+        this.scene.sys.canvas.style.cursor = 'default';
       } else if (this.clickCheck()) {
-        this.addNodeHandler([nV]);
+        this.events.emit('add-node', nV);
+        this.scene.sys.canvas.style.cursor = 'default';
       }
-      this.events.emit('tree-changed');
     });
 
     nV.ownerLabel.on('pointerup', () => {
@@ -115,13 +116,11 @@ export class TreeController {
         this.events.emit('label-clicked', nV);
       }
     });
-
     nV.payoffsLabel.on('pointerover', () => {
       if (!this.scene.input.activePointer.isDown) {
         this.scene.sys.canvas.style.cursor = 'text';
       }
     });
-
     nV.payoffsLabel.on('pointerout', () => {
       if (!this.scene.input.activePointer.isDown) {
         this.scene.sys.canvas.style.cursor = 'default';
@@ -229,9 +228,6 @@ export class TreeController {
       // If the node is in an iset, change the owner of the iSet to the new player
       if (nV.node.iSet && nV.node.iSet.nodes.length > 1) {
         nV.node.iSet.player = this.tree.players[playerID];
-        const iSetView = this.treeView.findISetView(nV.node.iSet);
-        // P3: what to do here?
-        // iSetView.tint = iSetView.iSet.player.color;
       }
     });
 

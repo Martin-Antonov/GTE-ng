@@ -30,7 +30,6 @@ export class UserActionController {
   viewExporter: ViewExporter;
   SPNEActive: boolean;
 
-  private resizeLocked: boolean;
   private shift: Phaser.Input.Keyboard.Key;
 
   constructor(scene: Phaser.Scene, treeController: TreeController) {
@@ -46,14 +45,16 @@ export class UserActionController {
     this.cutSpriteHandler = new CutSpriteHandler(this.scene);
 
     this.selectionRectangle = new SelectionRectangle(this.scene);
-    this.resizeLocked = false;
 
     this.events = new Phaser.Events.EventEmitter();
     this.SPNEActive = false;
 
-    this.treeController.events.on('tree-changed', () => {
-      this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
+    this.treeController.events.on('add-node', (nV: NodeView) => {
+      this.addNodesHandler(nV);
+    });
+
+    this.treeController.events.on('delete-node', (nV: NodeView) => {
+      this.deleteNodeHandler(nV);
     });
 
     this.treeController.events.on('iset-clicked', (iSetV: ISetView) => {
@@ -394,23 +395,15 @@ export class UserActionController {
   }
 
   gameResize() {
-    if (!this.resizeLocked) {
-      this.resizeLocked = true;
-      this.scene.time.addEvent({
-        delay: 100,
-        callback: () => {
-          const element = document.getElementById('phaser-div');
-          const boundingRect = element.getBoundingClientRect();
-          const width = boundingRect.width;
-          const height = boundingRect.height;
-          this.scene.scale.setGameSize(width, height);
-          this.treeController.treeView.properties = new TreeViewProperties(this.scene.sys.canvas.height * INITIAL_TREE_HEIGHT,
-            this.scene.sys.canvas.height * INITIAL_TREE_WIDTH);
-          this.treeController.resetTree(true, false);
-          this.resizeLocked = false;
-        }
-      });
-    }
+
+    const element = document.getElementById('phaser-div');
+    const boundingRect = element.getBoundingClientRect();
+    const width = boundingRect.width;
+    const height = boundingRect.height;
+    this.scene.scale.setGameSize(width, height);
+    this.treeController.treeView.properties = new TreeViewProperties(this.scene.sys.canvas.height * INITIAL_TREE_HEIGHT,
+      this.scene.sys.canvas.width * INITIAL_TREE_WIDTH);
+    this.treeController.resetTree(true, false);
   }
 }
 

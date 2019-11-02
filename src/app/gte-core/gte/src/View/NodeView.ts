@@ -118,6 +118,7 @@ export class NodeView extends Phaser.GameObjects.Container {
     // If Leaf
     if (this.node.type === NodeType.LEAF) {
       this.ownerLabel.alpha = 0;
+      this.circle.setTexture('circle-black');
       if (zeroSumOn) {
         this.node.payoffs.convertToZeroSum();
       }

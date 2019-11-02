@@ -45,6 +45,9 @@ export class SelectionRectangle extends Phaser.GameObjects.Sprite {
         this.isActive = false;
       }
     });
+    this.scene.input.on('gameout', () => {
+      this.scene.input.emit('pointerup');
+    });
     // On dragging, update the transform of the rectangle*/
     this.scene.input.on('pointermove', () => {
       if (this.scene.input.activePointer.isDown && this.active && this.alpha !== 0) {

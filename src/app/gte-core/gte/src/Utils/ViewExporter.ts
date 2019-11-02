@@ -3,8 +3,9 @@ import {NodeType} from '../Model/Node';
 import {MoveView} from '../View/MoveView';
 import {ISetView} from '../View/ISetView';
 import * as SVG from 'svg.js';
-import {ISET_LINE_WIDTH, LINE_WIDTH} from './Constants';
+import {ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH, PAYOFF_SIZE} from './Constants';
 import {TreeController} from '../Controller/TreeController';
+
 export class ViewExporter {
   treeController: TreeController;
 
@@ -44,14 +45,14 @@ export class ViewExporter {
         // other styles
         const post = '0 20 0.000 1 0.0000 ';
         const coords = Math.round(nV.x * factor) + ' ' + Math.round(nV.y * factor) + ' ';
-        const dimensions = Math.round((nV.displayWidth * 0.65 / 2) * factor) + ' ' + Math.round((nV.displayWidth * 0.65 / 2) * factor) + ' ';
+        const dimensions = Math.round((nV.circle.displayWidth * 0.65 / 2) * factor) + ' ' + Math.round((nV.circle.displayWidth * 0.65 / 2) * factor) + ' ';
         result += pre + depth + post + coords + dimensions + coords + coords + '\n';
 
         if (playerIndex > 0 && nV.node.iSet === null) {
           playerLabels.push({
             text: nV.ownerLabel.text,
             color: color,
-            x: nV.ownerLabel.x,
+            x: nV.x + nV.ownerLabel.x,
             y: nV.y + nV.ownerLabel.displayHeight * 0.2,
             index: playerIndex,
             justify: nV.labelHorizontalOffset === 1 ? 0 : 2,
@@ -61,7 +62,7 @@ export class ViewExporter {
         const pre = '2 2 0 0 0 0 10 -1 20 0.000 0 0 -1 0 0 5 ';
         const centerX = Math.round(nV.x * factor);
         const centerY = Math.round(nV.y * factor);
-        const halfWidth = Math.round(nV.displayWidth * factor * 0.7 / 2);
+        const halfWidth = Math.round(nV.circle.displayWidth * factor * 0.7 / 2);
         const topLeft = (centerX - halfWidth) + ' ' + (centerY - halfWidth) + ' ';
         const topRight = (centerX + halfWidth) + ' ' + (centerY - halfWidth) + ' ';
         const bottomLeft = (centerX - halfWidth) + ' ' + (centerY + halfWidth) + ' ';
@@ -71,7 +72,7 @@ export class ViewExporter {
         chanceLabels.push({
           text: nV.ownerLabel.text,
           color: 0,
-          x: nV.ownerLabel.x,
+          x: nV.x + nV.ownerLabel.x,
           y: nV.y + nV.ownerLabel.displayHeight * 0.2,
           index: 0,
           justify: nV.labelHorizontalOffset === 1 ? 0 : 2,
@@ -91,9 +92,9 @@ export class ViewExporter {
 
         for (let i = 0; i < outcomes.length; i++) {
           // 195 is half width to the right
-          const x = Math.round((nV.payoffsLabel.x) * factor + 195 / halfWidthToRightFactor);
+          const x = Math.round((nV.x + nV.payoffsLabel.x) * factor + 195 / halfWidthToRightFactor);
           // 440 is label height in FIG
-          const y = Math.round(nV.payoffsLabel.y * factor) + (i + 1) * 440;
+          const y = Math.round((nV.y + nV.payoffsLabel.y) * factor) + (i + 1) * 440;
           payoffsLabels.push({
             text: outcomes[i],
             color: this.getColorFromPlayerIndex(i + 1),
@@ -243,90 +244,91 @@ export class ViewExporter {
   }
 
   toSVG() {
-  //   const draw = SVG('svg-export').size(this.treeController.treeView.scene.sys.canvas.width, this.treeController.treeView.scene.sys.height);
-  //   this.treeController.treeView.nodes.forEach((nV: NodeView) => {
-  //     if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
-  //       draw.circle(nV.width).attr({fill: Phaser.Color.getWebRGB(nV.tint), 'stroke-width': 0}).center(nV.x, nV.y);
-  //       if (nV.node.iSet === null) {
-  //         draw.text(nV.ownerLabel.text).move(nV.ownerLabel.x, nV.ownerLabel.y - nV.ownerLabel.height * 0.75).fill(nV.ownerLabel.color)
-  //           .font({
-  //             anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
-  //             size: nV.ownerLabel.fontSize,
-  //             weight: 'bold'
-  //           });
-  //       }
-  //     }
-  //     else if (nV.node.type === NodeType.CHANCE) {
-  //       draw.rect(nV.square.width, nV.square.height).center(nV.x, nV.y);
-  //       draw.text(nV.ownerLabel.text).move(nV.ownerLabel.x, nV.ownerLabel.y - nV.ownerLabel.height * 0.75)
-  //         .font({
-  //           anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
-  //           size: (<number>nV.ownerLabel.fontSize * nV.ownerLabel.scale.x),
-  //           weight: 'bold'
-  //         });
-  //
-  //     }
-  //     else if (nV.node.type === NodeType.LEAF) {
-  //       draw.text((add) => {
-  //         const payoffsShown = nV.payoffsLabel.text.split('\n');
-  //         for (const i = 0; i < payoffsShown.length; i++) {
-  //           const payoff = payoffsShown[i];
-  //           add.tspan(payoff).fill(Phaser.Color.getWebRGB(this.treeController.treeView.tree.players[i + 1].color)).newLine();
-  //         }
-  //       }).move(nV.payoffsLabel.x + nV.payoffsLabel.width / 2, nV.payoffsLabel.y).font({
-  //         anchor: 'end',
-  //         size: nV.payoffsLabel.fontSize,
-  //       }).leading(1);
-  //     }
-  //   });
-  //
-  //   this.treeController.treeView.moves.forEach((mV: MoveView) => {
-  //     draw.line(mV.from.x, mV.from.y, mV.to.x, mV.to.y).attr({
-  //       stroke: '#000',
-  //       'stroke-width': Math.round(this.treeController.treeView.game.height * LINE_WIDTH)
-  //     }).back();
-  //     draw.text(mV.label.text).move(mV.label.x - mV.label.width / 2, mV.label.y - mV.label.height).fill(mV.label.fill)
-  //       .font({
-  //         weight: '200',
-  //         style: mV.from.node.player.id !== 0 ? 'italic' : 'none',
-  //         size: mV.label.fontSize
-  //       });
-  //     if (mV.move.subscript) {
-  //       draw.text(mV.subscript.text).move(mV.subscript.x, mV.subscript.y - mV.subscript.height)
-  //         .fill(mV.subscript.fill)
-  //         .font({
-  //           weight: '200',
-  //           size: mV.subscript.fontSize
-  //         });
-  //     }
-  //   });
-  //
-  //   this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
-  //     const pointCoords = [];
-  //     iSetV.nodes.forEach((nV: NodeView) => {
-  //       pointCoords.push(nV.x);
-  //       pointCoords.push(nV.y);
-  //     });
-  //
-  //     console.log('points-length: ' + pointCoords.length);
-  //
-  //     draw.polyline(pointCoords).attr({
-  //       stroke: Phaser.Color.getWebRGB(iSetV.tint),
-  //       opacity: 0.15,
-  //       'stroke-width': this.treeController.treeView.game.height * ISET_LINE_WIDTH,
-  //       'stroke-linecap': 'round',
-  //       'stroke-linejoin': 'round'
-  //     }).fill('none');
-  //
-  //     draw.text(iSetV.label.text).move(iSetV.label.x - iSetV.label.width / 2, iSetV.label.y - iSetV.label.height * 0.7)
-  //       .fill(iSetV.label.fill)
-  //       .font({
-  //         // anchor: 'middle',
-  //         weight: 'bold',
-  //         size: iSetV.label.fontSize
-  //       });
-  //   });
-  //
-  //   return draw.svg();
+    const draw = SVG('svg-export').size(this.treeController.treeView.scene.sys.canvas.width, this.treeController.treeView.scene.sys.canvas.height);
+    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+      if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
+        draw.circle(nV.circle.displayWidth).attr({fill: nV.node.player.color, 'stroke-width': 0}).center(nV.x, nV.y);
+        if (nV.node.iSet === null) {
+          draw.text(nV.ownerLabel.text).move(nV.x + nV.ownerLabel.x, nV.y + nV.ownerLabel.y - nV.ownerLabel.height * 0.75).fill(nV.node.player.color)
+            .font({
+              anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
+              size: nV.circle.displayWidth * LABEL_SIZE,
+              weight: 'bold'
+            });
+        }
+      } else if (nV.node.type === NodeType.CHANCE) {
+        draw.rect(nV.circle.displayWidth, nV.circle.displayHeight).center(nV.x, nV.y);
+        draw.text(nV.ownerLabel.text).move(nV.x + nV.ownerLabel.x, nV.y + nV.ownerLabel.y - nV.ownerLabel.height * 0.75)
+          .font({
+            anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
+            size: (nV.circle.displayWidth * LABEL_SIZE * nV.ownerLabel.scaleX),
+            weight: 'bold'
+          });
+
+      } else if (nV.node.type === NodeType.LEAF) {
+        draw.text((add) => {
+          const payoffsShown = nV.payoffsLabel.text.split('\n');
+          for (let i = 0; i < payoffsShown.length; i++) {
+            const payoff = payoffsShown[i];
+            if (payoff !== '') {
+              add.tspan(payoff).fill(this.treeController.treeView.tree.players[i + 1].color).newLine();
+            }
+          }
+        }).move(nV.x + nV.payoffsLabel.x + nV.payoffsLabel.width / 2, nV.y + nV.payoffsLabel.y).font({
+          anchor: 'end',
+          size: nV.circle.displayWidth * PAYOFF_SIZE,
+        }).leading(1);
+      }
+    });
+
+    this.treeController.treeView.moves.forEach((mV: MoveView) => {
+      draw.line(mV.from.x, mV.from.y, mV.to.x, mV.to.y).attr({
+        stroke: '#000',
+        'stroke-width': Math.round(this.treeController.treeView.scene.sys.canvas.height * LINE_WIDTH)
+      }).back();
+      draw.text(mV.label.text).move(mV.label.x, mV.label.y - mV.label.displayHeight / 2).fill(mV.from.node.player.color)
+        .font({
+          weight: '400',
+          style: mV.from.node.player.id !== 0 ? 'italic' : 'none',
+          size: mV.from.circle.displayWidth,
+          anchor: 'middle'
+        });
+      if (mV.move.subscript) {
+        draw.text(mV.subscript.text).move(mV.subscript.x, mV.subscript.y - mV.subscript.displayHeight * 0.75)
+          .fill(mV.from.node.player.color)
+          .font({
+            weight: '400',
+            size: mV.from.circle.displayWidth * 0.75,
+            anchor: 'start'
+          });
+      }
+    });
+
+    this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
+      const pointCoords = [];
+      iSetV.nodes.forEach((nV: NodeView) => {
+        pointCoords.push(nV.x);
+        pointCoords.push(nV.y);
+      });
+
+      console.log('points-length: ' + pointCoords.length);
+
+      draw.polyline(pointCoords).attr({
+        stroke: iSetV.iSet.player.color,
+        opacity: 0.15,
+        'stroke-width': this.treeController.treeView.scene.sys.canvas.height * ISET_LINE_WIDTH,
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round'
+      }).fill('none');
+
+      draw.text(iSetV.label.text).move(iSetV.label.x - iSetV.label.width / 2, iSetV.label.y - iSetV.label.height * 0.8)
+        .fill(iSetV.iSet.player.color)
+        .font({
+          // anchor: 'middle',
+          weight: 'bold',
+          size: iSetV.nodes[0].circle.displayWidth * LABEL_SIZE
+        });
+    });
+    return draw.svg();
   }
 }

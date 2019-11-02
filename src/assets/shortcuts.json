@@ -1,11 +1,11 @@
 [
   {
-    "command": "N / Num+ / Click",
+    "command": "N / Click",
     "explanation": "Add children to a set of nodes",
     "videoURL": "assets/videos/addNodes.mp4"
   },
   {
-    "command": "D / Del / Num- / Alt+Click",
+    "command": "D / Del  / Alt+Click",
     "explanation": "Delete a set of nodes",
     "videoURL": "assets/videos/removeNodes.mp4"
   },

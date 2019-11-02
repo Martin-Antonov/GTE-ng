@@ -23,7 +23,7 @@
           </div>
           <div *ngIf="this.isThereP4() && k===0" class="p4-col-strategy"
                [ngStyle]="{left: (l*86*this.userActionController.strategicForm.p2Strategies.length)+70+'px'}"
-               [innerHTML]="this.userActionController.treeController.tree.players[3].label+': '+this.transformStrategy(p4Col)">
+               [innerHTML]="this.userActionController.treeController.tree.players[4].label+': '+this.transformStrategy(p4Col)">
           </div>
           <ng-container *ngFor="let p1Row of this.userActionController.strategicForm.p1rows; index as i">
             <div class="inner-cell" *ngFor="let p2Col of this.userActionController.strategicForm.p2cols; index as j;"

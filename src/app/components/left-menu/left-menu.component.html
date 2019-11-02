@@ -37,7 +37,7 @@
 
   <app-square-button [imageKey]="'select-children.png'"
                      (clicked)="this.userActionController.selectChildren()"
-                     [inactive]="this.areNodesSelected()"
+                     [inactive]="!this.doSelectedHaveChildren()"
                      [tooltipText]="this.tooltips.select_children"
   ></app-square-button>
   <hr>
