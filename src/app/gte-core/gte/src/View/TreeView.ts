@@ -86,6 +86,7 @@ export class TreeView {
     } else {
       this.updateMoves();
     }
+
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);
       this.resetNodesAndMovesDisplay();
@@ -252,6 +253,13 @@ export class TreeView {
         if (m.to === nodeV) {
           this.moves.splice(this.moves.indexOf(m), 1);
           m.destroy();
+        }
+      });
+      // Remove the NodeView from any iSets it could be a part of
+      this.iSets.forEach((iSetV: ISetView) => {
+        const indexOfNodeView = iSetV.nodes.indexOf(nodeV);
+        if (indexOfNodeView !== -1) {
+          iSetV.nodes.splice(indexOfNodeView, 1);
         }
       });
       // Remove the nodeView from the treeView and destroy it

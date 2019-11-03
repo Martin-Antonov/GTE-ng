@@ -1,9 +1,10 @@
 import {NodeType} from '../Model/Node';
 import {NodeView} from './NodeView';
 import {Move} from '../Model/Move';
+import {LABEL_METRICS, SUBSCRIPT_METRICS} from '../Utils/Constants';
 
 /** A class which represents how the move looks like, it has a reference to the start and end points and the label text*/
-export class MoveView extends Phaser.GameObjects.Sprite {
+export class MoveView extends Phaser.GameObjects.Image {
   scene: Phaser.Scene;
   from: NodeView;
   to: NodeView;
@@ -29,24 +30,23 @@ export class MoveView extends Phaser.GameObjects.Sprite {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'bold italics',
-      fontSize: this.from.circle.displayWidth
+      fontSize: this.from.circle.displayWidth,
+      metrics: LABEL_METRICS
     }).setOrigin(0.5, 0.5)
       .setPadding(3, 0, 3, 0);
 
     this.label.setInteractive();
-
     this.subscript = this.scene.add.text(0, 0, this.move.subscript, {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'normal',
-      fontSize: this.from.circle.displayWidth * 0.75
+      fontSize: this.from.circle.displayWidth * 0.75,
+      metrics: SUBSCRIPT_METRICS
     })
       .setOrigin(0, 0.5)
       .setPadding(0, 0, 3, 0);
-
     this.setDepth(-1);
     this.scene.add.existing(this);
-
   }
 
   /** A method for repositioning the Move, once we have changed the position of the start or finish node */

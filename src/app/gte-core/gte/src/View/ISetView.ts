@@ -3,7 +3,7 @@ import {NodeView} from './NodeView';
 import {ISet} from '../Model/ISet';
 
 /**A class for drawing the iSet */
-export class ISetView extends Phaser.GameObjects.Sprite {
+export class ISetView extends Phaser.GameObjects.Image {
   scene: Phaser.Scene;
   canvasTexture: Phaser.Textures.CanvasTexture;
   iSet: ISet;

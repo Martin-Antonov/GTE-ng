@@ -54,6 +54,7 @@ export class SettingsComponent implements OnInit {
   }
 
   updatePlayerList(index: number) {
+    debugger;
     this.userActionController.treeController.tree.labelSetter.labels[index] = this.playerLists[index].split('');
     this.userActionController.treeController.resetTree(false, false);
   }

@@ -4,13 +4,13 @@ import {ISET_LINE_WIDTH} from './Constants';
 export class CutSpriteHandler {
   scene: Phaser.Scene;
 
-  cutSprite: Phaser.GameObjects.Sprite;
+  cutSprite: Phaser.GameObjects.Image;
   cutInformationSet: ISetView;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
 
-    this.cutSprite = this.scene.add.sprite(0, 0, 'scissors');
+    this.cutSprite = this.scene.add.image(0, 0, 'scissors');
     this.cutSprite.alpha = 0;
     this.cutSprite.setDepth(3);
 

@@ -18,6 +18,12 @@ export const NODES_HORIZONTAL_STEP_POSITIONING = 0.5;
 export const SELECTION_INNER_COLOR = 0x0389df;
 export const OVERLAY_SCALE = 3;
 
+// Text Constants
+export const OWNER_METRICS = {ascent: 31, descent: 7, fontSize: 38};
+export const PAYOFF_METRICS = {ascent: 24, descent: 5, fontSize: 29};
+export const LABEL_METRICS = {ascent: 10, descent: 2, fontSize: 12};
+export const SUBSCRIPT_METRICS = {ascent: 18, descent: 4, fontSize: 22};
+
 // Errors
 export const SAME_PATH_ON_ROOT_ERROR_TEXT = 'Cannot create an information set for nodes which share a path to the root.';
 export const NODES_CONTAIN_CHANCE_PLAYER = 'Cannot create an information set for node(s) which are owned by a chance player.';

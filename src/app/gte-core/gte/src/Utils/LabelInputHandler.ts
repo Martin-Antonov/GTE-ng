@@ -7,7 +7,7 @@ export class LabelInputHandler {
   scene: Phaser.Scene;
   active: boolean;
   shouldRecalculateOrder: boolean;
-  currentlySelected: Phaser.GameObjects.Sprite | NodeView;
+  currentlySelected: Phaser.GameObjects.Image | NodeView;
   nodesBFSOrder: Array<Node>;
   leavesDFSOrder: Array<Node>;
   treeController: TreeController;
@@ -26,17 +26,16 @@ export class LabelInputHandler {
     this.events = new Phaser.Events.EventEmitter();
     this.tab = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
     this.tab.enabled = false;
-    this.treeController.events.on('label-clicked', (sprite: Phaser.GameObjects.Sprite) => {
-      this.activate(sprite);
+    this.treeController.events.on('label-clicked', (image: Phaser.GameObjects.Image) => {
+      this.activate(image);
     });
   }
 
-  activate(sprite) {
+  activate(image: Phaser.GameObjects.Image) {
     this.active = true;
-    this.currentlySelected = sprite;
+    this.currentlySelected = image;
     this.setLabelCoords();
     this.tab.enabled = true;
-    // this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.TAB);
     this.events.emit('select-text');
   }
 

@@ -1,4 +1,4 @@
-import {LABEL_SIZE, OVERLAY_SCALE, PAYOFF_SIZE, PLAYER_COLORS, SELECTION_INNER_COLOR} from '../Utils/Constants';
+import {LABEL_SIZE, OWNER_METRICS, PAYOFF_METRICS, PAYOFF_SIZE} from '../Utils/Constants';
 import {Node, NodeType} from '../Model/Node';
 
 /** A class for the graphical representation of the Node. The inherited sprite from Phaser.Sprite will not be visible
@@ -8,12 +8,12 @@ export class NodeView extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
   node: Node;
 
-  circle: Phaser.GameObjects.Sprite;
+  circle: Phaser.GameObjects.Image;
   ownerLabel: Phaser.GameObjects.Text;
   payoffsLabel: Phaser.GameObjects.Text;
   isSelected: boolean;
   level: number;
-  private previewSelected: Phaser.GameObjects.Sprite;
+  private previewSelected: Phaser.GameObjects.Image;
 
   // Horizontal offset: -1 for left, 1 for right;
   labelHorizontalOffset: number;
@@ -34,10 +34,10 @@ export class NodeView extends Phaser.GameObjects.Container {
 
   /** A method which creates the circle and square sprites*/
   private createSprites() {
-    this.circle = this.scene.add.sprite(0, 0, 'circle-black');
+    this.circle = this.scene.add.image(0, 0, 'circle-black');
     this.circle.setInteractive();
 
-    this.previewSelected = this.scene.add.sprite(0, 0, 'circle-preview')
+    this.previewSelected = this.scene.add.image(0, 0, 'circle-preview')
       .setAlpha(0)
       .setDepth(1);
 
@@ -46,6 +46,7 @@ export class NodeView extends Phaser.GameObjects.Container {
 
   /** A method which creates the label for the Node*/
   private createLabels() {
+    const date = Date.now();
     const text = this.node.player ? this.node.player.label : '';
     const color = this.node.player ? this.node.player.color : '#000000';
 
@@ -54,8 +55,8 @@ export class NodeView extends Phaser.GameObjects.Container {
       color: color,
       fontStyle: 'bold',
       fontFamily: 'Arial',
+      metrics: OWNER_METRICS
     });
-
     this.ownerLabel.setInteractive();
 
     this.payoffsLabel = this.scene.add.text(0, 0, '', {
@@ -63,12 +64,23 @@ export class NodeView extends Phaser.GameObjects.Container {
       fontStyle: 'bold',
       align: 'right',
       fontFamily: 'Arial',
-      color: '#000'
+      color: '#000',
+      metrics: PAYOFF_METRICS
     }).setOrigin(0.5, 0);
+    // Create gradient
+    const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, 100);
+    grd.addColorStop(0.000, 'rgba(255, 0, 0, 1.000)');
+    grd.addColorStop(0.249, 'rgba(255, 0, 0, 1.000)');
+    grd.addColorStop(0.250, 'rgba(0, 0, 255, 1.000)');
+    grd.addColorStop(0.499, 'rgba(0, 0, 255, 1.000)');
+    grd.addColorStop(0.500, 'rgba(0, 187, 0, 1.000)');
+    grd.addColorStop(0.749, 'rgba(0, 187, 0, 1.000)');
+    grd.addColorStop(0.750, 'rgba(255, 0, 255, 1.000)');
+    grd.addColorStop(1.000, 'rgba(255, 0, 255, 1.000)');
+    this.payoffsLabel.setFill(grd);
 
     this.payoffsLabel.setInteractive();
     this.payoffsLabel.lineSpacing = -5;
-
     this.add([this.payoffsLabel, this.ownerLabel]);
   }
 
@@ -87,22 +99,22 @@ export class NodeView extends Phaser.GameObjects.Container {
   resetNodeDrawing(areLeavesActive: boolean, zeroSumOn: boolean) {
     // If Selected
     if (this.isSelected) {
-      this.previewSelected.alpha = 0.3;
+      this.previewSelected.setAlpha(0.3);
     } else {
-      this.previewSelected.alpha = 0;
+      this.previewSelected.setAlpha(0);
     }
 
     // If Owned
     if (this.node.type === NodeType.OWNED) {
       this.circle.setTexture(this.getColorFromPlayerId());
-      this.circle.alpha = 1;
+      this.circle.setAlpha(1);
       if (this.node.iSet) {
-        this.ownerLabel.alpha = 0;
+        this.ownerLabel.setAlpha(0);
       } else {
-        this.ownerLabel.alpha = 1;
-        this.ownerLabel.setText(this.node.player.label);
-        this.ownerLabel.setColor(this.node.player.color);
-        this.ownerLabel.setScale(1);
+        this.ownerLabel.setText(this.node.player.label)
+          .setColor(this.node.player.color)
+          .setScale(1)
+          .setAlpha(1);
       }
     }
 
@@ -110,33 +122,28 @@ export class NodeView extends Phaser.GameObjects.Container {
     if (this.node.type === NodeType.CHANCE) {
       this.circle.setTexture('square');
       this.ownerLabel.setScale(0.5);
-      this.ownerLabel.alpha = 1;
+      this.ownerLabel.setAlpha(1);
       this.ownerLabel.setText('chance');
       this.ownerLabel.setColor('#000000');
     }
 
     // If Leaf
     if (this.node.type === NodeType.LEAF) {
-      this.ownerLabel.alpha = 0;
+      this.ownerLabel.setAlpha(0);
       this.circle.setTexture('circle-black');
       if (zeroSumOn) {
         this.node.payoffs.convertToZeroSum();
       }
       if (areLeavesActive) {
-        this.circle.alpha = 0;
-        this.payoffsLabel.alpha = 1;
+        this.circle.setAlpha(0);
+        this.payoffsLabel.setAlpha(1);
         const payoffsString = this.node.payoffs.toString();
         const labelsArray = payoffsString.split(' ');
         this.payoffsLabel.text = '';
-
-        // this.payoffsLabel.clearColors();
         for (let i = 0; i < labelsArray.length; i++) {
           this.payoffsLabel.text += labelsArray[i] + '\n';
-          // this.payoffsLabel.addColor(Phaser.Color.getWebRGB(PLAYER_COLORS[i]),
-          //   (this.payoffsLabel.text.length - labelsArray[i].length - i - 1));
         }
-        // this.payoffsLabel.text = this.payoffsLabel.text.slice(0, -1);
-        this.payoffsLabel.alpha = 1;
+        this.payoffsLabel.setAlpha(1);
         this.payoffsLabel.input.enabled = true;
       } else {
         this.circle.alpha = 1;

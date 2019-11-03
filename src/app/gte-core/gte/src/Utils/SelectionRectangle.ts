@@ -1,7 +1,7 @@
 import {SELECTION_INNER_COLOR} from './Constants';
 
 /** A class representing the rectangle which selects vertices*/
-export class SelectionRectangle extends Phaser.GameObjects.Sprite {
+export class SelectionRectangle extends Phaser.GameObjects.Image {
   scene: Phaser.Scene;
 
   start: Phaser.Math.Vector2;
