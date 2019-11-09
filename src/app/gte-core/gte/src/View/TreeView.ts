@@ -169,32 +169,12 @@ export class TreeView {
 
   /**Re-centers the tree on the screen*/
   centerGroupOnScreen() {
-    let left = this.scene.sys.canvas.width * 5;
-    let right = -this.scene.sys.canvas.width * 5;
-    let top = this.scene.sys.canvas.height * 5;
-    let bottom = -this.scene.sys.canvas.height * 5;
 
-    this.nodes.forEach(n => {
-      if (n.x < left) {
-        left = n.x;
-      }
-      if (n.x > right) {
-        right = n.x;
-      }
-      if (n.y < top) {
-        top = n.y;
-      }
-      if (n.y > bottom) {
-        bottom = n.y;
-      }
-    });
+    const bounds = this.getTreeBounds();
+    this.treeHeight = bounds.height;
 
-    const width = right - left;
-    const height = bottom - top;
-    this.treeHeight = height;
-
-    const treeCenterX = left + width / 2;
-    const treeCenterY = top + height / 1.8;
+    const treeCenterX = bounds.left + bounds.width / 2;
+    const treeCenterY = bounds.top + bounds.height / 1.8;
 
     const offsetX = (this.scene.sys.canvas.width / 2 - treeCenterX);
     const offsetY = (this.scene.sys.canvas.height / 2 - treeCenterY);
@@ -202,6 +182,33 @@ export class TreeView {
     this.nodes.forEach((n: NodeView) => {
       n.setPosition(n.x + offsetX, n.y + offsetY);
     });
+  }
+
+  getTreeBounds(): { left: number, top: number, width: number, height: number } {
+    let left = this.scene.sys.canvas.width * 200;
+    let right = -this.scene.sys.canvas.width * 200;
+    let top = this.scene.sys.canvas.height * 200;
+    let bottom = -this.scene.sys.canvas.height * 200;
+
+    this.nodes.forEach((nV: NodeView) => {
+      if (nV.x < left) {
+        left = nV.x;
+      }
+      if (nV.x > right) {
+        right = nV.x;
+      }
+      if (nV.y < top) {
+        top = nV.y;
+      }
+      if (nV.y > bottom) {
+        bottom = nV.y;
+      }
+    });
+
+    const width = right - left;
+
+    const height = bottom - top;
+    return {left: left, top: top, width: width, height: height};
   }
 
   // endregion
@@ -316,16 +323,6 @@ export class TreeView {
       }
     }
   }
-
   // endregion
-  getMaxDepth() {
-    let maxDepth = -1;
-    this.nodes.forEach((nV: NodeView) => {
-      if (maxDepth < nV.level) {
-        maxDepth = nV.level;
-      }
-    });
-    return maxDepth;
-  }
 }
 

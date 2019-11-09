@@ -26,19 +26,18 @@ export class StrategicFormSerializer {
     result += '}\n';
 
     // Strategies
-    let maxMoveLength = this.getMaxMoveLength();
+    const maxMoveLength = this.getMaxMoveLength();
     console.log('MAX MOVE LENGTH: ' + maxMoveLength);
     let separator;
     if (maxMoveLength === 1) {
       separator = '';
-    }
-    else {
+    } else {
       separator = ' ';
     }
-    let p1RowsSeparated = this.getSeparatedStrategies(this.strategicForm.p1rows, separator);
-    let p2ColsSeparated = this.getSeparatedStrategies(this.strategicForm.p2cols, separator);
-    let p3RowsSeparated = this.getSeparatedStrategies(this.strategicForm.p3rows, separator);
-    let p4ColsSeparated = this.getSeparatedStrategies(this.strategicForm.p4cols, separator);
+    const p1RowsSeparated = this.getSeparatedStrategies(this.strategicForm.p1rows, separator);
+    const p2ColsSeparated = this.getSeparatedStrategies(this.strategicForm.p2cols, separator);
+    const p3RowsSeparated = this.getSeparatedStrategies(this.strategicForm.p3rows, separator);
+    const p4ColsSeparated = this.getSeparatedStrategies(this.strategicForm.p4cols, separator);
     result += 'Strategies for P1: {' + p1RowsSeparated.join(', ') + '} as {' +
       this.getStrategiesToNum(this.strategicForm.p1rows) + '}\n';
     result += 'Strategies for P2: {' + p2ColsSeparated.join(', ') + '} as {' +
@@ -65,8 +64,8 @@ export class StrategicFormSerializer {
             if (this.strategicForm.p4Strategies.length !== 0) {
               this.strategicForm.payoffsMatrix[i][j][k][l].setPlayersCount(4);
             }
-            let kAsString = this.strategicForm.p3Strategies.length === 0 ? '' : k + ' ';
-            let lAsString = this.strategicForm.p4Strategies.length === 0 ? '' : l + ' ';
+            const kAsString = this.strategicForm.p3Strategies.length === 0 ? '' : k + ' ';
+            const lAsString = this.strategicForm.p4Strategies.length === 0 ? '' : l + ' ';
 
             result += '\n' + i + ' ' + j + ' ' + kAsString + lAsString + ': ' +
               this.strategicForm.payoffsMatrix[i][j][k][l].toString();
@@ -85,16 +84,16 @@ export class StrategicFormSerializer {
       strategiesAsNum.push(i);
     }
 
-    let result = strategiesAsNum.join(', ');
+    const result = strategiesAsNum.join(', ');
     strategiesAsNum = null;
     return result;
   }
 
   private getMaxMoveLength() {
-    let allStrategies = this.strategicForm.p1rows.concat(this.strategicForm.p2cols, this.strategicForm.p3rows, this.strategicForm.p4cols);
+    const allStrategies = this.strategicForm.p1rows.concat(this.strategicForm.p2cols, this.strategicForm.p3rows, this.strategicForm.p4cols);
     let maxMoveLength = -1;
     allStrategies.forEach((strat: string) => {
-      let moves = strat.split(' ');
+      const moves = strat.split(' ');
       moves.forEach((move: string) => {
         if (move.length > maxMoveLength) {
           maxMoveLength = move.length;
@@ -105,7 +104,7 @@ export class StrategicFormSerializer {
   }
 
   private getSeparatedStrategies(strategies: Array<string>, separator: string) {
-    let result = [];
+    const result = [];
     strategies.forEach((strat) => {
       result.push(strat.split(' ').join(separator));
     });

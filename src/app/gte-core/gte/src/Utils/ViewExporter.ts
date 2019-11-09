@@ -245,8 +245,12 @@ export class ViewExporter {
 
   toSVG() {
     const zoom = this.treeController.scene.cameras.main.zoom;
-    const draw = SVG('svg-export').size(this.treeController.treeView.scene.sys.canvas.width / zoom,
-      this.treeController.treeView.scene.sys.canvas.height / zoom);
+    const treeBounds = this.treeController.treeView.getTreeBounds();
+    const margin = 100;
+    const draw = SVG('svg-export').size((treeBounds.left + treeBounds.width) / zoom + margin,
+      (treeBounds.top + treeBounds.height) / zoom + margin);
+    draw.viewbox(treeBounds.left - margin / 2, treeBounds.top - margin / 2, (treeBounds.left + treeBounds.width) / zoom + margin,
+      (treeBounds.top + treeBounds.height) / zoom + margin);
     this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
         const color = nV.node.player && nV.node.player.color ? nV.node.player.color : '#000';
@@ -316,10 +320,9 @@ export class ViewExporter {
         pointCoords.push(nV.y);
       });
 
-      console.log('points-length: ' + pointCoords.length);
-
+      const color = iSetV.iSet.player && iSetV.iSet.player.color ? iSetV.iSet.player.color : '#000';
       draw.polyline(pointCoords).attr({
-        stroke: iSetV.iSet.player.color,
+        stroke: color,
         opacity: 0.15,
         'stroke-width': this.treeController.treeView.scene.sys.canvas.height * ISET_LINE_WIDTH,
         'stroke-linecap': 'round',
@@ -327,13 +330,14 @@ export class ViewExporter {
       }).fill('none');
 
       draw.text(iSetV.label.text).move(iSetV.label.x - iSetV.label.width / 2, iSetV.label.y - iSetV.label.height * 0.8)
-        .fill(iSetV.iSet.player.color)
+        .fill(color)
         .font({
           // anchor: 'middle',
           weight: 'bold',
           size: iSetV.nodes[0].circle.displayWidth * LABEL_SIZE
         });
     });
+
     return draw.svg();
   }
 }

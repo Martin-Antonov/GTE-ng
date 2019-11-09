@@ -4,6 +4,7 @@ import {UiSettingsService} from '../../../services/ui-settings/ui-settings.servi
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../../gte-core/gte/src/Utils/Constants';
+import {Move} from '../../../gte-core/gte/src/Model/Move';
 
 @Component({
   selector: 'app-settings',
@@ -54,15 +55,18 @@ export class SettingsComponent implements OnInit {
   }
 
   updatePlayerList(index: number) {
-    debugger;
     this.userActionController.treeController.tree.labelSetter.labels[index] = this.playerLists[index].split('');
+    this.userActionController.treeController.tree.moves.forEach((m: Move) => {
+      if (m.from.player && m.from.player.id === index + 1) {
+        m.manuallyAssigned = false;
+      }
+    });
     this.userActionController.treeController.resetTree(false, false);
   }
 
   toggleAutoLevels() {
     const properties = this.userActionController.treeController.treeView.properties;
     properties.automaticLevelAdjustment = !properties.automaticLevelAdjustment;
-    // this.userActionController.treeController.resetTree(true, true);
   }
 
   toggleBestResponses() {
