@@ -31,7 +31,8 @@ export class PlayersBoxComponent implements OnInit {
   isPlusDisabled() {
     return this.userActionController.treeController.tree.players.length === 5;
   }
-  isMinusDisabled(){
+
+  isMinusDisabled() {
     return this.userActionController.treeController.tree.players.length === 2;
   }
 }

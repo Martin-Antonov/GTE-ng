@@ -52,12 +52,10 @@ export class MatrixInputComponent implements OnInit {
   }
 
   checkRowsColsCondition(): boolean {
-    let rowsAsInt = this.convertToNumber(this.matrixInputModel.rows);
-    let colsAsInt = this.convertToNumber(this.matrixInputModel.cols);
-    if (rowsAsInt >= 2 && rowsAsInt <= 20 && colsAsInt >= 2 && colsAsInt <= 20) {
-      return true;
-    }
-    return false;
+    const rowsAsInt = this.convertToNumber(this.matrixInputModel.rows);
+    const colsAsInt = this.convertToNumber(this.matrixInputModel.cols);
+    return rowsAsInt >= 2 && rowsAsInt <= 20 && colsAsInt >= 2 && colsAsInt <= 20;
+
   }
 
   checkDecimalNumber(el) {

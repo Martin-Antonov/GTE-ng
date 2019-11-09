@@ -51,8 +51,7 @@ export class SquareButtonComponent implements OnInit {
     if (this.secondImageKey) {
       if (this.pathToImage.length === this.PATH_TO_ASSETS.length + this.imageKey.length) {
         this.pathToImage = this.PATH_TO_ASSETS + this.secondImageKey;
-      }
-      else {
+      } else {
         this.pathToImage = this.PATH_TO_ASSETS + this.imageKey;
       }
     }

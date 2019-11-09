@@ -38,7 +38,7 @@ export class BottomMenuComponent implements OnInit {
     }
   }
 
-  getFPS(){
+  getFPS() {
     return Math.round(this.tfs.userActionController.scene.game.loop.actualFps);
   }
 

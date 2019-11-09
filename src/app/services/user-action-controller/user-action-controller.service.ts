@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
 
@@ -10,9 +10,10 @@ export class UserActionControllerService {
   private _userActionController = new BehaviorSubject<UserActionController>(null);
   userActionController = this._userActionController.asObservable();
 
-  constructor() {  }
+  constructor() {
+  }
 
-  setUAC(userActionController: UserActionController){
+  setUAC(userActionController: UserActionController) {
     this._userActionController.next(userActionController);
   }
 }

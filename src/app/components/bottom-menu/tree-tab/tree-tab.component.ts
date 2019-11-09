@@ -12,17 +12,18 @@ export class TreeTabComponent implements OnInit {
   @Input() isSelected: string;
   @Output() close = new EventEmitter();
   @Output() select = new EventEmitter();
+
   constructor(public tfs: TreesFileService) {
   }
 
   ngOnInit() {
   }
 
-  closeTab(){
+  closeTab() {
     this.close.emit();
   }
 
-  selectTab(){
+  selectTab() {
     this.select.emit();
   }
 

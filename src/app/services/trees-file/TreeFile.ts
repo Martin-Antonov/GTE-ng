@@ -6,13 +6,14 @@ export class TreeFile {
   coordsList: Array<{ x: number, y: number }>;
   urTreesList: Array<Tree>;
   urCurrentTreeIndex: number;
+
   constructor(fileName: string) {
     this.fileName = fileName;
     this.coordsList = [];
     this.urTreesList = [];
   }
 
-  destroy(){
+  destroy() {
     this.coordsList = null;
     this.urTreesList = null;
     this.coordsList = null;

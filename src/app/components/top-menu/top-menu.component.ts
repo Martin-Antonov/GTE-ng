@@ -67,8 +67,7 @@ export class TopMenuComponent implements OnInit {
   toggleSPNE() {
     if (!this.userActionController.SPNEActive) {
       this.userActionController.calculateSPNE();
-    }
-    else {
+    } else {
       this.userActionController.resetSPNE();
     }
   }

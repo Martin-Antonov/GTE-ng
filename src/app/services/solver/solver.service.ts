@@ -12,7 +12,7 @@ export class SolverService {
   }
 
   postMatrixAsText(matrix: string) {
-    let data = new FormData();
+    const data = new FormData();
     data.append('game_text', matrix);
     this.http.post(this.url, data).subscribe(
       (result: any) => {

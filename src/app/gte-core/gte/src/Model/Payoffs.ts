@@ -14,8 +14,7 @@ export class Payoffs {
 
     if (payoffs) {
       this.outcomes = payoffs.slice(0);
-    }
-    else {
+    } else {
       this.outcomes = [0, 0, 0, 0];
     }
     this.outcomesAsFractions = [];
@@ -25,12 +24,12 @@ export class Payoffs {
 
   /**A method converting text payoffs from the input field, and placing them to the corresponding leaves*/
   saveFromString(payoffs: string) {
-    let payoffsAsStringArray = payoffs.split(' ');
+    const payoffsAsStringArray = payoffs.split(' ');
     for (let i = 0; i < payoffsAsStringArray.length; i++) {
       if (i > 3) {
         return;
       }
-      let currentPayoff = parseFloat(payoffsAsStringArray[i]);
+      const currentPayoff = parseFloat(payoffsAsStringArray[i]);
       if (currentPayoff === 0 || currentPayoff) {
         this.outcomes[i] = currentPayoff;
       }
@@ -88,7 +87,7 @@ export class Payoffs {
 
   /**A method for printing and visualizing payoffs*/
   toString() {
-    let numbersToShow = [];
+    const numbersToShow = [];
     for (let i = 0; i < this.playersCount; i++) {
       numbersToShow.push(this.outcomes[i]);
     }

@@ -49,7 +49,7 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getInnerCellStyle(i: number, j: number, k: number, l: number) {
-    let style = {};
+    const style = {};
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isEquilibrium() && this.uis.bestResponsesActive) {
       style['background'] = ['#f5f5f5'];
     }
@@ -57,14 +57,12 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getP1PayoffStyle(i: number, j: number, k: number, l: number) {
-    let style = {};
+    const style = {};
     if (!this.isThereP3() && !this.isThereP4()) {
       style['top'] = '47%';
-    }
-    else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
+    } else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
       style['top'] = '27%';
-    }
-    else {
+    } else {
       style['top'] = '0';
     }
 
@@ -79,17 +77,15 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getP2PayoffStyle(i: number, j: number, k: number, l: number) {
-    let style = {};
+    const style = {};
     if (!this.isThereP3() && !this.isThereP4()) {
       style['left'] = '100%';
       style['transform'] = 'translateX(-100%)';
-    }
-    else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
+    } else if ((this.isThereP3() && !this.isThereP4()) || (!this.isThereP3() && this.isThereP4())) {
       style['left'] = '50%';
       style['top'] = '20%';
       style['transform'] = 'translate(-50%,-20%)';
-    }
-    else {
+    } else {
       style['left'] = '33%';
       style['transform'] = 'translateX(-33%)';
     }
@@ -105,12 +101,11 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getP3PayoffStyle(i: number, j: number, k: number, l: number) {
-    let style = {};
+    const style = {};
     if (this.isThereP4()) {
       style['left'] = '66%';
       style['transform'] = 'translateX(-66%)';
-    }
-    else {
+    } else {
       style['left'] = '100%';
       style['transform'] = 'translateX(-100%)';
 
@@ -125,7 +120,7 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getP4PayoffStyle(i: number, j: number, k: number, l: number) {
-    let style = {};
+    const style = {};
     if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[3] && this.uis.bestResponsesActive) {
       // style['background'] = 'rgba(255,0,255,0.15)';
       style['font-weight'] = '900';
@@ -137,13 +132,12 @@ export class StrategicFormTableComponent implements OnInit {
 
   transformStrategy(strategy: string) {
     let result = ``;
-    let separateMoves = strategy.split(' ');
+    const separateMoves = strategy.split(' ');
     separateMoves.forEach(move => {
-        let moveWithSubscript = move.split('_');
+        const moveWithSubscript = move.split('_');
         if (moveWithSubscript.length === 1) {
           result += moveWithSubscript[0];
-        }
-        else {
+        } else {
           result += moveWithSubscript[0] + '<sub>' + moveWithSubscript[1] + '</sub>';
         }
         result += ' ';
@@ -155,20 +149,17 @@ export class StrategicFormTableComponent implements OnInit {
   getOutcome(i: number, j: number, k: number, l: number, outcome: number) {
 
     if (this.userActionController.treeController.treeView.properties.fractionOn) {
-      let outcomePayoff = this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
+      const outcomePayoff = this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
       if (outcomePayoff.n === 0) {
         return 0;
-      }
-      else if (outcomePayoff.d === 1) {
-        let sign = outcomePayoff.s === 1 ? '' : '-';
+      } else if (outcomePayoff.d === 1) {
+        const sign = outcomePayoff.s === 1 ? '' : '-';
         return sign + outcomePayoff.n;
-      }
-      else {
-        let sign = outcomePayoff.s === 1 ? '' : '-';
+      } else {
+        const sign = outcomePayoff.s === 1 ? '' : '-';
         return sign + outcomePayoff.n + '/' + outcomePayoff.d;
       }
-    }
-    else {
+    } else {
       return this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsDecimals[outcome];
     }
 
