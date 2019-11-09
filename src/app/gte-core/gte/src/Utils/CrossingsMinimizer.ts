@@ -51,11 +51,6 @@ export class CrossingsMinimizer {
       this.iSetContainmentCase();
     }
 
-    const maxDepth = this.treeView.getMaxDepth();
-    if (maxDepth * this.treeView.properties.levelHeight > this.treeView.scene.sys.canvas.height * 0.75) {
-      this.treeView.properties.levelHeight = ((1 / (maxDepth + 2)) * this.treeView.scene.sys.canvas.height);
-    }
-
     this.treeView.setYCoordinates();
     this.treeView.updateLeavesPositions();
     this.treeView.centerParents();

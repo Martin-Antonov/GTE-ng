@@ -31,14 +31,14 @@ export class Node {
 
   /**The method adds a child to the current Node. */
   addChild(node?: Node) {
-    let child = node || new Node();
+    const child = node || new Node();
 
     child.parent = this;
     child.type = NodeType.DEFAULT;
     child.depth = this.depth + 1;
 
     this.children.push(child);
-    let move = new Move(this, child);
+    const move = new Move(this, child);
     child.parentMove = move;
     this.childrenMoves.push(move);
   }
@@ -64,26 +64,24 @@ export class Node {
       if (this.iSet && this.iSet.nodes) {
         this.iSet.player = player;
         for (let i = 0; i < this.iSet.nodes.length; i++) {
-          let n = this.iSet.nodes[i];
+          const n = this.iSet.nodes[i];
           n.type = NodeType.OWNED;
           n.player = player;
           for (let j = 0; j < n.childrenMoves.length; j++) {
-            let m = n.childrenMoves[j];
+            const m = n.childrenMoves[j];
             m.convertToLabeled(this.iSet.nodes[0].childrenMoves[j].label);
           }
         }
-      }
-      else {
-        let playerTheSame = this.player === player;
+      } else {
+        const playerTheSame = this.player === player;
         this.type = NodeType.OWNED;
         this.player = player;
         this.childrenMoves.forEach((m: Move) => {
             if (!playerTheSame) {
               m.manuallyAssigned = false;
               m.convertToLabeled();
-            }
-            else{
-             m.convertToLabeled(m.label);
+            } else {
+              m.convertToLabeled(m.label);
             }
           }
         );
@@ -107,8 +105,7 @@ export class Node {
 
       if (chancePlayer.id === 0) {
         this.player = chancePlayer;
-      }
-      else {
+      } else {
         throw new Error('Given player is not a chance player');
       }
 
@@ -120,8 +117,7 @@ export class Node {
         for (let i = 0; i < this.childrenMoves.length; i++) {
           this.childrenMoves[i].convertToChance(1 / probabilities[i]);
         }
-      }
-      else if (probabilities && this.childrenMoves.length !== probabilities.length) {
+      } else if (probabilities && this.childrenMoves.length !== probabilities.length) {
         throw new SyntaxError('Number of probabilities does not match number of moves!');
       } else {
         this.childrenMoves.forEach((m: Move) => m.convertToChance(1 / this.childrenMoves.length));
@@ -131,7 +127,7 @@ export class Node {
 
   /**A method which returns the path from a given node to the root*/
   getPathToRoot() {
-    let path = [];
+    const path = [];
     let node = <Node>this;
     while (node.parent !== null) {
       path.push(node.parent);

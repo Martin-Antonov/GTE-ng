@@ -20,8 +20,10 @@ export class TreeView {
   nodes: Array<NodeView>;
   moves: Array<MoveView>;
   iSets: Array<ISetView>;
+
   private treeTweenManager: TreeTweenManager;
   private crossingsMinimizer: CrossingsMinimizer;
+  private treeHeight: number;
 
   constructor(scene: Phaser.Scene, tree: Tree) {
     this.scene = scene;
@@ -49,17 +51,23 @@ export class TreeView {
       this.addISetView(iSet);
     });
     this.drawTree(true, false);
-
-    this.updateMoves();
   }
 
 
   // region Tree Drawing Algorithm
   /**This method contains the algorithm for drawing the tree in different scenarios*/
   drawTree(fullReset: boolean, startAnimations: boolean) {
-    this.treeTweenManager.oldCoordinates = this.getOldCoordinates();
+    if (fullReset) {
+      this.fullResetTree(startAnimations);
+    } else {
+      this.resetNodesAndMovesDisplay();
+      this.drawISets();
+    }
+  }
 
-    if (this.properties.automaticLevelAdjustment && fullReset && this.iSets.length !== 0) {
+  private fullResetTree(startAnimations: boolean) {
+    this.treeTweenManager.oldCoordinates = this.getOldCoordinates();
+    if (this.properties.automaticLevelAdjustment && this.iSets.length !== 0) {
       this.crossingsMinimizer.equalizeInfoSetsLevels();
     }
 
@@ -69,31 +77,26 @@ export class TreeView {
       });
     }
 
-    const maxDepth = this.getMaxDepth();
-    if (maxDepth * this.properties.levelHeight > this.scene.sys.canvas.height * 0.75) {
-      this.properties.levelHeight = ((1 / (maxDepth + 2)) * this.scene.sys.canvas.height);
+    this.setYCoordinates();
+    this.updateLeavesPositions();
+    this.centerParents();
+    if (this.properties.automaticLevelAdjustment && this.iSets.length > 0) {
+      this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
     }
-
-    if (fullReset) {
-      this.setYCoordinates();
-      this.updateLeavesPositions();
-      this.centerParents();
-      if (this.properties.automaticLevelAdjustment && this.iSets.length > 0) {
-        this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
-      }
-      this.centerGroupOnScreen();
-      this.drawISets();
-    } else {
-      this.updateMoves();
-    }
+    this.centerGroupOnScreen();
+    this.drawISets();
 
     if (startAnimations) {
       this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);
-      this.resetNodesAndMovesDisplay();
+      this.resetNodesAndMovesDisplay(false);
     } else {
-      this.updateMoves();
       this.resetNodesAndMovesDisplay();
-      this.drawISets();
+    }
+
+    if (this.treeHeight * 1.25 > this.scene.sys.canvas.height) {
+      this.scene.cameras.main.zoomTo((this.scene.sys.canvas.height / (this.treeHeight * 1.25)), 200);
+    } else {
+      this.scene.cameras.main.zoomTo(1, 200);
     }
   }
 
@@ -136,14 +139,6 @@ export class TreeView {
     });
   }
 
-  /**A method which updates the rotation and position of the moves with regards to the parent and child nodes*/
-  updateMoves() {
-    this.moves.forEach((mV: MoveView) => {
-      mV.updateMovePosition();
-      mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
-    });
-  }
-
   /**ISets need to be redrawn at each step*/
   drawISets() {
     this.iSets.forEach(is => {
@@ -152,7 +147,7 @@ export class TreeView {
   }
 
   /** A method which resets the nodes and moves drawing*/
-  resetNodesAndMovesDisplay() {
+  resetNodesAndMovesDisplay(updateMovesPositions = true) {
     const areAllNodesLabeled = this.tree.checkAllNodesLabeled();
     this.nodes.forEach(n => {
       n.resetNodeDrawing(areAllNodesLabeled, this.properties.zeroSumOn);
@@ -160,9 +155,13 @@ export class TreeView {
 
     if (areAllNodesLabeled) {
       this.tree.resetLabels();
+    }
+    if (updateMovesPositions) {
       this.moves.forEach((mV: MoveView) => {
         mV.label.alpha = 1;
         mV.subscript.alpha = 1;
+
+        mV.updateMovePosition();
         mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
       });
     }
@@ -192,7 +191,7 @@ export class TreeView {
 
     const width = right - left;
     const height = bottom - top;
-
+    this.treeHeight = height;
 
     const treeCenterX = left + width / 2;
     const treeCenterY = top + height / 1.8;

@@ -244,12 +244,15 @@ export class ViewExporter {
   }
 
   toSVG() {
-    const draw = SVG('svg-export').size(this.treeController.treeView.scene.sys.canvas.width, this.treeController.treeView.scene.sys.canvas.height);
+    const zoom = this.treeController.scene.cameras.main.zoom;
+    const draw = SVG('svg-export').size(this.treeController.treeView.scene.sys.canvas.width / zoom,
+      this.treeController.treeView.scene.sys.canvas.height / zoom);
     this.treeController.treeView.nodes.forEach((nV: NodeView) => {
       if (nV.node.type !== NodeType.LEAF && nV.node.type !== NodeType.CHANCE) {
-        draw.circle(nV.circle.displayWidth).attr({fill: nV.node.player.color, 'stroke-width': 0}).center(nV.x, nV.y);
+        const color = nV.node.player && nV.node.player.color ? nV.node.player.color : '#000';
+        draw.circle(nV.circle.displayWidth).attr({fill: color, 'stroke-width': 0}).center(nV.x, nV.y);
         if (nV.node.iSet === null) {
-          draw.text(nV.ownerLabel.text).move(nV.x + nV.ownerLabel.x, nV.y + nV.ownerLabel.y - nV.ownerLabel.height * 0.75).fill(nV.node.player.color)
+          draw.text(nV.ownerLabel.text).move(nV.x + nV.ownerLabel.x, nV.y + nV.ownerLabel.y - nV.ownerLabel.height * 0.75).fill(color)
             .font({
               anchor: nV.labelHorizontalOffset === -1 ? 'end' : 'start',
               size: nV.circle.displayWidth * LABEL_SIZE,
@@ -267,7 +270,6 @@ export class ViewExporter {
 
       } else if (nV.node.type === NodeType.LEAF) {
         draw.text((add) => {
-          // P3: TODO
           const payoffsShown = nV.payoffsLabel.text.split('\n');
           for (let i = 0; i < payoffsShown.length; i++) {
             const payoff = payoffsShown[i];
@@ -287,13 +289,15 @@ export class ViewExporter {
         stroke: '#000',
         'stroke-width': Math.round(this.treeController.treeView.scene.sys.canvas.height * LINE_WIDTH)
       }).back();
-      draw.text(mV.label.text).move(mV.label.x, mV.label.y - mV.label.displayHeight / 2).fill(mV.from.node.player.color)
-        .font({
-          weight: '400',
-          style: mV.from.node.player.id !== 0 ? 'italic' : 'none',
-          size: mV.from.circle.displayWidth,
-          anchor: 'middle'
-        });
+      if (mV.from.node.player) {
+        draw.text(mV.label.text).move(mV.label.x, mV.label.y - mV.label.displayHeight / 2).fill(mV.from.node.player.color)
+          .font({
+            weight: '400',
+            style: mV.from.node.player.id !== 0 ? 'italic' : 'none',
+            size: mV.from.circle.displayWidth,
+            anchor: 'middle'
+          });
+      }
       if (mV.move.subscript) {
         draw.text(mV.subscript.text).move(mV.subscript.x, mV.subscript.y - mV.subscript.displayHeight * 0.75)
           .fill(mV.from.node.player.color)

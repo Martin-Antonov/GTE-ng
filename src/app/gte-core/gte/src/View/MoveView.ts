@@ -80,6 +80,20 @@ export class MoveView extends Phaser.GameObjects.Image {
       this.subscript.alpha = 0;
     }
 
+    // Set font styles of text
+    let color = '#000';
+    if (this.move.from.type === NodeType.OWNED) {
+      this.label.setColor(this.from.node.player.color.toString())
+        .setFontStyle('italic')
+        .setFontSize(this.from.circle.displayWidth * 1.28);
+      color = this.from.node.player.color.toString();
+    } else if (this.move.from.type === NodeType.CHANCE) {
+      this.label.setColor('#000')
+        .setFontStyle('normal')
+        .setFontSize(this.from.circle.displayWidth * 1.05);
+    }
+    this.subscript.setColor(color);
+
     // Calculate positions of texts
     let labelPos = new Phaser.Math.Vector2(this.from.x, this.from.y);
     let direction = new Phaser.Math.Vector2(this.to.x - this.from.x, this.to.y - this.from.y);
@@ -96,20 +110,6 @@ export class MoveView extends Phaser.GameObjects.Image {
     this.label.y = labelPos.y - this.label.displayHeight * 0.3;
     this.subscript.x = this.label.x + this.label.displayWidth / 2 - 5;
     this.subscript.y = this.label.y + this.subscript.displayHeight / 2;
-
-    // Set font styles of text
-    let color = '#000';
-    if (this.move.from.type === NodeType.OWNED) {
-      this.label.setColor(this.from.node.player.color.toString())
-        .setFontStyle('italic')
-        .setFontSize(this.from.circle.displayWidth * 1.28);
-      color = this.from.node.player.color.toString();
-    } else if (this.move.from.type === NodeType.CHANCE) {
-      this.label.setColor('#000')
-        .setFontStyle('normal')
-        .setFontSize(this.from.circle.displayWidth * 1.05);
-    }
-    this.subscript.setColor(color);
   }
 
   setOwnerColor() {

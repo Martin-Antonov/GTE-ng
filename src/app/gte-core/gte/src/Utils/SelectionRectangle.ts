@@ -1,5 +1,3 @@
-import {SELECTION_INNER_COLOR} from './Constants';
-
 /** A class representing the rectangle which selects vertices*/
 export class SelectionRectangle extends Phaser.GameObjects.Image {
   scene: Phaser.Scene;
@@ -21,8 +19,9 @@ export class SelectionRectangle extends Phaser.GameObjects.Image {
       this.isActive = true;
       this.displayWidth = 0;
       this.displayHeight = 0;
-      this.start.x = this.scene.input.activePointer.x;
-      this.start.y = this.scene.input.activePointer.y;
+      const zoom = this.scene.cameras.main.zoom;
+      this.start.x = this.scene.input.activePointer.worldX;
+      this.start.y = this.scene.input.activePointer.worldY;
       this.setPosition(this.start.x, this.start.y);
       this.alpha = 0.3;
       this.scene.time.addEvent({
@@ -51,11 +50,11 @@ export class SelectionRectangle extends Phaser.GameObjects.Image {
     // On dragging, update the transform of the rectangle*/
     this.scene.input.on('pointermove', () => {
       if (this.scene.input.activePointer.isDown && this.active && this.alpha !== 0) {
-        this.displayWidth = Math.abs(this.scene.input.activePointer.x - this.start.x);
-        this.displayHeight = Math.abs(this.scene.input.activePointer.y - this.start.y);
+        this.displayWidth = Math.abs(this.scene.input.activePointer.worldX - this.start.x);
+        this.displayHeight = Math.abs(this.scene.input.activePointer.worldY - this.start.y);
 
-        this.displayOriginX = (this.scene.input.activePointer.x - this.start.x) < 0 ? 1 : 0;
-        this.displayOriginY = (this.scene.input.activePointer.y - this.start.y) < 0 ? 1 : 0;
+        this.displayOriginX = (this.scene.input.activePointer.worldX - this.start.x) < 0 ? 1 : 0;
+        this.displayOriginY = (this.scene.input.activePointer.worldY - this.start.y) < 0 ? 1 : 0;
       }
     });
     this.scene.add.existing(this);

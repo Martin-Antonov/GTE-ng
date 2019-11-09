@@ -2,7 +2,6 @@ import {TREE_TWEEN_DURATION} from './Constants';
 import {NodeView} from '../View/NodeView';
 import {MoveView} from '../View/MoveView';
 import {TreeViewProperties} from '../View/TreeViewProperties';
-import {debug} from 'util';
 
 export class TreeTweenManager {
   scene: Phaser.Scene;
