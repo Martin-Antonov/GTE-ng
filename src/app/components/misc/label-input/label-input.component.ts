@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 

@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 @Component({
   selector: 'app-draggable-window',
@@ -12,11 +13,14 @@ export class DraggableWindowComponent implements OnInit {
   @Input() height: string;
   @Input() top: string;
   @Input() right: string;
-
   @Input() title: string;
   @Output() closeCallback = new EventEmitter();
 
-  constructor() {
+  constructor(private hotkeys: HotkeysService) {
+    this.hotkeys.add(new Hotkey('esc', (event: KeyboardEvent): boolean => {
+      this.close();
+      return false;
+    }));
   }
 
   ngOnInit() {

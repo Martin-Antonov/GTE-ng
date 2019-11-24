@@ -1,7 +1,7 @@
 /**A class for handling the Undo/Redo functionality */
-import {TreeController} from './TreeController';
-import {Tree} from '../Model/Tree';
-import {NodeView} from '../View/NodeView';
+import {TreeController} from '../Main/TreeController';
+import {Tree} from '../../Model/Tree';
+import {NodeView} from '../../View/NodeView';
 
 export class UndoRedoController {
   treeController: TreeController;

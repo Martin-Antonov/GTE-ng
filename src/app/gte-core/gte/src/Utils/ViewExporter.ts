@@ -4,7 +4,7 @@ import {MoveView} from '../View/MoveView';
 import {ISetView} from '../View/ISetView';
 import * as SVG from 'svg.js';
 import {ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH, PAYOFF_SIZE} from './Constants';
-import {TreeController} from '../Controller/TreeController';
+import {TreeController} from '../Controller/Main/TreeController';
 
 export class ViewExporter {
   treeController: TreeController;

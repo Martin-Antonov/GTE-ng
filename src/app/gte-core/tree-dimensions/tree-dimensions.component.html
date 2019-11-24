@@ -1,1 +1,11 @@
-<p>tree-dimensions works!</p>
+<input type="range" id="tree-height" class="dimension" name="treeWidth" [(ngModel)]="this.treeHeight" [min]="0"
+       max="100" (input)="this.updateTreeHeight()" list="tricks1">
+<datalist id="tricks1">
+  <option *ngFor="let option of options">{{option}}</option>
+</datalist>
+<input type="range" id="tree-width" class="dimension" name="treeWidth" [(ngModel)]="this.treeWidth" [min]="0" max="100"
+       (input)="this.updateTreeWidth()" list="tricks2">
+<datalist id="tricks2">
+  <option *ngFor="let option of options">{{option}}</option>
+</datalist>
+

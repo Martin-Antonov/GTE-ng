@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {UserActionControllerService} from '../user-action-controller/user-action-controller.service';
-import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../gte-core/gte/src/Controller/Main/UserActionController';
 import {TreeFile} from './TreeFile';
 import {saveAs} from 'file-saver';
-import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedoController';
+import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedo/UndoRedoController';
 
 @Injectable({
   providedIn: 'root'

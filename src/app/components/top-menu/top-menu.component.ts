@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../gte-core/gte/src/Controller/Main/UserActionController';
 import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';

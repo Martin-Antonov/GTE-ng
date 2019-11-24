@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TreesFileService} from '../../services/trees-file/trees-file.service';
+import {GTE_VERSION} from '../../gte-core/gte/src/Utils/Constants';
 
 @Component({
   selector: 'app-bottom-menu',
@@ -10,12 +11,14 @@ export class BottomMenuComponent implements OnInit {
 
   confirmationActive: boolean;
   currentTabIndex: number;
+  version: string;
 
   constructor(public tfs: TreesFileService) {
   }
 
   ngOnInit() {
     this.confirmationActive = false;
+    this.version = GTE_VERSION;
   }
 
   changeTree(index: number) {

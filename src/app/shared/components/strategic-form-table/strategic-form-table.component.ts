@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
@@ -70,9 +70,11 @@ export class StrategicFormTableComponent implements OnInit {
       // style['background'] = 'rgba(255,0,0,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
-      style['border-bottom'] = '2px solid red';
-    }
 
+      style['border'] = '1px solid red';
+      style['line-height'] = '110%';
+      style['padding'] = '0 2px';
+    }
     return style;
   }
 
@@ -94,7 +96,9 @@ export class StrategicFormTableComponent implements OnInit {
       // style['background'] = 'rgba(0,0,255,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
-      style['border-bottom'] = '2px solid blue';
+      style['border'] = '1px solid blue';
+      style['line-height'] = '110%';
+      style['padding'] = '0 2px';
     }
 
     return style;
@@ -114,7 +118,10 @@ export class StrategicFormTableComponent implements OnInit {
       // style['background'] = 'rgba(0,255,0,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
-      style['border-bottom'] = '2px solid #00bb00';
+      style['border'] = '1px solid #00bb00';
+      style['line-height'] = '110%';
+      style['padding'] = '0 2px';
+
     }
     return style;
   }
@@ -125,7 +132,10 @@ export class StrategicFormTableComponent implements OnInit {
       // style['background'] = 'rgba(255,0,255,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
-      style['border-bottom'] = '2px solid #ff00ff';
+      style['border'] = '1px solid #ff00ff';
+      style['line-height'] = '110%';
+      style['padding'] = '0 2px';
+
     }
     return style;
   }
@@ -147,7 +157,6 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getOutcome(i: number, j: number, k: number, l: number, outcome: number) {
-
     if (this.userActionController.treeController.treeView.properties.fractionOn) {
       const outcomePayoff = this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
       if (outcomePayoff.n === 0) {
@@ -162,7 +171,6 @@ export class StrategicFormTableComponent implements OnInit {
     } else {
       return this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsDecimals[outcome];
     }
-
   }
 
   ngOnInit() {

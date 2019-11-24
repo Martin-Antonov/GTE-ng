@@ -1,7 +1,7 @@
 import {NodeView} from '../View/NodeView';
 import {MoveView} from '../View/MoveView';
 import {Node} from '../Model/Node';
-import {TreeController} from '../Controller/TreeController';
+import {TreeController} from '../Controller/Main/TreeController';
 
 export class LabelInputHandler {
   scene: Phaser.Scene;

@@ -1,10 +1,10 @@
 import {TreeController} from './TreeController';
 import {UserActionController} from './UserActionController';
-import {KeyboardController} from './KeyboardController';
-import {InitialBitmapsCreator} from '../Utils/InitialBitmapsCreator';
-import {UserActionControllerService} from '../../../../services/user-action-controller/user-action-controller.service';
-import {TreesFileService} from '../../../../services/trees-file/trees-file.service';
-import {Tree} from '../Model/Tree';
+import {KeyboardController} from '../Keyboard/KeyboardController';
+import {UserActionControllerService} from '../../../../../services/user-action-controller/user-action-controller.service';
+import {TreesFileService} from '../../../../../services/trees-file/trees-file.service';
+import {InitialBitmapsCreator} from '../../Utils/InitialBitmapsCreator';
+
 
 /**A class for the main part of the software. This is the starting point of the core software*/
 export class MainScene extends Phaser.Scene {

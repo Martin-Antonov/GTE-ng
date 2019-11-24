@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {UiSettingsService} from './services/ui-settings/ui-settings.service';
 import {UserActionControllerService} from './services/user-action-controller/user-action-controller.service';
-import {UserActionController} from './gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from './gte-core/gte/src/Controller/Main/UserActionController';
 
 @Component({
   selector: 'app-root',

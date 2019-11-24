@@ -1,16 +1,18 @@
 import {TreeController} from './TreeController';
-import {StrategicForm} from '../Model/StrategicForm';
-import {UndoRedoController} from './UndoRedoController';
-import {NodeView} from '../View/NodeView';
-import {SelectionRectangle} from '../Utils/SelectionRectangle';
-import {ISetView} from '../View/ISetView';
-import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
-import {ISet} from '../Model/ISet';
-import {LabelInputHandler} from '../Utils/LabelInputHandler';
-import {TreeViewProperties} from '../View/TreeViewProperties';
-import {CutSpriteHandler} from '../Utils/CutSpriteHandler';
-import {ViewExporter} from '../Utils/ViewExporter';
-import {MoveView} from '../View/MoveView';
+import {StrategicForm} from '../../Model/StrategicForm';
+import {NodeView} from '../../View/NodeView';
+import {SelectionRectangle} from '../../Utils/SelectionRectangle';
+import {ISetView} from '../../View/ISetView';
+import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../Utils/Constants';
+import {ISet} from '../../Model/ISet';
+import {LabelInputHandler} from '../../Utils/LabelInputHandler';
+import {TreeViewProperties} from '../../View/TreeViewProperties';
+import {CutSpriteHandler} from '../../Utils/CutSpriteHandler';
+import {ViewExporter} from '../../Utils/ViewExporter';
+import {MoveView} from '../../View/MoveView';
+import {UndoRedoController} from '../UndoRedo/UndoRedoController';
+import {UndoRedoActionController} from '../UndoRedo/UndoRedoActionController';
+import {ACTION} from '../UndoRedo/ActionsEnum';
 
 export class UserActionController {
   scene: Phaser.Scene;
@@ -18,6 +20,7 @@ export class UserActionController {
   treeController: TreeController;
   strategicForm: StrategicForm;
   undoRedoController: UndoRedoController;
+  undoRedoActionController: UndoRedoActionController;
 
   // Used for going to the next node on tab pressed
   labelInput: LabelInputHandler;
@@ -37,6 +40,7 @@ export class UserActionController {
     this.treeController = treeController;
     this.viewExporter = new ViewExporter(this.treeController);
     this.undoRedoController = new UndoRedoController(this.treeController);
+    this.undoRedoActionController = new UndoRedoActionController(this.treeController);
     this.selectedNodes = [];
 
     this.shift = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
@@ -151,13 +155,12 @@ export class UserActionController {
 
   /**A method for adding children to selected nodes (keyboard N).*/
   addNodesHandler(nodeV?: NodeView) {
-    if (nodeV) {
-      this.treeController.addNodeHandler([nodeV]);
-    } else if (this.selectedNodes.length > 0) {
-      this.treeController.addNodeHandler(this.selectedNodes);
+    const nodes = nodeV ? [nodeV] : this.selectedNodes;
+    if (nodes.length > 0) {
+      this.treeController.addNodeHandler(nodes);
+      this.undoRedoActionController.saveAction(ACTION.ADD_NODE, nodes);
     }
     this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
   }
 
   /** A method for deleting nodes (keyboard DELETE).*/
@@ -186,14 +189,14 @@ export class UserActionController {
 
   /**A method for assigning players to nodes (keyboard 1,2,3,4)*/
   assignPlayerToNodeHandler(playerID: number, nodeV?: NodeView) {
-    if (nodeV && nodeV.node.children.length !== 0) {
-      this.treeController.assignPlayerToNode(playerID, [nodeV]);
+    const nodesV = nodeV ? [nodeV] : this.selectedNodes;
+    nodesV.filter((nV: NodeView) => {
+      return nV.node.children.length !== 0;
+    });
+    if (nodesV.length !== 0) {
+      this.treeController.assignPlayerToNode(playerID, nodesV);
       this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
-    } else if (this.selectedNodes.length > 0 && this.doSelectedHaveChildren()) {
-      this.treeController.assignPlayerToNode(playerID, this.selectedNodes);
-      this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
+      this.undoRedoActionController.saveAction(ACTION.ASSIGN_PLAYER, {playerID: playerID, nodesV: nodesV});
     }
   }
 
@@ -265,8 +268,7 @@ export class UserActionController {
 
   /**A method for assigning undo/redo functionality (keyboard ctrl/shift + Z)*/
   undoRedoHandler(undo: boolean) {
-    this.undoRedoController.changeTreeInController(undo);
-    // this.viewExporter.treeView = this.treeController.treeView;
+    this.undoRedoActionController.changeTree(undo);
     this.emptySelectedNodes();
     this.checkCreateStrategicForm();
   }

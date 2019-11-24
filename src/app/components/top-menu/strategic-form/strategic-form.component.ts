@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';

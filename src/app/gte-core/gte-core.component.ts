@@ -3,7 +3,7 @@ import {Component, ElementRef, OnInit} from '@angular/core';
 import {UserActionControllerService} from '../services/user-action-controller/user-action-controller.service';
 import {TreesFileService} from '../services/trees-file/trees-file.service';
 import GameConfig = Phaser.Types.Core.GameConfig;
-import {MainScene} from './gte/src/Controller/MainScene';
+import {MainScene} from './gte/src/Controller/Main/MainScene';
 
 declare var Phaser: any;
 

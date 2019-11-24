@@ -33,6 +33,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.component';
 import { DraggableWindowComponent } from './shared/components/draggable-window/draggable-window.component';
 import {HotkeyModule} from 'angular2-hotkeys';
+import { TreeDimensionsComponent } from './gte-core/tree-dimensions/tree-dimensions.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {HotkeyModule} from 'angular2-hotkeys';
     ErrorLogComponent,
     SaveMenuComponent,
     DraggableWindowComponent,
+    TreeDimensionsComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule,

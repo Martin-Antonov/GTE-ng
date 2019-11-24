@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {SquareButtonComponent} from '../../../shared/components/square-button/square-button.component';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../../gte-core/gte/src/Utils/Constants';
 import {Move} from '../../../gte-core/gte/src/Model/Move';
 
@@ -40,18 +40,6 @@ export class SettingsComponent implements OnInit {
   close() {
     this.settingsButton.clickHandler();
     this.uis.settingsActive = false;
-  }
-
-  updateTreeWidth() {
-    this.userActionController.treeController.treeView.properties.treeWidth =
-      this.userActionController.scene.sys.canvas.width * INITIAL_TREE_WIDTH * this.treeWidth * 2 / 100;
-    this.userActionController.treeController.resetTree(true, true);
-  }
-
-  updateTreeHeight() {
-    this.userActionController.treeController.treeView.properties.levelHeight =
-      this.userActionController.scene.sys.canvas.height * INITIAL_TREE_HEIGHT * this.treeHeight * 2 / 100;
-    this.userActionController.treeController.resetTree(true, true);
   }
 
   updatePlayerList(index: number) {

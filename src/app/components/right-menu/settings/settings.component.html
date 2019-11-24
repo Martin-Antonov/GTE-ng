@@ -1,12 +1,8 @@
-<app-draggable-window [width]="'500px'" [height]="'600px'" [isResizeable]="false" [top]="'5%'" [right]="'4%'"
+<app-draggable-window [width]="'30%'" [height]="'55%'" [isResizeable]="false" [top]="'5%'" [right]="'4%'"
                       (closeCallback)="this.close()" [title]="'Settings'">
     <div class="settings-content">
       <form #settingsForm="ngForm" autocomplete="off">
         <div class="tree-dimensions">
-          <label for="treeWidth">Tree Width</label><br>
-          <input type="range" id="treeWidth" name="treeWidth" [(ngModel)]="this.treeWidth" [min]="0" [max]="100" (change)="this.updateTreeWidth()"> <span>{{this.treeWidth | number:"1.0"}}</span><br>
-          <label for="treeHeight">Tree Height</label><br>
-          <input type="range" id="treeHeight" name="treeWidth" [(ngModel)]="this.treeHeight" [min]="0" max="100" (change)="this.updateTreeHeight()"> <span>{{this.treeHeight | number:"1.0"}}</span><br>
         </div>
         <div class="player-preferred-lists">
           <label for="p1List">P1 Moves List: </label>

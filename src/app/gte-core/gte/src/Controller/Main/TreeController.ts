@@ -1,13 +1,13 @@
-import {Tree} from '../Model/Tree';
-import {TreeView} from '../View/TreeView';
-import {Player} from '../Model/Player';
-import {CLICK_THRESHOLD, PLAYER_COLORS} from '../Utils/Constants';
-import {NodeView} from '../View/NodeView';
-import {ISetView} from '../View/ISetView';
-import {ISet} from '../Model/ISet';
-import {Node} from '../Model/Node';
-import {MoveView} from '../View/MoveView';
-import {TreeParser} from '../Utils/TreeParser';
+import {Tree} from '../../Model/Tree';
+import {TreeView} from '../../View/TreeView';
+import {Player} from '../../Model/Player';
+import {CLICK_THRESHOLD, PLAYER_COLORS} from '../../Utils/Constants';
+import {NodeView} from '../../View/NodeView';
+import {ISetView} from '../../View/ISetView';
+import {ISet} from '../../Model/ISet';
+import {Node} from '../../Model/Node';
+import {MoveView} from '../../View/MoveView';
+import {TreeParser} from '../../Utils/TreeParser';
 
 /**A class which connects the TreeView and the Tree Model.
  * This class is used mainly through UserActionController.ts*/

@@ -51,11 +51,23 @@ export class Node {
     }
   }
 
-  /**Converts the current Node to a default Node */
+  /**Converts the current Node to a default Node. If the node is in iSet, convert all nodes in the iSet */
   convertToDefault() {
-    this.type = NodeType.DEFAULT;
-    this.player = null;
-    this.childrenMoves.forEach((m: Move) => m.convertToDefault());
+    const nodesToConvert = [];
+    if (this.iSet) {
+      this.iSet.nodes.forEach((n: Node) => {
+        nodesToConvert.push(n);
+      });
+      this.iSet.player = null;
+    } else {
+      nodesToConvert.push(this);
+    }
+
+    nodesToConvert.forEach((n: Node) => {
+      n.type = NodeType.DEFAULT;
+      n.player = null;
+      n.childrenMoves.forEach((m: Move) => m.convertToDefault());
+    });
   }
 
   /**Converts the current Node to a labeled, by setting an player */
