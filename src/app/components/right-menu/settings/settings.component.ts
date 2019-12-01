@@ -5,6 +5,7 @@ import {UserActionControllerService} from '../../../services/user-action-control
 import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../../gte-core/gte/src/Utils/Constants';
 import {Move} from '../../../gte-core/gte/src/Model/Move';
+import {ACTION} from '../../../gte-core/gte/src/Controller/UndoRedo/ActionsEnum';
 
 @Component({
   selector: 'app-settings',
@@ -43,6 +44,7 @@ export class SettingsComponent implements OnInit {
   }
 
   updatePlayerList(index: number) {
+    const oldLabels = this.userActionController.treeController.tree.labelSetter.labels[index].slice(0);
     this.userActionController.treeController.tree.labelSetter.labels[index] = this.playerLists[index].split('');
     this.userActionController.treeController.tree.moves.forEach((m: Move) => {
       if (m.from.player && m.from.player.id === index + 1) {
@@ -50,6 +52,8 @@ export class SettingsComponent implements OnInit {
       }
     });
     this.userActionController.treeController.resetTree(false, false);
+    this.userActionController.undoRedoActionController.saveAction(ACTION.CHANGE_PLAYER_MOVES_LIST,
+      [oldLabels, this.userActionController.treeController.tree.labelSetter.labels[index].slice(0), index]);
   }
 
   toggleAutoLevels() {

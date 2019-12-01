@@ -1,10 +1,10 @@
 <input type="range" id="tree-height" class="dimension" name="treeWidth" [(ngModel)]="this.treeHeight" [min]="0"
-       max="100" (input)="this.updateTreeHeight()" list="tricks1">
+       max="100" (input)="this.updateTreeHeight()" list="tricks1" (mousedown)="saveInitialHeight()" (mouseup)="saveHeightToUndo($event)">
 <datalist id="tricks1">
   <option *ngFor="let option of options">{{option}}</option>
 </datalist>
 <input type="range" id="tree-width" class="dimension" name="treeWidth" [(ngModel)]="this.treeWidth" [min]="0" max="100"
-       (input)="this.updateTreeWidth()" list="tricks2">
+       (input)="this.updateTreeWidth()" list="tricks2" (mousedown)="saveInitialWidth()" (mouseup)="saveWidthToUndo($event)">
 <datalist id="tricks2">
   <option *ngFor="let option of options">{{option}}</option>
 </datalist>

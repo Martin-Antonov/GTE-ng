@@ -1,6 +1,7 @@
 import {IKeyboardKeys} from './IKeyboardKeys';
 import {UserActionController} from '../Main/UserActionController';
 import {NODES_HORIZONTAL_STEP_POSITIONING, NODES_VERTICAL_STEP_POSITIONING} from '../../Utils/Constants';
+import {ACTION} from '../UndoRedo/ActionsEnum';
 
 /** A class for controlling the input of the application. If there is a confusion over the functionality of each button
  * you can check the attachHandlersToKeysMethod*/
@@ -9,11 +10,12 @@ export class KeyboardController {
   scene: Phaser.Scene;
   userActionController: UserActionController;
   keys: IKeyboardKeys;
+  distanceMoved: number;
 
   constructor(scene: Phaser.Scene, userActionController: UserActionController) {
     this.scene = scene;
     this.userActionController = userActionController;
-
+    this.distanceMoved = 0;
     this.addKeys();
     this.attachHandlersToKeys();
   }
@@ -22,7 +24,7 @@ export class KeyboardController {
   addKeys() {
     this.keys =
       this.scene.input.keyboard.addKeys('SHIFT,CTRL,ALT,N,ZERO,I,PLUS,MINUS,SPACE,Z,D,U,C,S,R,Y,L,' +
-        'TAB,ENTER,ESC,UP,DOWN,LEFT,RIGHT,ONE,TWO,THREE,FOUR,DELETE') as IKeyboardKeys;
+        'TAB,ENTER,ESC,UP,DOWN,LEFT,RIGHT,ONE,TWO,THREE,FOUR,DELETE,NUMPAD_ADD,NUMPAD_SUBTRACT') as IKeyboardKeys;
 
     this.scene.input.keyboard.removeCapture('ZERO,ONE,TWO,THREE,FOUR,N,I,SPACE,Z,D,U,C,S,R,Y,L,LEFT,RIGHT,DOWN,UP,SHIFT');
   }
@@ -30,23 +32,28 @@ export class KeyboardController {
   /**A method which assigns action to each key via the UserActionController*/
   attachHandlersToKeys() {
     // TestKey
-    this.keys.SPACE.on('down', () => {
-      const children = this.userActionController.treeController.tree.nodes[0].children;
-      const treeV = this.userActionController.treeController.treeView;
-
-      const a = children[0];
-      children[0] = children[1];
-      children[1] = a;
-
-      // const b = treeV.nodes[1];
-      // treeV.nodes[1] = treeV.nodes[2];
-      // treeV.nodes[2] = b;
-
-      this.userActionController.treeController.resetTree(true, true);
-    });
+    // this.keys.SPACE.on('down', () => {
+    //   const children = this.userActionController.treeController.tree.nodes[0].children;
+    //   const treeV = this.userActionController.treeController.treeView;
+    //
+    //   const a = children[0];
+    //   children[0] = children[1];
+    //   children[1] = a;
+    //
+    //   // const b = treeV.nodes[1];
+    //   // treeV.nodes[1] = treeV.nodes[2];
+    //   // treeV.nodes[2] = b;
+    //
+    //   this.userActionController.treeController.resetTree(true, true);
+    // });
 
     // Add Children
     this.keys.N.on('down', () => {
+      if (!this.keys.CTRL.isDown && !this.keys.ALT.isDown && !this.userActionController.labelInput.active) {
+        this.userActionController.addNodesHandler();
+      }
+    });
+    this.keys.NUMPAD_ADD.on('down', () => {
       if (!this.keys.CTRL.isDown && !this.keys.ALT.isDown && !this.userActionController.labelInput.active) {
         this.userActionController.addNodesHandler();
       }
@@ -61,15 +68,15 @@ export class KeyboardController {
         this.userActionController.deleteNodeHandler();
       }
     });
-    // MINUS KEY NOT WORKING ON P3
-    // this.keys.MINUS.on('down', () => {
-    //   this.userActionController.deleteNodeHandler();
-    // });
+
+    this.keys.NUMPAD_SUBTRACT.on('down', () => {
+      this.userActionController.deleteNodeHandler();
+    });
 
     // Assigning players
     this.keys.ZERO.on('down', () => {
       if (!this.userActionController.labelInput.active) {
-        this.userActionController.assignChancePlayerToNodeHandler();
+        this.userActionController.assignPlayerToNodeHandler(0);
       }
     });
     this.keys.ONE.on('down', () => {
@@ -163,19 +170,25 @@ export class KeyboardController {
 
     // Arrow Keys Moving nodes
     this.keys.UP.on('up', () => {
-      this.userActionController.undoRedoController.saveNewTree(true);
+      this.userActionController.undoRedoActionController.saveAction(ACTION.MOVE_TREE, [0, -this.distanceMoved, this.userActionController.selectedNodes]);
+      this.distanceMoved = 0;
     });
 
     this.keys.DOWN.on('up', () => {
-      this.userActionController.undoRedoController.saveNewTree(true);
+
+      this.userActionController.undoRedoActionController.saveAction(ACTION.MOVE_TREE, [0, this.distanceMoved, this.userActionController.selectedNodes]);
+      this.distanceMoved = 0;
     });
 
     this.keys.LEFT.on('up', () => {
-      this.userActionController.undoRedoController.saveNewTree(true);
+      this.userActionController.undoRedoActionController.saveAction(ACTION.MOVE_TREE, [-this.distanceMoved, 0, this.userActionController.selectedNodes]);
+      this.distanceMoved = 0;
     });
 
     this.keys.RIGHT.on('up', () => {
-      this.userActionController.undoRedoController.saveNewTree(true);
+
+      this.userActionController.undoRedoActionController.saveAction(ACTION.MOVE_TREE, [this.distanceMoved, 0, this.userActionController.selectedNodes]);
+      this.distanceMoved = 0;
     });
 
 
@@ -184,10 +197,12 @@ export class KeyboardController {
         if (this.keys.CTRL.isDown) {
           this.userActionController.moveNodeManually(0, -1, 1);
           this.keys.UP.emitOnRepeat = true;
+          this.distanceMoved += 1;
         } else {
           this.keys.UP.emitOnRepeat = false;
           const verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
           this.userActionController.moveNodeManually(0, -1, verticalDistance);
+          this.distanceMoved = verticalDistance;
         }
       }
     });
@@ -197,10 +212,13 @@ export class KeyboardController {
         if (this.keys.CTRL.isDown) {
           this.userActionController.moveNodeManually(0, 1, 1);
           this.keys.DOWN.emitOnRepeat = true;
+          this.distanceMoved += 1;
         } else {
+          this.distanceMoved = 0;
           this.keys.DOWN.emitOnRepeat = false;
           const verticalDistance = this.userActionController.treeController.treeView.properties.levelHeight * NODES_VERTICAL_STEP_POSITIONING;
           this.userActionController.moveNodeManually(0, 1, verticalDistance);
+          this.distanceMoved = verticalDistance;
         }
       }
     });
@@ -210,11 +228,14 @@ export class KeyboardController {
         if (this.keys.CTRL.isDown) {
           this.userActionController.moveNodeManually(-1, 0, 1);
           this.keys.LEFT.emitOnRepeat = true;
+          this.distanceMoved += 1;
         } else {
+          this.distanceMoved = 0;
           this.keys.LEFT.emitOnRepeat = false;
           const horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
             this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
           this.userActionController.moveNodeManually(-1, 0, horizontalDistance);
+          this.distanceMoved = horizontalDistance;
         }
       }
     });
@@ -223,11 +244,14 @@ export class KeyboardController {
         if (this.keys.CTRL.isDown) {
           this.userActionController.moveNodeManually(1, 0, 1);
           this.keys.RIGHT.emitOnRepeat = true;
+          this.distanceMoved += 1;
         } else {
+          this.distanceMoved = 0;
           this.keys.RIGHT.emitOnRepeat = false;
           const horizontalDistance = this.userActionController.treeController.treeView.properties.treeWidth /
             this.userActionController.treeController.tree.getLeaves().length * NODES_HORIZONTAL_STEP_POSITIONING;
           this.userActionController.moveNodeManually(1, 0, horizontalDistance);
+          this.distanceMoved = horizontalDistance;
         }
       }
     });

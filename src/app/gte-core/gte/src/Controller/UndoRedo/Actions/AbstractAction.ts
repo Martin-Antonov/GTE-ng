@@ -29,7 +29,11 @@ export abstract class AbstractAction {
 
   getNodeFromAddress(nodeAddress: string): Node {
     const nodeAddressSteps = nodeAddress.split(' ');
+
     let currentNode = this.treeController.tree.nodes[0];
+    if (nodeAddress === '') {
+      return currentNode;
+    }
     for (let i = 0; i < nodeAddressSteps.length; i++) {
       const index = Number(nodeAddressSteps[i]);
       currentNode = currentNode.children[index];

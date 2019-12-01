@@ -13,8 +13,8 @@ export const LINE_WIDTH = 0.004;
 export const LABEL_SIZE = 1.25;
 export const PAYOFF_SIZE = 1;
 export const PLAYER_COLORS = ['#ff0000', '#0000ff', '#00bb00', '#ff00ff'];
-export const NODES_VERTICAL_STEP_POSITIONING = 0.5;
-export const NODES_HORIZONTAL_STEP_POSITIONING = 0.5;
+export const NODES_VERTICAL_STEP_POSITIONING = 0.166667;
+export const NODES_HORIZONTAL_STEP_POSITIONING = 0.166667;
 
 // Selection Rectangle Constants
 export const SELECTION_INNER_COLOR = 0x0389df;

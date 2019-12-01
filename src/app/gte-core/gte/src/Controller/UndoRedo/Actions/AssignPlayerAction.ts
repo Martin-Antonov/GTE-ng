@@ -16,7 +16,7 @@ export class AssignPlayerAction extends AbstractAction {
   }
 
   executeAction(undo: boolean) {
-    // TODO: Add unassign player from nodes in UserActionController - possible problems with info sets
+    // TODO: Bug with unassigning the last node.
     if (undo) {
       this.serializedNodes.forEach((serializedNode: string) => {
         const node = this.getNodeFromAddress(serializedNode);
@@ -29,7 +29,11 @@ export class AssignPlayerAction extends AbstractAction {
         const node = this.getNodeFromAddress(serializedNode);
         nodesToAssignPlayer.push(this.treeController.treeView.findNodeView(node));
       });
-      this.treeController.assignPlayerToNode(this.playerID, nodesToAssignPlayer);
+      if (this.playerID === 0) {
+        this.treeController.assignChancePlayerToNode(nodesToAssignPlayer);
+      } else{
+        this.treeController.assignPlayerToNode(this.playerID, nodesToAssignPlayer);
+      }
     }
   }
 

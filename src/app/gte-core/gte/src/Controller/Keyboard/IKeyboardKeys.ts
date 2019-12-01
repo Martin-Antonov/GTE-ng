@@ -28,4 +28,6 @@ export interface IKeyboardKeys {
   THREE: Phaser.Input.Keyboard.Key;
   FOUR: Phaser.Input.Keyboard.Key;
   DELETE: Phaser.Input.Keyboard.Key;
+  NUMPAD_ADD: Phaser.Input.Keyboard.Key;
+  NUMPAD_SUBTRACT: Phaser.Input.Keyboard.Key;
 }

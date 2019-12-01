@@ -5,6 +5,7 @@ import {SelectionRectangle} from '../../Utils/SelectionRectangle';
 import {ISetView} from '../../View/ISetView';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../Utils/Constants';
 import {ISet} from '../../Model/ISet';
+import {Node} from '../../Model/Node';
 import {LabelInputHandler} from '../../Utils/LabelInputHandler';
 import {TreeViewProperties} from '../../View/TreeViewProperties';
 import {CutSpriteHandler} from '../../Utils/CutSpriteHandler';
@@ -69,6 +70,10 @@ export class UserActionController {
         this.selectedNodes.push(nV);
       });
       this.selectionRectangle.isActive = true;
+    });
+
+    this.undoRedoActionController.event.on('deselect', () => {
+      this.deselectNodesHandler();
     });
   }
 
@@ -155,21 +160,21 @@ export class UserActionController {
 
   /**A method for adding children to selected nodes (keyboard N).*/
   addNodesHandler(nodeV?: NodeView) {
-    const nodes = nodeV ? [nodeV] : this.selectedNodes;
-    if (nodes.length > 0) {
-      this.treeController.addNodeHandler(nodes);
-      this.undoRedoActionController.saveAction(ACTION.ADD_NODE, nodes);
+    const nodesV = nodeV ? [nodeV] : this.selectedNodes;
+    if (nodesV.length > 0) {
+      this.treeController.addNodeHandler(nodesV);
+      this.undoRedoActionController.saveAction(ACTION.ADD_NODE, nodesV);
     }
     this.checkCreateStrategicForm();
   }
 
   /** A method for deleting nodes (keyboard DELETE).*/
   deleteNodeHandler(nodeV?: NodeView) {
-    if (nodeV) {
-      this.treeController.deleteNodeHandler([nodeV]);
-    } else if (this.selectedNodes.length > 0) {
-      this.treeController.deleteNodeHandler(this.selectedNodes);
+    const nodesV = nodeV ? [nodeV] : this.selectedNodes;
+    if (nodesV.length > 0) {
+      this.treeController.deleteNodeHandler(nodesV);
     }
+
     const deletedNodes = [];
     if (this.selectedNodes.length > 0) {
       this.selectedNodes.forEach((nV: NodeView) => {
@@ -194,33 +199,30 @@ export class UserActionController {
       return nV.node.children.length !== 0;
     });
     if (nodesV.length !== 0) {
-      this.treeController.assignPlayerToNode(playerID, nodesV);
+      if (playerID === 0) {
+        this.treeController.assignChancePlayerToNode(nodesV);
+      } else {
+        this.treeController.assignPlayerToNode(playerID, nodesV);
+      }
       this.checkCreateStrategicForm();
       this.undoRedoActionController.saveAction(ACTION.ASSIGN_PLAYER, {playerID: playerID, nodesV: nodesV});
     }
   }
 
-  /**A method for assigning chance player to a node (keyboard 0)*/
-  assignChancePlayerToNodeHandler(nodeV?: NodeView) {
-    if (nodeV && nodeV.node.children.length !== 0) {
-      this.treeController.assignChancePlayerToNode([nodeV]);
-      this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
-    } else if (this.selectedNodes.length > 0 && this.doSelectedHaveChildren()) {
-      this.treeController.assignChancePlayerToNode(this.selectedNodes);
-      this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
-    }
-  }
-
   /**A method which removes the last player from the list of players*/
   removeLastPlayerHandler() {
-    const numberOfPlayers = this.treeController.tree.players.length - 1;
-    if (numberOfPlayers > 1) {
-      this.treeController.tree.removePlayer(this.treeController.tree.players[numberOfPlayers]);
+    const lastPlayerIndex = this.treeController.tree.players.length - 1;
+    if (lastPlayerIndex > 1) {
+      const nodesWithRemovedPlayer = [];
+      this.treeController.tree.nodes.forEach((n: Node) => {
+        if (n.player === this.treeController.tree.players[lastPlayerIndex]) {
+          nodesWithRemovedPlayer.push(n);
+        }
+      });
+      this.treeController.tree.removePlayer(this.treeController.tree.players[lastPlayerIndex]);
       this.treeController.resetTree(false, false);
       this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
+      this.undoRedoActionController.saveAction(ACTION.DECREASE_PLAYERS_COUNT, [nodesWithRemovedPlayer, lastPlayerIndex]);
     }
   }
 
@@ -228,6 +230,7 @@ export class UserActionController {
     const numberOfPlayers = this.treeController.tree.players.length - 1;
     if (numberOfPlayers < 4) {
       this.treeController.addPlayer(numberOfPlayers + 1);
+      this.undoRedoActionController.saveAction(ACTION.INCREASE_PLAYERS_COUNT);
     }
   }
 
@@ -240,9 +243,9 @@ export class UserActionController {
         this.events.emit('show-error', err);
         return;
       }
+      this.checkCreateStrategicForm();
+      this.undoRedoController.saveNewTree();
     }
-    this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
   }
 
   /**Remove iSetHandler*/
@@ -275,21 +278,37 @@ export class UserActionController {
 
   /**A method for assigning random payoffs*/
   randomPayoffsHandler() {
+    const payoffsBefore = this.getCurrentPayoffs();
     this.treeController.assignRandomPayoffs();
+    const payoffsAfter = this.getCurrentPayoffs();
+    this.undoRedoActionController.saveAction(ACTION.ASSIGN_RANDOM_PAYOFFS, [payoffsBefore, payoffsAfter]);
     this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the zero sum on or off*/
   toggleZeroSum() {
+    const payoffs = this.getCurrentPayoffs();
     this.treeController.treeView.properties.zeroSumOn = !this.treeController.treeView.properties.zeroSumOn;
     this.treeController.resetTree(false, false);
     this.checkCreateStrategicForm();
+    this.undoRedoActionController.saveAction(ACTION.ZERO_SUM_TOGGLE, payoffs);
   }
 
   /**A method which toggles the fractional or decimal view of chance moves*/
   toggleFractionDecimal() {
     this.treeController.treeView.properties.fractionOn = !this.treeController.treeView.properties.fractionOn;
     this.treeController.resetTree(false, false);
+    this.undoRedoActionController.saveAction(ACTION.FRACTION_DECIMAL_TOGGLE);
+  }
+
+  private getCurrentPayoffs() {
+    const payoffs = [];
+    const leaves = this.treeController.tree.getLeaves();
+    leaves.forEach((leaf: Node) => {
+      payoffs.push(leaf.payoffs.outcomes.slice(0));
+    });
+
+    return payoffs;
   }
 
   /**Starts the 'Cut' state for an Information set*/
@@ -351,9 +370,21 @@ export class UserActionController {
 
   /**If the input field is on and we press enter, change the label*/
   changeLabel(newLabel: string) {
+    if (this.labelInput.currentlySelected instanceof MoveView) {
+      const mV = this.labelInput.currentlySelected as MoveView;
+      this.undoRedoActionController.saveAction(ACTION.CHANGE_MOVE_LABEL, [mV.move.label, mV.move, newLabel]);
+    } else if (this.labelInput.currentlySelected instanceof NodeView) {
+      const nV = this.labelInput.currentlySelected as NodeView;
+      if (nV.ownerLabel.alpha === 1) {
+        this.undoRedoActionController.saveAction(ACTION.CHANGE_PLAYER_LABEL,
+          [nV.node.player.label, newLabel, this.treeController.tree.players.indexOf(nV.node.player)]);
+      } else {
+        this.undoRedoActionController.saveAction(ACTION.CHANGE_PAYOFF, [nV.node.payoffs.toString(), newLabel, nV.node]);
+      }
+    }
+
     this.labelInput.changeLabel(newLabel);
     this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
   }
 
   /**Hides the input*/

@@ -277,7 +277,7 @@ export class Tree {
   }
 
   /**Returns the number of leaves in the tree.*/
-  getLeaves() {
+  getLeaves(): Array<Node> {
     const leaves = [];
     this.DFSOnTree();
     this.dfsNodes.forEach((n: Node) => {

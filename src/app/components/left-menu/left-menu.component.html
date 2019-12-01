@@ -19,7 +19,7 @@
 
 
   <app-square-button [imageKey]="'chance-node.png'"
-                     (clicked)="this.userActionController.assignChancePlayerToNodeHandler();"
+                     (clicked)="this.userActionController.assignPlayerToNodeHandler(0);"
                      [inactive]="!this.doSelectedHaveChildren()"
                      [tooltipText]="this.tooltips.chance"></app-square-button>
   <app-square-button [imageKey]="'link.png'"
