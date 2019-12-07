@@ -16,7 +16,6 @@ export class AssignPlayerAction extends AbstractAction {
   }
 
   executeAction(undo: boolean) {
-    // TODO: Bug with unassigning the last node.
     if (undo) {
       this.serializedNodes.forEach((serializedNode: string) => {
         const node = this.getNodeFromAddress(serializedNode);

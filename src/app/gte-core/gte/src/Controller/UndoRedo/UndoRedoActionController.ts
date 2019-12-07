@@ -16,6 +16,7 @@ import {ChangePlayerLabel} from './Actions/ChangePlayerLabel';
 import {ChangePayoffAction} from './Actions/ChangePayoffAction';
 import {MoveTreeAction} from './Actions/MoveTreeAction';
 import {DecreasePlayersAction} from './Actions/DecreasePlayersAction';
+import {ChangeISetAction} from './Actions/ChangeISetAction';
 
 
 export class UndoRedoActionController {
@@ -60,11 +61,8 @@ export class UndoRedoActionController {
       case ACTION.ASSIGN_PLAYER:
         this.actionsList.push(new AssignPlayerAction(this.treeController, data.nodesV, data.playerID));
         break;
-      case ACTION.CREATE_INFO_SET:
-        break;
-      case ACTION.UNLINK_INFO_SET:
-        break;
-      case ACTION.CUT_INFO_SET:
+      case ACTION.CHANGE_INFO_SETS:
+        this.actionsList.push(new ChangeISetAction(this.treeController, data[0], data[1], data[2]));
         break;
       case ACTION.ZERO_SUM_TOGGLE:
         this.actionsList.push(new ZeroSumAction(this.treeController, (data as Array<Array<number>>)));

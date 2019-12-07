@@ -6,6 +6,7 @@ import {TreeViewProperties} from '../View/TreeViewProperties';
 export class TreeTweenManager {
   scene: Phaser.Scene;
   oldCoordinates: Array<{ x, y }>;
+  tween: Phaser.Tweens.Tween;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -21,7 +22,11 @@ export class TreeTweenManager {
     });
 
 
-    const tween = this.scene.tweens.add({
+    if (this.tween && this.tween.isPlaying()) {
+      this.tween.complete();
+    }
+
+    this.tween = this.scene.tweens.add({
       targets: nodes[0],
       x: {from: this.oldCoordinates[0].x, to: nodes[0].x},
       y: {from: this.oldCoordinates[0].y, to: nodes[0].y},
@@ -33,7 +38,7 @@ export class TreeTweenManager {
         }
       },
       onUpdate: () => {
-        const progress = tween.data[0].ease(tween.progress);
+        const progress = this.tween.data[0].ease(this.tween.progress);
         for (let i = 1; i < nodes.length; i++) {
           nodes[i].setPosition(this.oldCoordinates[i].x + (finalPositionsX[i] - this.oldCoordinates[i].x) * progress,
             this.oldCoordinates[i].y + (finalPositionsY[i] - this.oldCoordinates[i].y) * progress);

@@ -238,77 +238,28 @@ export class UserActionController {
   createISetHandler() {
     if (this.selectedNodes.length > 1) {
       try {
+        const oldISets = this.getCurrentISets();
+        const selectedNotOwned = this.getCurrentlySelectedAndUnassigned();
         this.treeController.createISet(this.selectedNodes);
+        const newISets = this.getCurrentISets();
+        this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets, selectedNotOwned]);
+        this.checkCreateStrategicForm();
       } catch (err) {
         this.events.emit('show-error', err);
         return;
       }
-      this.checkCreateStrategicForm();
-      this.undoRedoController.saveNewTree();
     }
-  }
-
-  /**Remove iSetHandler*/
-  removeISetHandler(iSet: ISet) {
-    this.treeController.removeISetHandler(iSet);
-
-    this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
   }
 
   /**Removes and iSet by a given list of nodes*/
-  removeISetsByNodesHandler(nodeV?: NodeView) {
-    if (nodeV) {
-      this.removeISetHandler(nodeV.node.iSet);
-    } else if (this.selectedNodes.length > 0) {
+  removeISetsByNodesHandler() {
+    if (this.selectedNodes.length > 0) {
+      const oldISets = this.getCurrentISets();
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
-    } else {
-      return;
+      const newISets = this.getCurrentISets();
+      this.checkCreateStrategicForm();
+      this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets]);
     }
-    this.checkCreateStrategicForm();
-    this.undoRedoController.saveNewTree();
-  }
-
-  /**A method for assigning undo/redo functionality (keyboard ctrl/shift + Z)*/
-  undoRedoHandler(undo: boolean) {
-    this.undoRedoActionController.changeTree(undo);
-    this.emptySelectedNodes();
-    this.checkCreateStrategicForm();
-  }
-
-  /**A method for assigning random payoffs*/
-  randomPayoffsHandler() {
-    const payoffsBefore = this.getCurrentPayoffs();
-    this.treeController.assignRandomPayoffs();
-    const payoffsAfter = this.getCurrentPayoffs();
-    this.undoRedoActionController.saveAction(ACTION.ASSIGN_RANDOM_PAYOFFS, [payoffsBefore, payoffsAfter]);
-    this.checkCreateStrategicForm();
-  }
-
-  /**A method which toggles the zero sum on or off*/
-  toggleZeroSum() {
-    const payoffs = this.getCurrentPayoffs();
-    this.treeController.treeView.properties.zeroSumOn = !this.treeController.treeView.properties.zeroSumOn;
-    this.treeController.resetTree(false, false);
-    this.checkCreateStrategicForm();
-    this.undoRedoActionController.saveAction(ACTION.ZERO_SUM_TOGGLE, payoffs);
-  }
-
-  /**A method which toggles the fractional or decimal view of chance moves*/
-  toggleFractionDecimal() {
-    this.treeController.treeView.properties.fractionOn = !this.treeController.treeView.properties.fractionOn;
-    this.treeController.resetTree(false, false);
-    this.undoRedoActionController.saveAction(ACTION.FRACTION_DECIMAL_TOGGLE);
-  }
-
-  private getCurrentPayoffs() {
-    const payoffs = [];
-    const leaves = this.treeController.tree.getLeaves();
-    leaves.forEach((leaf: Node) => {
-      payoffs.push(leaf.payoffs.outcomes.slice(0));
-    });
-
-    return payoffs;
   }
 
   /**Starts the 'Cut' state for an Information set*/
@@ -352,14 +303,77 @@ export class UserActionController {
       });
       this.scene.input.keyboard.enabled = true;
 
+      const oldISets = this.getCurrentISets();
       this.treeController.cutInformationSet(this.cutSpriteHandler.cutInformationSet,
         this.cutSpriteHandler.cutSprite.x, this.cutSpriteHandler.cutSprite.y);
       this.cutSpriteHandler.cutInformationSet = null;
-
+      const newISets = this.getCurrentISets();
       this.checkCreateStrategicForm();
       this.treeController.resetTree(true, true);
-      this.undoRedoController.saveNewTree();
+      this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets]);
     }, this);
+  }
+
+  private getCurrentISets(): Array<Array<Node>> {
+    const iSets = [];
+    this.treeController.tree.iSets.forEach((iSet: ISet) => {
+      iSets.push(iSet.nodes.slice(0));
+    });
+
+    return iSets;
+  }
+
+  private getCurrentlySelectedAndUnassigned(): Array<Node> {
+    const result = [];
+    this.selectedNodes.forEach((nV: NodeView) => {
+      if (!nV.node.player) {
+        result.push(nV.node);
+      }
+    });
+
+    return result;
+  }
+
+  /**A method for assigning undo/redo functionality (keyboard ctrl/shift + Z)*/
+  undoRedoHandler(undo: boolean) {
+    this.undoRedoActionController.changeTree(undo);
+    this.emptySelectedNodes();
+    this.checkCreateStrategicForm();
+  }
+
+  /**A method for assigning random payoffs*/
+  randomPayoffsHandler() {
+    const payoffsBefore = this.getCurrentPayoffs();
+    this.treeController.assignRandomPayoffs();
+    const payoffsAfter = this.getCurrentPayoffs();
+    this.undoRedoActionController.saveAction(ACTION.ASSIGN_RANDOM_PAYOFFS, [payoffsBefore, payoffsAfter]);
+    this.checkCreateStrategicForm();
+  }
+
+  /**A method which toggles the zero sum on or off*/
+  toggleZeroSum() {
+    const payoffs = this.getCurrentPayoffs();
+    this.treeController.treeView.properties.zeroSumOn = !this.treeController.treeView.properties.zeroSumOn;
+    this.treeController.resetTree(false, false);
+    this.checkCreateStrategicForm();
+    this.undoRedoActionController.saveAction(ACTION.ZERO_SUM_TOGGLE, payoffs);
+  }
+
+  /**A method which toggles the fractional or decimal view of chance moves*/
+  toggleFractionDecimal() {
+    this.treeController.treeView.properties.fractionOn = !this.treeController.treeView.properties.fractionOn;
+    this.treeController.resetTree(false, false);
+    this.undoRedoActionController.saveAction(ACTION.FRACTION_DECIMAL_TOGGLE);
+  }
+
+  private getCurrentPayoffs() {
+    const payoffs = [];
+    const leaves = this.treeController.tree.getLeaves();
+    leaves.forEach((leaf: Node) => {
+      payoffs.push(leaf.payoffs.outcomes.slice(0));
+    });
+
+    return payoffs;
   }
 
   /**If the label input is active, go to the next label

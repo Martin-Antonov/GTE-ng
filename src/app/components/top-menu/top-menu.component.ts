@@ -19,7 +19,7 @@ export class TopMenuComponent implements OnInit {
   logoSrc: string;
   strategicFormActive: boolean;
 
-  @ViewChild('loadInput', { static: false }) loadFileField;
+  @ViewChild('loadInput', {static: false}) loadFileField;
 
   constructor(private uac: UserActionControllerService, public tts: TooltipsService,
               public uis: UiSettingsService, private tfs: TreesFileService, private hotkeys: HotkeysService) {
@@ -73,12 +73,12 @@ export class TopMenuComponent implements OnInit {
   }
 
   isUndoActive() {
-    return this.userActionController.undoRedoController.currentTreeIndex === 0;
+    return this.userActionController.undoRedoActionController.currentIndex === -1;
   }
 
   isRedoActive() {
-    return this.userActionController.undoRedoController.currentTreeIndex ===
-      this.userActionController.undoRedoController.treesList.length - 1;
+    return this.userActionController.undoRedoActionController.currentIndex ===
+      this.userActionController.undoRedoActionController.actionsList.length - 1;
   }
 
   toggleSaveMenu() {

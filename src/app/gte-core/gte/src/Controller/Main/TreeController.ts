@@ -288,9 +288,8 @@ export class TreeController {
   }
 
   /**A method which removes all isets from the selected nodes*/
-  removeISetsByNodesHandler(selectedNodes: Array<NodeView>) {
-    let iSetsToRemove = this.getDistinctISetsFromNodes(selectedNodes);
-
+  removeISetsByNodesHandler(nodesV: Array<NodeView>) {
+    let iSetsToRemove = this.getDistinctISetsFromNodes(nodesV);
     for (let i = 0; i < iSetsToRemove.length; i++) {
       this.removeISetHandler(iSetsToRemove[i]);
     }

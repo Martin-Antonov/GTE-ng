@@ -19,11 +19,9 @@ export class ChangeMoveLabelAction extends AbstractAction {
     const label = undo ? this.oldLabel : this.newLabel;
 
     this.treeController.tree.changeMoveLabel(node.parentMove, label);
-
     this.treeController.resetTree(false, false);
   }
 
   destroy() {
   }
-
 }
