@@ -5,7 +5,7 @@ import {SelectionRectangle} from '../../Utils/SelectionRectangle';
 import {ISetView} from '../../View/ISetView';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../Utils/Constants';
 import {ISet} from '../../Model/ISet';
-import {Node} from '../../Model/Node';
+import {Node, NodeType} from '../../Model/Node';
 import {LabelInputHandler} from '../../Utils/LabelInputHandler';
 import {TreeViewProperties} from '../../View/TreeViewProperties';
 import {CutSpriteHandler} from '../../Utils/CutSpriteHandler';
@@ -14,14 +14,17 @@ import {MoveView} from '../../View/MoveView';
 import {UndoRedoController} from '../UndoRedo/UndoRedoController';
 import {UndoRedoActionController} from '../UndoRedo/UndoRedoActionController';
 import {ACTION} from '../UndoRedo/ActionsEnum';
+import {IStrategicFormResult} from '../../Utils/IStrategicFormResult';
+import * as math from 'mathjs';
 
 export class UserActionController {
   scene: Phaser.Scene;
 
   treeController: TreeController;
-  strategicForm: StrategicForm;
   undoRedoController: UndoRedoController;
   undoRedoActionController: UndoRedoActionController;
+  strategicForm: StrategicForm;
+  strategicFormResult: IStrategicFormResult;
 
   // Used for going to the next node on tab pressed
   labelInput: LabelInputHandler;
@@ -42,6 +45,7 @@ export class UserActionController {
     this.viewExporter = new ViewExporter(this.treeController);
     this.undoRedoController = new UndoRedoController(this.treeController);
     this.undoRedoActionController = new UndoRedoActionController(this.treeController);
+    this.strategicForm = new StrategicForm();
     this.selectedNodes = [];
 
     this.shift = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
@@ -386,19 +390,40 @@ export class UserActionController {
   changeLabel(newLabel: string) {
     if (this.labelInput.currentlySelected instanceof MoveView) {
       const mV = this.labelInput.currentlySelected as MoveView;
-      this.undoRedoActionController.saveAction(ACTION.CHANGE_MOVE_LABEL, [mV.move.label, mV.move, newLabel]);
+      if (this.checkIfMoveLabelIsDifferent(mV, newLabel)) {
+        this.undoRedoActionController.saveAction(ACTION.CHANGE_MOVE_LABEL, [mV.move.label, mV.move, newLabel]);
+        this.labelInput.changeLabel(newLabel);
+        this.checkCreateStrategicForm();
+        return;
+      }
     } else if (this.labelInput.currentlySelected instanceof NodeView) {
       const nV = this.labelInput.currentlySelected as NodeView;
-      if (nV.ownerLabel.alpha === 1) {
+      if (nV.ownerLabel.alpha === 1 && nV.node.player.label !== newLabel) {
         this.undoRedoActionController.saveAction(ACTION.CHANGE_PLAYER_LABEL,
           [nV.node.player.label, newLabel, this.treeController.tree.players.indexOf(nV.node.player)]);
-      } else {
+        this.labelInput.changeLabel(newLabel);
+        this.checkCreateStrategicForm();
+        return;
+      } else if (nV.node.payoffs.toString() !== newLabel) {
         this.undoRedoActionController.saveAction(ACTION.CHANGE_PAYOFF, [nV.node.payoffs.toString(), newLabel, nV.node]);
+        this.labelInput.changeLabel(newLabel);
+        this.checkCreateStrategicForm();
+        return;
       }
     }
+    this.labelInput.show(true);
+  }
 
-    this.labelInput.changeLabel(newLabel);
-    this.checkCreateStrategicForm();
+  private checkIfMoveLabelIsDifferent(mV: MoveView, label: string): boolean {
+    if (mV.move.from.type === NodeType.CHANCE) {
+      return mV.move.probability !== <number>math.number(<any>(math.fraction(label)));
+    } else {
+      if (label.includes('_')) {
+        return mV.move.label + '_' + mV.move.subscript !== label;
+      } else {
+        return mV.move.label !== label;
+      }
+    }
   }
 
   /**Hides the input*/
@@ -438,16 +463,10 @@ export class UserActionController {
 
   checkCreateStrategicForm() {
     this.SPNEActive = false;
-    this.destroyStrategicForm();
+    this.strategicFormResult = null;
+    this.strategicForm.destroy();
     if (this.treeController.tree.checkAllNodesLabeled()) {
-      this.strategicForm = new StrategicForm(this.treeController.tree);
-    }
-  }
-
-  destroyStrategicForm() {
-    if (this.strategicForm) {
-      this.strategicForm.destroy();
-      this.strategicForm = null;
+     this.strategicFormResult = this.strategicForm.generateStrategicForm(this.treeController.tree);
     }
   }
 

@@ -6,6 +6,7 @@ import {Tree} from './Tree';
 import {Payoffs} from './Payoffs';
 import {ISet} from './ISet';
 import {StrategicFormSerializer} from '../Utils/StrategicFormSerializer';
+import {IStrategicFormResult} from '../Utils/IStrategicFormResult';
 
 export class StrategicForm {
   tree: Tree;
@@ -37,15 +38,15 @@ export class StrategicForm {
 
   serializer: StrategicFormSerializer;
 
-  constructor(tree: Tree) {
-    this.tree = tree;
+  constructor() {
     this.serializer = new StrategicFormSerializer(this);
-    this.generateStrategicForm();
   }
 
   // region Generate strategies
   /**Generates the strategic form, which is stored in two arrays of strategies for P1 and P2*/
-  generateStrategicForm() {
+  generateStrategicForm(tree: Tree) {
+    this.tree = tree;
+
     this.checkStrategicFormPossible();
 
     // The order of information sets is breadth-first. If at some point we wish to change this - swap with dfs.
@@ -92,6 +93,7 @@ export class StrategicForm {
     this.generateStrategies(p2InfoSets);
     this.generateStrategies(p3InfoSets);
     this.generateStrategies(p4InfoSets);
+
     this.generatePayoffs();
 
     this.p1rows = this.strategyToString(this.p1Strategies);
@@ -100,11 +102,17 @@ export class StrategicForm {
     this.p4cols = this.strategyToString(this.p4Strategies);
 
     this.calculateBestResponses();
+
+    const result: IStrategicFormResult = {
+      p1rows: this.p1rows, p2cols: this.p2cols, p3rows: this.p3rows, p4cols: this.p4cols,
+      p1Strategies: this.p1Strategies, p2Strategies: this.p2Strategies, p3Strategies: this.p3Strategies, p4Strategies: this.p4Strategies,
+      payoffsMatrix: this.payoffsMatrix
+    };
+    return result;
   }
 
   /**A method which checks whether the conditions for generating a strategic form are kept*/
   private checkStrategicFormPossible() {
-
     if (!this.tree.checkAllNodesLabeled()) {
       throw new Error(STRATEGIC_NOT_LABELED_ERROR_TEXT);
     }
@@ -273,6 +281,7 @@ export class StrategicForm {
       }
     }
     const leaves = this.tree.getLeaves();
+
     leaves.forEach((leaf: Node) => {
       this.getMovesPathToRoot(leaf);
       this.reachableP1Rows = [];
@@ -321,7 +330,9 @@ export class StrategicForm {
           }
         }
       }
-    }, this);
+    });
+
+
     for (let i = 0; i < this.payoffsMatrix.length; i++) {
       for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
         for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {

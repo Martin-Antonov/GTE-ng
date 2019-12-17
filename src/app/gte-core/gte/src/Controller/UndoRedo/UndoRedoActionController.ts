@@ -17,6 +17,7 @@ import {ChangePayoffAction} from './Actions/ChangePayoffAction';
 import {MoveTreeAction} from './Actions/MoveTreeAction';
 import {DecreasePlayersAction} from './Actions/DecreasePlayersAction';
 import {ChangeISetAction} from './Actions/ChangeISetAction';
+import {TREE_TWEEN_DURATION} from '../../Utils/Constants';
 
 
 export class UndoRedoActionController {
@@ -103,5 +104,20 @@ export class UndoRedoActionController {
     }
 
     this.currentIndex++;
+  }
+
+  playFromBeginning() {
+    for (let i = this.currentIndex; i >= 0; i--) {
+      this.actionsList[i].executeAction(true);
+    }
+
+    for (let i = 0; i <= this.currentIndex; i++) {
+      this.treeController.scene.time.addEvent({
+        delay: i * TREE_TWEEN_DURATION * 0.8,
+        callback: () => {
+          this.actionsList[i].executeAction(false);
+        }
+      });
+    }
   }
 }

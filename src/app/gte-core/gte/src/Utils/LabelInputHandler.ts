@@ -43,6 +43,7 @@ export class LabelInputHandler {
   show(next: boolean) {
     this.events.emit('select-text');
     if (this.shouldRecalculateOrder) {
+      this.shouldRecalculateOrder = false;
       this.nodesBFSOrder = this.treeController.tree.BFSOnTree();
       this.leavesDFSOrder = this.treeController.tree.getLeaves();
     }

@@ -1,4 +1,4 @@
-export const GTE_VERSION = 'GTE v2.1.0';
+export const GTE_VERSION = 'GTE v2.1.1';
 
 // Boot Menu Constants
 export const INITIAL_TREE_WIDTH = 0.5;
@@ -23,7 +23,7 @@ export const OVERLAY_SCALE = 3;
 // Text Constants
 export const OWNER_METRICS = {ascent: 31, descent: 7, fontSize: 38};
 export const PAYOFF_METRICS = {ascent: 24, descent: 5, fontSize: 29};
-export const LABEL_METRICS = {ascent: 10, descent: 2, fontSize: 12};
+export const LABEL_METRICS = {ascent: 30, descent: 7, fontSize: 37};
 export const SUBSCRIPT_METRICS = {ascent: 18, descent: 4, fontSize: 22};
 
 // Errors

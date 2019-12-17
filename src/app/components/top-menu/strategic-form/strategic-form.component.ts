@@ -49,9 +49,9 @@ export class StrategicFormComponent implements OnInit {
     let result = '';
     let m1 = '';
     let m2 = '';
-    result += this.userActionController.strategicForm.p1rows.length + ' ' + this.userActionController.strategicForm.p2cols.length;
-    for (let i = 0; i < this.userActionController.strategicForm.payoffsMatrix.length; i++) {
-      const payoffsMatrix = this.userActionController.strategicForm.payoffsMatrix[i];
+    result += this.userActionController.strategicFormResult.p1rows.length + ' ' + this.userActionController.strategicFormResult.p2cols.length;
+    for (let i = 0; i < this.userActionController.strategicFormResult.payoffsMatrix.length; i++) {
+      const payoffsMatrix = this.userActionController.strategicFormResult.payoffsMatrix[i];
       for (let j = 0; j < payoffsMatrix.length; j++) {
         const payoffs = payoffsMatrix[j];
         const m1PayoffAsFraction = math.format(math.fraction(payoffs[0][0].outcomes[0]));

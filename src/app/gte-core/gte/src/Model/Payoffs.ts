@@ -81,7 +81,7 @@ export class Payoffs {
   setOutcomes() {
     for (let i = 0; i < this.outcomes.length; i++) {
       this.outcomesAsFractions[i] = math.fraction(this.outcomes[i]);
-      this.outcomesAsDecimals[i] = math.round(this.outcomes[i], 2);
+      this.outcomesAsDecimals[i] = Math.round(this.outcomes[i] * 100) / 100;
     }
   }
 

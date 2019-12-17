@@ -27,4 +27,10 @@ export class TreeTabComponent implements OnInit {
     this.select.emit();
   }
 
+  test(element) {
+    if (element.value === '') {
+      this.tfs.treeTabs[this.index].fileName = 'My Tree X';
+    }
+    element.blur();
+  }
 }

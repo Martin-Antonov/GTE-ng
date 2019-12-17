@@ -12,6 +12,9 @@ export class MoveView extends Phaser.GameObjects.Image {
   subscript: Phaser.GameObjects.Text;
   move: Move;
 
+  private labelStyle: Object;
+  private subscriptStyle: Object;
+
   constructor(scene: Phaser.Scene, from: NodeView, to: NodeView) {
     super(scene, from.x, from.y, 'line-black');
 
@@ -26,11 +29,12 @@ export class MoveView extends Phaser.GameObjects.Image {
     this.rotation = Phaser.Math.Angle.Between(this.from.x, this.from.y, this.to.x, this.to.y) - Math.PI / 2;
     this.displayHeight = Phaser.Math.Distance.Between(this.from.x, this.from.y, this.to.x, this.to.y);
 
+
     this.label = this.scene.add.text(0, 0, this.move.label, {
       align: 'center',
       fontFamily: 'Arial',
-      fontStyle: 'bold italics',
-      fontSize: this.from.circle.displayWidth,
+      fontStyle: 'italic',
+      fontSize: this.from.circle.displayWidth * 1.28,
       metrics: LABEL_METRICS
     }).setOrigin(0.5, 0.5)
       .setPadding(3, 0, 3, 0);
@@ -40,7 +44,7 @@ export class MoveView extends Phaser.GameObjects.Image {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'normal',
-      fontSize: this.from.circle.displayWidth * 0.75,
+      fontSize: this.from.circle.displayWidth * 1.05,
       metrics: SUBSCRIPT_METRICS
     })
       .setOrigin(0, 0.5)
@@ -64,19 +68,19 @@ export class MoveView extends Phaser.GameObjects.Image {
   updateLabel(fractionOn: boolean, levelHeight: number) {
     // Set Label texts
     if (this.move.from.type === NodeType.CHANCE && this.move.probability !== null) {
-      this.label.text = this.move.getProbabilityText(fractionOn);
-      this.subscript.text = '';
+      this.label.setText(this.move.getProbabilityText(fractionOn));
+      this.subscript.setText('');
     } else if (this.move.from.type === NodeType.OWNED && this.move.label) {
-      this.label.text = this.move.label;
+      this.label.setText(this.move.label);
       if (this.move.subscript) {
-        this.subscript.text = this.move.subscript;
+        this.subscript.setText(this.move.subscript);
       } else {
-        this.subscript.text = '';
+        this.subscript.setText('');
       }
     } else {
-      this.label.text = '';
+      this.label.setText('');
       this.label.alpha = 0;
-      this.subscript.text = '';
+      this.subscript.setText('');
       this.subscript.alpha = 0;
     }
 
@@ -84,12 +88,11 @@ export class MoveView extends Phaser.GameObjects.Image {
     let color = '#000';
     if (this.move.from.type === NodeType.OWNED) {
       this.label.setColor(this.from.node.player.color.toString())
-        .setFontStyle('italic')
+
         .setFontSize(this.from.circle.displayWidth * 1.28);
       color = this.from.node.player.color.toString();
     } else if (this.move.from.type === NodeType.CHANCE) {
       this.label.setColor('#000')
-        .setFontStyle('normal')
         .setFontSize(this.from.circle.displayWidth * 1.05);
     }
     this.subscript.setColor(color);

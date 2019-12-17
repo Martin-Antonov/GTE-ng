@@ -2,10 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
-import {SolverService} from '../../../services/solver/solver.service';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {DomSanitizer} from '@angular/platform-browser';
 import * as math from 'mathjs';
-import {Fraction} from 'mathjs';
+
 
 @Component({
   selector: 'app-strategic-form-table',
@@ -23,34 +22,34 @@ export class StrategicFormTableComponent implements OnInit {
   }
 
   getOuterGridRows() {
-    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicForm.p3rows.length + ', 1fr)');
+    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicFormResult.p3rows.length + ', 1fr)');
   }
 
   getOuterGridCols() {
-    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicForm.p4cols.length + ', 1fr)');
+    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicFormResult.p4cols.length + ', 1fr)');
   }
 
   getInnerGridRows() {
-    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicForm.p1rows.length + ', 1fr)');
+    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicFormResult.p1rows.length + ', 1fr)');
   }
 
   getInnerGridCols() {
-    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicForm.p2cols.length + ', 1fr)');
+    return this.sanitizer.bypassSecurityTrustStyle('repeat(' + this.userActionController.strategicFormResult.p2cols.length + ', 1fr)');
   }
 
   isThereP3() {
-    return this.userActionController.strategicForm.p3Strategies.length !== 0 ||
+    return this.userActionController.strategicFormResult.p3Strategies.length !== 0 ||
       this.userActionController.treeController.tree.nodes.length === 1;
   }
 
   isThereP4() {
-    return this.userActionController.strategicForm.p4Strategies.length !== 0 ||
+    return this.userActionController.strategicFormResult.p4Strategies.length !== 0 ||
       this.userActionController.treeController.tree.nodes.length === 1;
   }
 
   getInnerCellStyle(i: number, j: number, k: number, l: number) {
     const style = {};
-    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isEquilibrium() && this.uis.bestResponsesActive) {
+    if (this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].isEquilibrium() && this.uis.bestResponsesActive) {
       style['background'] = ['#f5f5f5'];
     }
     return style;
@@ -66,7 +65,7 @@ export class StrategicFormTableComponent implements OnInit {
       style['top'] = '0';
     }
 
-    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[0] && this.uis.bestResponsesActive) {
+    if (this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].isBestResponce[0] && this.uis.bestResponsesActive) {
       // style['background'] = 'rgba(255,0,0,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
@@ -92,7 +91,7 @@ export class StrategicFormTableComponent implements OnInit {
       style['transform'] = 'translateX(-33%)';
     }
 
-    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[1] && this.uis.bestResponsesActive) {
+    if (this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].isBestResponce[1] && this.uis.bestResponsesActive) {
       // style['background'] = 'rgba(0,0,255,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
@@ -114,7 +113,7 @@ export class StrategicFormTableComponent implements OnInit {
       style['transform'] = 'translateX(-100%)';
 
     }
-    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[2] && this.uis.bestResponsesActive) {
+    if (this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].isBestResponce[2] && this.uis.bestResponsesActive) {
       // style['background'] = 'rgba(0,255,0,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
@@ -128,7 +127,7 @@ export class StrategicFormTableComponent implements OnInit {
 
   getP4PayoffStyle(i: number, j: number, k: number, l: number) {
     const style = {};
-    if (this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].isBestResponce[3] && this.uis.bestResponsesActive) {
+    if (this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].isBestResponce[3] && this.uis.bestResponsesActive) {
       // style['background'] = 'rgba(255,0,255,0.15)';
       style['font-weight'] = '900';
       // style['text-decoration'] = 'underline';
@@ -158,7 +157,7 @@ export class StrategicFormTableComponent implements OnInit {
 
   getOutcome(i: number, j: number, k: number, l: number, outcome: number) {
     if (this.userActionController.treeController.treeView.properties.fractionOn) {
-      const outcomePayoff = this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
+      const outcomePayoff = this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
       if (outcomePayoff.n === 0) {
         return 0;
       } else if (outcomePayoff.d === 1) {
@@ -169,7 +168,7 @@ export class StrategicFormTableComponent implements OnInit {
         return sign + outcomePayoff.n + '/' + outcomePayoff.d;
       }
     } else {
-      return this.userActionController.strategicForm.payoffsMatrix[i][j][k][l].outcomesAsDecimals[outcome];
+      return this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].outcomesAsDecimals[outcome];
     }
   }
 
