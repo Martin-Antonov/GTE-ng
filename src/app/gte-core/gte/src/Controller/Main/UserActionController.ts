@@ -16,6 +16,7 @@ import {UndoRedoActionController} from '../UndoRedo/UndoRedoActionController';
 import {ACTION} from '../UndoRedo/ActionsEnum';
 import {IStrategicFormResult} from '../../Utils/IStrategicFormResult';
 import Fraction from 'fraction.js/fraction';
+import {DeleteNodeAction} from '../UndoRedo/Actions/DeleteNodeAction';
 
 export class UserActionController {
   scene: Phaser.Scene;
@@ -74,10 +75,6 @@ export class UserActionController {
         this.selectedNodes.push(nV);
       });
       this.selectionRectangle.isActive = true;
-    });
-
-    this.undoRedoActionController.event.on('deselect', () => {
-      this.deselectNodesHandler();
     });
   }
 
@@ -176,6 +173,8 @@ export class UserActionController {
   deleteNodeHandler(nodeV?: NodeView) {
     const nodesV = nodeV ? [nodeV] : this.selectedNodes;
     if (nodesV.length > 0) {
+      const treeAsString = this.treeController.treeParser.stringify(this.treeController.tree);
+      this.undoRedoActionController.saveAction(ACTION.DELETE_NODE, [nodesV, treeAsString]);
       this.treeController.deleteNodeHandler(nodesV);
     }
 
@@ -340,8 +339,8 @@ export class UserActionController {
 
   /**A method for assigning undo/redo functionality (keyboard ctrl/shift + Z)*/
   undoRedoHandler(undo: boolean) {
-    this.undoRedoActionController.changeTree(undo);
     this.emptySelectedNodes();
+    this.undoRedoActionController.changeTree(undo);
     this.checkCreateStrategicForm();
   }
 

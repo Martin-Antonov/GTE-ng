@@ -19,19 +19,18 @@ import {DecreasePlayersAction} from './Actions/DecreasePlayersAction';
 import {ChangeISetAction} from './Actions/ChangeISetAction';
 import {TREE_TWEEN_DURATION} from '../../Utils/Constants';
 import Fraction from 'fraction.js/fraction';
+import {DeleteNodeAction} from './Actions/DeleteNodeAction';
 
 
 export class UndoRedoActionController {
   treeController: TreeController;
   currentIndex: number;
   actionsList: Array<AbstractAction>;
-  event: Phaser.Events.EventEmitter;
 
   constructor(treeController: TreeController) {
     this.treeController = treeController;
     this.actionsList = [];
     this.currentIndex = -1;
-    this.event = new Phaser.Events.EventEmitter();
   }
 
   changeTree(undo: boolean) {
@@ -40,11 +39,9 @@ export class UndoRedoActionController {
       return;
     }
     const indexToUse = undo ? this.currentIndex : this.currentIndex + 1;
-
     this.actionsList[indexToUse].executeAction(undo);
     const indexChange = undo ? -1 : 1;
     this.currentIndex += indexChange;
-    this.event.emit('deselect');
   }
 
   saveAction(action: ACTION, data?: any) {
@@ -56,9 +53,10 @@ export class UndoRedoActionController {
 
     switch (action) {
       case ACTION.ADD_NODE:
-        this.actionsList.push(new AddNodeAction(this.treeController, (data as Array<NodeView>)));
+        this.actionsList.push(new AddNodeAction(this.treeController, data as Array<NodeView>));
         break;
       case ACTION.DELETE_NODE:
+        this.actionsList.push(new DeleteNodeAction(this.treeController, data[0] as Array<NodeView>, data[1] as string));
         break;
       case ACTION.ASSIGN_PLAYER:
         this.actionsList.push(new AssignPlayerAction(this.treeController, data.nodesV, data.playerID));
@@ -67,7 +65,7 @@ export class UndoRedoActionController {
         this.actionsList.push(new ChangeISetAction(this.treeController, data[0], data[1], data[2]));
         break;
       case ACTION.ZERO_SUM_TOGGLE:
-        this.actionsList.push(new ZeroSumAction(this.treeController, (data as Array<Array<Fraction>>)));
+        this.actionsList.push(new ZeroSumAction(this.treeController, data as Array<Array<Fraction>>));
         break;
       case ACTION.ASSIGN_RANDOM_PAYOFFS:
         this.actionsList.push(new RandomPayoffsAction(this.treeController, data[0] as Array<Array<Fraction>>, data[1] as Array<Array<Fraction>>));
