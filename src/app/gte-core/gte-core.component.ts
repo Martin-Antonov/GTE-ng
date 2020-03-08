@@ -37,10 +37,6 @@ export class GteCoreComponent implements OnInit {
 
     const game = new GTE(config);
     game.scene.add('main', MainScene, true, {uac: this.userActionControllerService, tfs: this.tfs});
-    // game.scene.scenes[0].on('scene-loaded', () => {
-    //   this.userActionControllerService.setUAC((game.scene.scenes[0] as MainScene).userActionController);
-    //   this.tfs.initiateFirstTree();
-    // });
   }
 }
 

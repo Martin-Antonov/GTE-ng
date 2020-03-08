@@ -1,4 +1,3 @@
-/// <reference path="../../../../../../node_modules/@types/mathjs/index.d.ts" />
 import {
   BACKWARDS_INDUCTION_NOT_ALL_LABELED,
   BACKWARDS_INDUCTION_PERFECT_INFORMATION,
@@ -9,11 +8,11 @@ import {
   SAME_PATH_ON_ROOT_ERROR_TEXT
 } from '../Utils/Constants';
 import {Move} from './Move';
-import * as  math from 'mathjs';
 import {Node, NodeType} from './Node';
 import {Player} from './Player';
 import {ISet} from './ISet';
 import {LabelSetter} from './LabelSetter';
+import Fraction from 'fraction.js/fraction';
 
 /**The class which stores all the needed information for the tree - lists of nodes, moves, isets, players and the root */
 export class Tree {
@@ -95,6 +94,7 @@ export class Tree {
       node.convertToChance(this.players[0]);
     }
   }
+
   // endregion
 
   // region Information Sets
@@ -330,19 +330,18 @@ export class Tree {
     this.nodes.forEach((n: Node) => {
       let shouldReset = false;
       if (n.type === NodeType.CHANCE) {
-        let sum = 0;
+        let sum = new Fraction(0);
         for (let i = 0; i < n.childrenMoves.length; i++) {
           const move = n.childrenMoves[i];
           if (!move.probability) {
             shouldReset = true;
             break;
           }
-          sum += move.probability;
+          sum = sum.add(move.probability);
         }
-        sum = parseFloat((sum).toFixed(4));
-        if (shouldReset || sum !== 1) {
+        if (shouldReset || sum.valueOf() !== 1) {
           n.childrenMoves.forEach((m: Move) => {
-            m.probability = 1 / n.childrenMoves.length;
+            m.probability = new Fraction(1, n.childrenMoves.length);
           });
         }
       }
@@ -388,13 +387,14 @@ export class Tree {
   /** A method which sets the probabilities of a chance node, once a new probability is set externally*/
   private chanceNodesSetProbabilities(move: Move, text: string) {
     move.subscript = '';
-    const newProb = <number>math.number(<any>(math.fraction(text)));
+    const newProb = new Fraction(text);
 
     // If the user is just tabbing through probabilities
-    if (move.probability === newProb) {
+    if (move.probability.compare(newProb) === 0) {
       return;
     }
-    if (newProb >= 0 && newProb <= 1) {
+    const probAsDecimal = newProb.valueOf();
+    if (probAsDecimal >= 0 && probAsDecimal <= 1) {
       move.probability = newProb;
       const probabilities = [];
       let currentIndex = -1;
@@ -407,33 +407,36 @@ export class Tree {
       }
 
       // Calculate the sum of all probabilities before the given element
-      let probSumBeforeCurrent = 0;
+      let probSumBeforeCurrent = new Fraction(0);
       for (let i = 0; i < currentIndex; i++) {
-        probSumBeforeCurrent += probabilities[i];
+        probSumBeforeCurrent = probSumBeforeCurrent.add(probabilities[i]);
       }
       // Rounding errors prevention
-      const totalProbability = parseFloat((probSumBeforeCurrent + newProb).toFixed(4));
+      const totalProbability = (probSumBeforeCurrent.add(newProb)).valueOf();
 
       // Case 0: Borderline case - if the last element is set with total probability less than 1
       // We reset all previous elements
       if (totalProbability < 1 && currentIndex === probabilities.length - 1) {
         for (let i = 0; i < currentIndex; i++) {
-          move.from.childrenMoves[i].probability = (1 - newProb) / (currentIndex);
+          const newValue = (new Fraction(1).sub(newProb)).div(currentIndex);
+          move.from.childrenMoves[i].probability = newValue;
         }
         // Case 1: Standard case - the new probabilitiy with the previous does not exceed 1
         // We set the remaining probabilities to be the average of the remaining
       } else if (totalProbability <= 1) {
         for (let i = currentIndex + 1; i < probabilities.length; i++) {
-          move.from.childrenMoves[i].probability = (1 - probSumBeforeCurrent - newProb) / (probabilities.length - currentIndex - 1);
+          const newValue = (new Fraction(1).sub(probSumBeforeCurrent).sub(newProb)).div(probabilities.length - currentIndex - 1);
+          move.from.childrenMoves[i].probability = newValue;
         }
         // Case 2: If the previous + the current new probability exceed 1
         // We set all probabilities afterwards to be 0, and the previous will be averaged of the remaining
       } else if (totalProbability > 1) {
         for (let i = 0; i < currentIndex; i++) {
-          move.from.childrenMoves[i].probability = (1 - newProb) / (currentIndex);
+          const newValue = (new Fraction(1).sub(newProb)).div(currentIndex);
+          move.from.childrenMoves[i].probability = newValue;
         }
         for (let i = currentIndex + 1; i < probabilities.length; i++) {
-          move.from.childrenMoves[i].probability = 0;
+          move.from.childrenMoves[i].probability = new Fraction(0);
         }
       }
     }
@@ -494,7 +497,7 @@ export class Tree {
 
       parentNodes.forEach((n: Node) => {
         if (n.type === NodeType.CHANCE) {
-          n.payoffs.outcomes = [0, 0, 0, 0];
+          n.payoffs.reset();
           n.children.forEach((c: Node) => {
             c.payoffs.multiply(c.parentMove.probability);
             n.payoffs.add(c.payoffs.outcomes);
@@ -502,11 +505,11 @@ export class Tree {
           n.convertToLeaf();
         } else if (n.type === NodeType.OWNED) {
           let maxLeaf: Node = null;
-          let maxPayoff = -100000;
+          let maxPayoff = new Fraction(-100000);
           const playerIndex = clonedTree.players.indexOf(n.player);
-          n.payoffs.outcomes = [0, 0, 0, 0];
+          n.payoffs.reset();
           n.children.forEach((c: Node) => {
-            if (c.payoffs.outcomes[playerIndex - 1] > maxPayoff) {
+            if (c.payoffs.outcomes[playerIndex - 1].compare(maxPayoff) > 0) {
               maxPayoff = c.payoffs.outcomes[playerIndex - 1];
               maxLeaf = c;
             }

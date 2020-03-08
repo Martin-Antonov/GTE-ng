@@ -32,7 +32,7 @@ export class TreeController {
   createInitialTree() {
     this.tree = new Tree();
     this.tree.addNode();
-    this.tree.addPlayer(new Player(0, 'chance', '#000000'));
+    this.tree.addPlayer(new Player(0, 'chance', '#000'));
     this.tree.addPlayer(new Player(1, '1', PLAYER_COLORS[0]));
     this.tree.addPlayer(new Player(2, '2', PLAYER_COLORS[1]));
 
@@ -148,6 +148,18 @@ export class TreeController {
     });
 
     iSet.on('pointerout', () => {
+      this.scene.sys.canvas.style.cursor = 'default';
+    });
+
+    iSet.label.on('pointerup', () => {
+      this.events.emit('label-clicked', iSet.nodes[0]);
+    });
+
+    iSet.label.on('pointerover', () => {
+      this.scene.sys.canvas.style.cursor = 'text';
+    });
+
+    iSet.label.on('pointerout', () => {
       this.scene.sys.canvas.style.cursor = 'default';
     });
   }

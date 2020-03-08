@@ -18,6 +18,7 @@ import {MoveTreeAction} from './Actions/MoveTreeAction';
 import {DecreasePlayersAction} from './Actions/DecreasePlayersAction';
 import {ChangeISetAction} from './Actions/ChangeISetAction';
 import {TREE_TWEEN_DURATION} from '../../Utils/Constants';
+import Fraction from 'fraction.js/fraction';
 
 
 export class UndoRedoActionController {
@@ -66,10 +67,10 @@ export class UndoRedoActionController {
         this.actionsList.push(new ChangeISetAction(this.treeController, data[0], data[1], data[2]));
         break;
       case ACTION.ZERO_SUM_TOGGLE:
-        this.actionsList.push(new ZeroSumAction(this.treeController, (data as Array<Array<number>>)));
+        this.actionsList.push(new ZeroSumAction(this.treeController, (data as Array<Array<Fraction>>)));
         break;
       case ACTION.ASSIGN_RANDOM_PAYOFFS:
-        this.actionsList.push(new RandomPayoffsAction(this.treeController, data[0] as Array<Array<number>>, data[1] as Array<Array<number>>));
+        this.actionsList.push(new RandomPayoffsAction(this.treeController, data[0] as Array<Array<Fraction>>, data[1] as Array<Array<Fraction>>));
         break;
       case ACTION.FRACTION_DECIMAL_TOGGLE:
         this.actionsList.push(new FractionDecimalToggleAction(this.treeController));

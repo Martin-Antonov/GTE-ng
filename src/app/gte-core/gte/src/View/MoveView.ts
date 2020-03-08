@@ -12,9 +12,6 @@ export class MoveView extends Phaser.GameObjects.Image {
   subscript: Phaser.GameObjects.Text;
   move: Move;
 
-  private labelStyle: Object;
-  private subscriptStyle: Object;
-
   constructor(scene: Phaser.Scene, from: NodeView, to: NodeView) {
     super(scene, from.x, from.y, 'line-black');
 
@@ -87,13 +84,14 @@ export class MoveView extends Phaser.GameObjects.Image {
     // Set font styles of text
     let color = '#000';
     if (this.move.from.type === NodeType.OWNED) {
-      this.label.setColor(this.from.node.player.color.toString())
-
-        .setFontSize(this.from.circle.displayWidth * 1.28);
       color = this.from.node.player.color.toString();
+      this.label.setColor(color)
+        .setFontSize(this.from.circle.displayWidth * 1.28)
+        .setFontStyle('italic');
     } else if (this.move.from.type === NodeType.CHANCE) {
       this.label.setColor('#000')
-        .setFontSize(this.from.circle.displayWidth * 1.05);
+        .setFontSize(this.from.circle.displayWidth * 1.05)
+        .setFontStyle('normal');
     }
     this.subscript.setColor(color);
 

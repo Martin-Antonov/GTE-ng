@@ -1,7 +1,8 @@
 import {NodeView} from '../View/NodeView';
 import {MoveView} from '../View/MoveView';
-import {Node} from '../Model/Node';
+import {Node, NodeType} from '../Model/Node';
 import {TreeController} from '../Controller/Main/TreeController';
+import {ISetView} from '../View/ISetView';
 
 export class LabelInputHandler {
   scene: Phaser.Scene;
@@ -63,12 +64,12 @@ export class LabelInputHandler {
       // If we are currently looking at nodes
     } else if (this.currentlySelected instanceof NodeView) {
       // If owner label
-      if ((<NodeView>this.currentlySelected).ownerLabel.alpha === 1) {
+      if ((<NodeView>this.currentlySelected).node.type === NodeType.OWNED) {
         const index = this.nodesBFSOrder.indexOf((<NodeView>this.currentlySelected).node);
         const nextIndex = this.calculateNodeLabelIndex(next, index);
         this.currentlySelected = this.treeController.treeView.findNodeView(this.nodesBFSOrder[nextIndex]);
         // If payoffs label
-      } else {
+      } else if ((<NodeView>this.currentlySelected).node.type === NodeType.LEAF) {
         const index = this.leavesDFSOrder.indexOf((<NodeView>this.currentlySelected).node);
         let nextIndex;
         if (next) {
@@ -128,12 +129,17 @@ export class LabelInputHandler {
         // If we are looking at nodes
       } else if (this.currentlySelected instanceof NodeView) {
         const nodeV = (<NodeView>this.currentlySelected);
-        if (nodeV.ownerLabel.alpha === 1) {
+        if (nodeV.node.type === NodeType.OWNED) {
           nodeV.node.player.label = newLabel;
           this.treeController.treeView.nodes.forEach((nV: NodeView) => {
             if (nV.node.player) {
               nV.ownerLabel.setText(nV.node.player.label);
               nV.updateLabelPosition();
+            }
+          });
+          this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
+            if (iSetV.label.alpha === 1) {
+              iSetV.label.setText(iSetV.nodes[0].node.player.label);
             }
           });
         } else {
@@ -162,9 +168,9 @@ export class LabelInputHandler {
       }
     } else if (this.currentlySelected instanceof NodeView) {
       const nodeV = (<NodeView>this.currentlySelected);
-      if (nodeV.ownerLabel.alpha === 1) {
+      if (nodeV.node.type === NodeType.OWNED) {
         return nodeV.ownerLabel.text;
-      } else if (nodeV.payoffsLabel.alpha === 1) {
+      } else if (nodeV.node.type === NodeType.LEAF) {
         return nodeV.node.payoffs.toString();
       }
     }
@@ -177,14 +183,18 @@ export class LabelInputHandler {
       this.fieldY = this.currentlySelected.label.y;
     } else if (this.currentlySelected instanceof NodeView) {
       const nodeV = (<NodeView>this.currentlySelected);
-      if (nodeV.ownerLabel.alpha === 1) {
+      if (nodeV.node.type === NodeType.OWNED) {
         this.fieldX = nodeV.ownerLabel.x + nodeV.x;
         this.fieldY = nodeV.ownerLabel.y + nodeV.y;
-      } else if (nodeV.payoffsLabel.alpha === 1) {
+      } else if (nodeV.node.type === NodeType.LEAF) {
         this.fieldX = nodeV.payoffsLabel.x + nodeV.x;
         this.fieldY = nodeV.payoffsLabel.y + nodeV.y + 50;
       }
     }
+    const wView = this.scene.cameras.main.worldView;
+
+    this.fieldX = ((this.fieldX - wView.left) / (wView.right - wView.left)) * this.scene.sys.canvas.width;
+    this.fieldY = ((this.fieldY - wView.top) / (wView.bottom - wView.top)) * this.scene.sys.canvas.height;
   }
 
 

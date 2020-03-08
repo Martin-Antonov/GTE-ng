@@ -3,8 +3,9 @@ import {NodeType} from '../Model/Node';
 import {MoveView} from '../View/MoveView';
 import {ISetView} from '../View/ISetView';
 import * as SVG from 'svg.js';
-import {ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH, PAYOFF_SIZE} from './Constants';
+import {GTE_VERSION, ISET_LINE_WIDTH, LABEL_SIZE, LINE_WIDTH, PAYOFF_SIZE} from './Constants';
 import {TreeController} from '../Controller/Main/TreeController';
+import Fraction from 'fraction.js/fraction';
 
 export class ViewExporter {
   treeController: TreeController;
@@ -22,7 +23,7 @@ export class ViewExporter {
     const payoffsLabels = [];
 
     let result = '';
-    result += '#FIG 3.2  Produced by Game Theory Explorer\n' +
+    result += '#FIG 3.2  Produced by ' + GTE_VERSION + '\n' +
       'Landscape\n' +
       'Center\n' +
       'Metric\n' +
@@ -82,14 +83,13 @@ export class ViewExporter {
         let maxNumberOfDigits = 0;
         const outcomes = nV.node.payoffs.outcomes;
         outcomes.splice(this.treeController.treeView.tree.players.length - 1, 10);
-        outcomes.forEach((payoff: number) => {
-          const numberOfDigits = this.getDigitLength(payoff);
+        outcomes.forEach((payoff: Fraction) => {
+          const numberOfDigits = this.getDigitLength(payoff.toString());
           if (maxNumberOfDigits < numberOfDigits) {
             maxNumberOfDigits = numberOfDigits;
           }
         });
         const halfWidthToRightFactor = maxNumberOfDigits === 1 ? 2 : 1;
-
         for (let i = 0; i < outcomes.length; i++) {
           // 195 is half width to the right
           const x = Math.round((nV.x + nV.payoffsLabel.x) * factor + 195 / halfWidthToRightFactor);
@@ -212,8 +212,8 @@ export class ViewExporter {
     // console.log(result);
   }
 
-  private getDigitLength(number: number) {
-    return String(number).replace('.', '').length;
+  private getDigitLength(number: string) {
+    return number.replace('.', '').length;
   }
 
   private getColorFromPlayerIndex(playerIndex: number) {

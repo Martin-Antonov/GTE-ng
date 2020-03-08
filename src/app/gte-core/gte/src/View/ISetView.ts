@@ -21,10 +21,10 @@ export class ISetView extends Phaser.GameObjects.Image {
     this.canvasTexture = this.scene.textures.createCanvas(this.uuid, this.scene.sys.canvas.width, this.scene.sys.canvas.height);
     this.sortNodesLeftToRight();
     this.createISetBMD();
-    this.createLabel();
     this.setTexture(this.uuid);
     this.setInteractive(this.scene.input.makePixelPerfect());
     this.scene.add.existing(this);
+    this.createLabel();
   }
 
   removeNode(nodeV: NodeView) {
@@ -103,6 +103,8 @@ export class ISetView extends Phaser.GameObjects.Image {
     } else {
       this.label.setColor(this.iSet.player.color);
     }
+
+    this.label.setInteractive();
   }
 
   private getUUID() {

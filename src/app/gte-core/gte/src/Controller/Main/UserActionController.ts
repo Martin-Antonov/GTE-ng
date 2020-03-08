@@ -15,7 +15,7 @@ import {UndoRedoController} from '../UndoRedo/UndoRedoController';
 import {UndoRedoActionController} from '../UndoRedo/UndoRedoActionController';
 import {ACTION} from '../UndoRedo/ActionsEnum';
 import {IStrategicFormResult} from '../../Utils/IStrategicFormResult';
-import * as math from 'mathjs';
+import Fraction from 'fraction.js/fraction';
 
 export class UserActionController {
   scene: Phaser.Scene;
@@ -208,8 +208,8 @@ export class UserActionController {
       } else {
         this.treeController.assignPlayerToNode(playerID, nodesV);
       }
-      this.checkCreateStrategicForm();
       this.undoRedoActionController.saveAction(ACTION.ASSIGN_PLAYER, {playerID: playerID, nodesV: nodesV});
+      this.checkCreateStrategicForm();
     }
   }
 
@@ -225,8 +225,8 @@ export class UserActionController {
       });
       this.treeController.tree.removePlayer(this.treeController.tree.players[lastPlayerIndex]);
       this.treeController.resetTree(false, false);
-      this.checkCreateStrategicForm();
       this.undoRedoActionController.saveAction(ACTION.DECREASE_PLAYERS_COUNT, [nodesWithRemovedPlayer, lastPlayerIndex]);
+      this.checkCreateStrategicForm();
     }
   }
 
@@ -261,8 +261,8 @@ export class UserActionController {
       const oldISets = this.getCurrentISets();
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
       const newISets = this.getCurrentISets();
-      this.checkCreateStrategicForm();
       this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets]);
+      this.checkCreateStrategicForm();
     }
   }
 
@@ -312,9 +312,9 @@ export class UserActionController {
         this.cutSpriteHandler.cutSprite.x, this.cutSpriteHandler.cutSprite.y);
       this.cutSpriteHandler.cutInformationSet = null;
       const newISets = this.getCurrentISets();
-      this.checkCreateStrategicForm();
-      this.treeController.resetTree(true, true);
       this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets]);
+      this.treeController.resetTree(true, true);
+      this.checkCreateStrategicForm();
     }, this);
   }
 
@@ -359,8 +359,8 @@ export class UserActionController {
     const payoffs = this.getCurrentPayoffs();
     this.treeController.treeView.properties.zeroSumOn = !this.treeController.treeView.properties.zeroSumOn;
     this.treeController.resetTree(false, false);
-    this.checkCreateStrategicForm();
     this.undoRedoActionController.saveAction(ACTION.ZERO_SUM_TOGGLE, payoffs);
+    this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the fractional or decimal view of chance moves*/
@@ -391,7 +391,8 @@ export class UserActionController {
     if (this.labelInput.currentlySelected instanceof MoveView) {
       const mV = this.labelInput.currentlySelected as MoveView;
       if (this.checkIfMoveLabelIsDifferent(mV, newLabel)) {
-        this.undoRedoActionController.saveAction(ACTION.CHANGE_MOVE_LABEL, [mV.move.label, mV.move, newLabel]);
+        const oldLabel = mV.move.from.type === NodeType.CHANCE ? mV.move.probability : mV.move.label;
+        this.undoRedoActionController.saveAction(ACTION.CHANGE_MOVE_LABEL, [oldLabel, mV.move, newLabel]);
         this.labelInput.changeLabel(newLabel);
         this.checkCreateStrategicForm();
         return;
@@ -416,7 +417,7 @@ export class UserActionController {
 
   private checkIfMoveLabelIsDifferent(mV: MoveView, label: string): boolean {
     if (mV.move.from.type === NodeType.CHANCE) {
-      return mV.move.probability !== <number>math.number(<any>(math.fraction(label)));
+      return mV.move.probability.compare(new Fraction(label)) !== 0;
     } else {
       if (label.includes('_')) {
         return mV.move.label + '_' + mV.move.subscript !== label;
@@ -466,7 +467,8 @@ export class UserActionController {
     this.strategicFormResult = null;
     this.strategicForm.destroy();
     if (this.treeController.tree.checkAllNodesLabeled()) {
-     this.strategicFormResult = this.strategicForm.generateStrategicForm(this.treeController.tree);
+      const start = Date.now();
+      this.strategicFormResult = this.strategicForm.generateStrategicForm(this.treeController.tree);
     }
   }
 

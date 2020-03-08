@@ -3,8 +3,6 @@ import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/Us
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {DomSanitizer} from '@angular/platform-browser';
-import * as math from 'mathjs';
-
 
 @Component({
   selector: 'app-strategic-form-table',
@@ -157,7 +155,7 @@ export class StrategicFormTableComponent implements OnInit {
 
   getOutcome(i: number, j: number, k: number, l: number, outcome: number) {
     if (this.userActionController.treeController.treeView.properties.fractionOn) {
-      const outcomePayoff = this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].outcomesAsFractions[outcome];
+      const outcomePayoff = this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].outcomes[outcome];
       if (outcomePayoff.n === 0) {
         return 0;
       } else if (outcomePayoff.d === 1) {

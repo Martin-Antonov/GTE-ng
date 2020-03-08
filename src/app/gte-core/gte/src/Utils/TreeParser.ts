@@ -5,6 +5,8 @@ import {Node, NodeType} from '../Model/Node';
 import {ISet} from '../Model/ISet';
 
 import * as converter from 'xml-js';
+import Fraction from 'fraction.js/fraction';
+import {PLAYER_COLORS} from './Constants';
 
 export class TreeParser {
 
@@ -19,7 +21,7 @@ export class TreeParser {
 
     // Copy players
     tree.players.forEach((p: Player) => {
-      strippedTree.players.push(new Player(p.id, p.label, p.color));
+      strippedTree.players.push(new Player(p.id, p.label, PLAYER_COLORS[p.id - 1]));
     });
 
     // Copy the nodes without any connection to other nodes
@@ -92,14 +94,17 @@ export class TreeParser {
 
     const clonedTree = new Tree();
     strippedTree.players.forEach((pl: Player) => {
-      clonedTree.players.push(new Player(pl.id, pl.label, pl.color));
+      clonedTree.players.push(new Player(pl.id, pl.label, PLAYER_COLORS[pl.id - 1]));
     });
 
     strippedTree.nodes.forEach((n: Node) => {
       const node = new Node();
       node.type = n.type;
       node.depth = n.depth;
-      node.payoffs.outcomes = n.payoffs.outcomes.slice(0);
+      node.payoffs.outcomes = [];
+      n.payoffs.outcomes.forEach((outcome) => {
+        node.payoffs.outcomes.push(new Fraction(outcome));
+      });
       clonedTree.nodes.push(node);
     });
 
@@ -121,7 +126,7 @@ export class TreeParser {
       const move = new Move();
       move.label = m.label;
       move.subscript = m.subscript;
-      move.probability = m.probability;
+      move.probability = new Fraction(m.probability);
       move.manuallyAssigned = m.manuallyAssigned;
       move.from = clonedTree.nodes[m.fromIndex];
       move.to = clonedTree.nodes[m.toIndex];

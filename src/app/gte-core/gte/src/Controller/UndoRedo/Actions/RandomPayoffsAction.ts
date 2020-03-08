@@ -1,11 +1,12 @@
 import {AbstractAction} from './AbstractAction';
 import {TreeController} from '../../Main/TreeController';
+import Fraction from 'fraction.js/fraction';
 
 export class RandomPayoffsAction extends AbstractAction {
-  payoffsBefore: Array<Array<number>>;
-  payoffsAfter: Array<Array<number>>;
+  payoffsBefore: Array<Array<Fraction>>;
+  payoffsAfter: Array<Array<Fraction>>;
 
-  constructor(treeController: TreeController, payoffsBefore: Array<Array<number>>, payoffsAfter: Array<Array<number>>) {
+  constructor(treeController: TreeController, payoffsBefore: Array<Array<Fraction>>, payoffsAfter: Array<Array<Fraction>>) {
     super(treeController);
     this.payoffsBefore = payoffsBefore;
     this.payoffsAfter = payoffsAfter;

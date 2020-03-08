@@ -7,6 +7,7 @@ import {Payoffs} from './Payoffs';
 import {ISet} from './ISet';
 import {StrategicFormSerializer} from '../Utils/StrategicFormSerializer';
 import {IStrategicFormResult} from '../Utils/IStrategicFormResult';
+import Fraction from 'fraction.js/fraction';
 
 export class StrategicForm {
   tree: Tree;
@@ -29,7 +30,7 @@ export class StrategicForm {
   private movesToReachLeafP3: Array<Move>;
   private movesToReachLeafP4: Array<Move>;
 
-  private probabilityPerPath: number;
+  private probabilityPerPath: Fraction;
 
   private reachableP1Rows: Array<number>;
   private reachableP2Cols: Array<number>;
@@ -295,10 +296,13 @@ export class StrategicForm {
       this.getReachableVectors(this.reachableP3Rows, this.p3Strategies, this.movesToReachLeafP3);
       this.getReachableVectors(this.reachableP4Cols, this.p4Strategies, this.movesToReachLeafP4);
 
+      const payoffsToAdd: Array<Fraction> = [];
 
-      const payoffsToAdd = leaf.payoffs.outcomes.slice(0);
+      leaf.payoffs.outcomes.forEach((payoff: Fraction) => {
+        payoffsToAdd.push(payoff.clone());
+      });
       for (let i = 0; i < payoffsToAdd.length; i++) {
-        payoffsToAdd[i] = payoffsToAdd[i] * this.probabilityPerPath;
+        payoffsToAdd[i] = payoffsToAdd[i].mul(this.probabilityPerPath);
       }
 
       let rowsP1Length = this.reachableP1Rows.length;
@@ -350,11 +354,11 @@ export class StrategicForm {
     this.movesToReachLeafP2 = [];
     this.movesToReachLeafP3 = [];
     this.movesToReachLeafP4 = [];
-    this.probabilityPerPath = 1;
+    this.probabilityPerPath = new Fraction(1);
     let current = leaf;
     while (current.parent) {
       if (current.parent.type === NodeType.CHANCE) {
-        this.probabilityPerPath *= current.parentMove.probability;
+        this.probabilityPerPath = this.probabilityPerPath.mul(current.parentMove.probability);
       } else if (current.parent.type === NodeType.OWNED) {
         if (current.parent.player === this.tree.players[1]) {
           this.movesToReachLeafP1.push(current.parentMove);
@@ -417,13 +421,13 @@ export class StrategicForm {
     for (let i = 0; i < this.payoffsMatrix.length; i++) {
       for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
         for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
-          let maxPayoff = -1000000;
+          let maxPayoff = new Fraction(-100000);
           let maxIndices = [];
           for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
-            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[3]) {
+            if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[3]) < 0) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[3];
               maxIndices = [l];
-            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[3]) {
+            } else if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[3]) === 0) {
               maxIndices.push(l);
             }
           }
@@ -438,13 +442,13 @@ export class StrategicForm {
     for (let i = 0; i < this.payoffsMatrix.length; i++) {
       for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
         for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
-          let maxPayoff = -1000000;
+          let maxPayoff = new Fraction(-100000);
           let maxIndices = [];
           for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
-            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[2]) {
+            if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[2]) < 0) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[2];
               maxIndices = [k];
-            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[2]) {
+            } else if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[2]) === 0) {
               maxIndices.push(k);
             }
           }
@@ -458,13 +462,13 @@ export class StrategicForm {
     for (let i = 0; i < this.payoffsMatrix.length; i++) {
       for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
         for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
-          let maxPayoff = -1000000;
+          let maxPayoff = new Fraction(-100000);
           let maxIndices = [];
           for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
-            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[1]) {
+            if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[1]) < 0) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[1];
               maxIndices = [j];
-            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[1]) {
+            } else if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[1]) === 0) {
               maxIndices.push(j);
             }
           }
@@ -478,13 +482,13 @@ export class StrategicForm {
     for (let l = 0; l < this.payoffsMatrix[0][0][0].length; l++) {
       for (let j = 0; j < this.payoffsMatrix[0].length; j++) {
         for (let k = 0; k < this.payoffsMatrix[0][0].length; k++) {
-          let maxPayoff = -1000000;
+          let maxPayoff = new Fraction(-100000);
           let maxIndices = [];
           for (let i = 0; i < this.payoffsMatrix.length; i++) {
-            if (maxPayoff < this.payoffsMatrix[i][j][k][l].outcomes[0]) {
+            if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[0]) < 0) {
               maxPayoff = this.payoffsMatrix[i][j][k][l].outcomes[0];
               maxIndices = [i];
-            } else if (maxPayoff === this.payoffsMatrix[i][j][k][l].outcomes[0]) {
+            } else if (maxPayoff.compare(this.payoffsMatrix[i][j][k][l].outcomes[0]) === 0) {
               maxIndices.push(i);
             }
           }
@@ -553,7 +557,6 @@ export class StrategicForm {
       }
       result += '\n\n\n';
     }
-
     console.log(result);
   }
 

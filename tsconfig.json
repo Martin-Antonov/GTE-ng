@@ -14,7 +14,8 @@
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types",
-      "node_modules/phaser/types/phaser.d.ts"
+      "node_modules/phaser/types/phaser.d.ts",
+      "node_modules/fraction.js/fraction.d.ts"
     ],
     "lib": [
       "es2017",

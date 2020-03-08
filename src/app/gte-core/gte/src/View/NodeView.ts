@@ -1,4 +1,13 @@
-import {LABEL_SIZE, OWNER_METRICS, PAYOFF_METRICS, PAYOFF_SIZE} from '../Utils/Constants';
+import {
+  LABEL_SIZE,
+  NODE_RADIUS,
+  OWNER_METRICS,
+  PAYOFF_METRICS,
+  PAYOFF_SIZE,
+  PLAYER_COLORS, PLAYER_COLORS_NUMBER,
+  PREVIEW_CIRCLE_COLOR,
+  PREVIEW_CIRCLE_SCALE
+} from '../Utils/Constants';
 import {Node, NodeType} from '../Model/Node';
 
 /** A class for the graphical representation of the Node. The inherited sprite from Phaser.Sprite will not be visible
@@ -8,19 +17,23 @@ export class NodeView extends Phaser.GameObjects.Container {
   scene: Phaser.Scene;
   node: Node;
 
-  circle: Phaser.GameObjects.Image;
+  circle: Phaser.GameObjects.Arc;
+  private previewSelected: Phaser.GameObjects.Arc;
+  private square: Phaser.GameObjects.Rectangle;
+
   ownerLabel: Phaser.GameObjects.Text;
   payoffsLabel: Phaser.GameObjects.Text;
+
   isSelected: boolean;
   level: number;
-  private previewSelected: Phaser.GameObjects.Image;
-
   // Horizontal offset: -1 for left, 1 for right;
   labelHorizontalOffset: number;
+  private radius: number;
 
   constructor(scene: Phaser.Scene, node: Node, x?: number, y?: number) {
     super(scene, x, y);
     this.isSelected = false;
+    this.radius = this.scene.sys.canvas.height * NODE_RADIUS;
 
     this.node = node;
     this.level = this.node.depth;
@@ -34,19 +47,21 @@ export class NodeView extends Phaser.GameObjects.Container {
 
   /** A method which creates the circle and square sprites*/
   private createSprites() {
-    this.circle = this.scene.add.image(0, 0, 'circle-black');
+    this.circle = this.scene.add.circle(0, 0, this.radius, 0x000000);
     this.circle.setInteractive();
 
-    this.previewSelected = this.scene.add.image(0, 0, 'circle-preview')
+    this.previewSelected = this.scene.add.circle(0, 0, this.radius * PREVIEW_CIRCLE_SCALE, PREVIEW_CIRCLE_COLOR)
       .setAlpha(0)
       .setDepth(1);
 
-    this.add([this.circle, this.previewSelected]);
+    this.square = this.scene.add.rectangle(0, 0, this.radius * 2, this.radius * 2, 0x000000)
+      .setAlpha(0);
+
+    this.add([this.circle, this.square, this.previewSelected]);
   }
 
   /** A method which creates the label for the Node*/
   private createLabels() {
-    const date = Date.now();
     const text = this.node.player ? this.node.player.label : '';
     const color = this.node.player ? this.node.player.color : '#000000';
 
@@ -67,6 +82,7 @@ export class NodeView extends Phaser.GameObjects.Container {
       color: '#000',
       metrics: PAYOFF_METRICS
     }).setOrigin(0.5, 0);
+
     // Create gradient
     const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, 100);
     grd.addColorStop(0.000, 'rgba(255, 0, 0, 1.000)');
@@ -97,6 +113,7 @@ export class NodeView extends Phaser.GameObjects.Container {
 
   /** A method which converts the node, depending on whether it is a chance, owned or default.*/
   resetNodeDrawing(areLeavesActive: boolean, zeroSumOn: boolean) {
+    this.square.setAlpha(0);
     // If Selected
     if (this.isSelected) {
       this.previewSelected.setAlpha(0.3);
@@ -106,7 +123,7 @@ export class NodeView extends Phaser.GameObjects.Container {
 
     // If Owned
     if (this.node.type === NodeType.OWNED) {
-      this.circle.setTexture(this.getColorFromPlayerId());
+      this.circle.setFillStyle(this.getColorFromPlayerId());
       this.circle.setAlpha(1);
       if (this.node.iSet) {
         this.ownerLabel.setAlpha(0);
@@ -120,7 +137,9 @@ export class NodeView extends Phaser.GameObjects.Container {
 
     // If Chance
     if (this.node.type === NodeType.CHANCE) {
-      this.circle.setTexture('square');
+      this.square.setAlpha(1);
+      this.circle.setAlpha(0);
+
       this.ownerLabel.setScale(0.5);
       this.ownerLabel.setAlpha(1);
       this.ownerLabel.setText('chance');
@@ -130,7 +149,7 @@ export class NodeView extends Phaser.GameObjects.Container {
     // If Leaf
     if (this.node.type === NodeType.LEAF) {
       this.ownerLabel.setAlpha(0);
-      this.circle.setTexture('circle-black');
+      this.circle.setFillStyle(this.getColorFromPlayerId());
       if (zeroSumOn) {
         this.node.payoffs.convertToZeroSum();
       }
@@ -154,7 +173,7 @@ export class NodeView extends Phaser.GameObjects.Container {
     // If Default
     if (this.node.type === NodeType.DEFAULT) {
       this.circle.alpha = 1;
-      this.circle.setTexture('circle-black');
+      this.circle.setFillStyle(this.getColorFromPlayerId());
       this.ownerLabel.alpha = 0;
       this.payoffsLabel.alpha = 0;
     }
@@ -163,23 +182,9 @@ export class NodeView extends Phaser.GameObjects.Container {
   }
 
   private getColorFromPlayerId() {
-    let result = '';
-    switch (this.node.player.id) {
-      case 1:
-        result = 'circle-red';
-        break;
-      case 2:
-        result = 'circle-blue';
-        break;
-      case 3:
-        result = 'circle-green';
-        break;
-      case 4:
-        result = 'circle-purple';
-        break;
-      default:
-        result = 'circle-black';
-        break;
+    let result = 0x000000;
+    if (this.node && this.node.player && this.node.player.id) {
+      result = PLAYER_COLORS_NUMBER[this.node.player.id - 1];
     }
     return result;
   }

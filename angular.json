@@ -31,9 +31,9 @@
               "node_modules/angular2-draggable/css/resizable.min.css"
             ],
             "scripts": [
-              "./node_modules/mathjs/dist/math.js",
               "./node_modules/file-saver/dist/FileSaver.js",
-              "./node_modules/phaser/dist/phaser.js"
+              "./node_modules/phaser/dist/phaser.js",
+              "./node_modules/fraction.js/fraction.js"
             ]
           },
           "configurations": {

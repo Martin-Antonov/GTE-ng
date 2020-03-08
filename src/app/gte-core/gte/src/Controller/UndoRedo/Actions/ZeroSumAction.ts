@@ -1,11 +1,12 @@
 import {AbstractAction} from './AbstractAction';
 import {TreeController} from '../../Main/TreeController';
 import {Node} from '../../../Model/Node';
+import Fraction from 'fraction.js/fraction';
 
 export class ZeroSumAction extends AbstractAction {
-  savedPayoffs: Array<Array<number>>;
+  savedPayoffs: Array<Array<Fraction>>;
 
-  constructor(treeController: TreeController, payoffs: Array<Array<number>>) {
+  constructor(treeController: TreeController, payoffs: Array<Array<Fraction>>) {
     super(treeController);
    this.savedPayoffs = payoffs;
   }

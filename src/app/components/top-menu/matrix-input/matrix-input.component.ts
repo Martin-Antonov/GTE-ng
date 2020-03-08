@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatrixInput} from './MatrixInput';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
-import * as math from 'mathjs';
+import Fraction from 'fraction.js/fraction';
 
 @Component({
   selector: 'app-matrix-input',
@@ -16,8 +16,8 @@ export class MatrixInputComponent implements OnInit {
   fromMatricesActive: boolean;
 
   matrixInputModel: MatrixInput;
-  @ViewChild('p1Table', { static: false }) p1T;
-  @ViewChild('p2Table', { static: false }) p2T;
+  @ViewChild('p1Table', {static: false}) p1T;
+  @ViewChild('p2Table', {static: false}) p2T;
 
   constructor(public uis: UiSettingsService, private solver: SolverService) {
   }
@@ -74,7 +74,7 @@ export class MatrixInputComponent implements OnInit {
       const childElement = this.p1T.nativeElement.children[0].children[i];
       for (let j = 0; j < childElement.children.length; j++) {
         const child = childElement.children[j];
-        const fraction = math.format(math.fraction(child.children[0].value));
+        const fraction = new Fraction(child.children[0].value).toFraction();
         m1 += fraction + ' ';
       }
       m1 += '\n';
@@ -84,13 +84,13 @@ export class MatrixInputComponent implements OnInit {
       const childElement = this.p2T.nativeElement.children[0].children[i];
       for (let j = 0; j < childElement.children.length; j++) {
         const child = childElement.children[j];
-        const fraction = math.format(math.fraction(child.children[0].value));
+        const fraction = new Fraction(child.children[0].value).toFraction();
         m2 += fraction + ' ';
       }
       m2 += '\n';
     }
 
-    let result = this.matrixInputModel.rows + ' ' + this.matrixInputModel.cols + '\n\n' + m1 + '\n' + m2;
+    const result = this.matrixInputModel.rows + ' ' + this.matrixInputModel.cols + '\n\n' + m1 + '\n' + m2;
 
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
