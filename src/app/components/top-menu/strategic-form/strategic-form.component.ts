@@ -13,31 +13,28 @@ import {TreesFileService} from '../../../services/trees-file/trees-file.service'
 export class StrategicFormComponent implements OnInit {
   userActionController: UserActionController;
   stratFormScaleCSS: string;
-  private stratFormScale: number;
 
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
               private solver: SolverService,
-              private tts: TreesFileService) {
-  }
+              private tts: TreesFileService) {}
 
 
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
-    this.stratFormScale = 1;
-    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+    this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
   }
 
   upScale(increment: number) {
-    this.stratFormScale *= increment;
-    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+    this.uis.stratFormScale *= increment;
+    this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
   }
 
   downScale(increment: number) {
-    this.stratFormScale *= 1 / increment;
-    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+    this.uis.stratFormScale *= 1 / increment;
+    this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
   }
 
   close() {
@@ -65,9 +62,5 @@ export class StrategicFormComponent implements OnInit {
     console.log(result);
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
-  }
-
-  saveStrategicForm() {
-    this.tts.saveStrategicForm();
   }
 }

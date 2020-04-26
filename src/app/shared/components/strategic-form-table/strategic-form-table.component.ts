@@ -10,13 +10,16 @@ import {DomSanitizer} from '@angular/platform-browser';
   styleUrls: ['./strategic-form-table.component.scss']
 })
 export class StrategicFormTableComponent implements OnInit {
-  @Input() stratFormScaleCSS: number;
+  @Input() stratFormScaleCSS: string;
   userActionController: UserActionController;
 
   constructor(private uac: UserActionControllerService, public sanitizer: DomSanitizer, private uis: UiSettingsService) {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
+  }
+
+  ngOnInit() {
   }
 
   getOuterGridRows() {
@@ -91,7 +94,9 @@ export class StrategicFormTableComponent implements OnInit {
 
     if (this.userActionController.strategicFormResult.payoffsMatrix[i][j][k][l].isBestResponce[1] && this.uis.bestResponsesActive) {
       // style['background'] = 'rgba(0,0,255,0.15)';
-      style['font-weight'] = '900';
+      if (!this.isSafari()) {
+        style['font-weight'] = '900';
+      }
       // style['text-decoration'] = 'underline';
       style['border'] = '1px solid blue';
       style['line-height'] = '110%';
@@ -170,7 +175,13 @@ export class StrategicFormTableComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  isSafari(): boolean {
+    const chromeAgent = navigator.userAgent.indexOf('Chrome') > -1;
+    let safariAgent = navigator.userAgent.indexOf('Safari') > -1;
+    if (chromeAgent && safariAgent) {
+      safariAgent = false;
+    }
+    return safariAgent;
   }
 }
 

@@ -132,9 +132,16 @@ export class TreesFileService {
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.svg');
   }
 
-  saveStrategicForm() {
+  saveStrategicFormToSTF() {
     const stratFormFile = this.userActionController.strategicForm.serializer.toText(this.treeTabs[this.currentTabIndex].fileName);
-    console.log(stratFormFile);
+    const blob = new Blob([stratFormFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.stf');
+  }
+
+  saveStrategicFormToTEX() {
+    const stratFormTex = this.userActionController.strategicForm.serializer.toTex();
+    const blob = new Blob([stratFormTex], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.tex');
   }
 
   loadTreeFromFile(event) {

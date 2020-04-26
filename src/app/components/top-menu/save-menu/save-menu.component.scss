@@ -3,24 +3,47 @@
 
 :host {
   position: absolute;
-  top: 24px;
-  left: 9%;
-  width:0;
-  height:0;
-  ul {
-    list-style: none;
-    li {
-      width: 150px;
+  top: 40px;
+  left: 11%;
+  width: 0;
+  height: 0;
+  @include removeSelection();
+
+  .save-menu-container {
+    display: flex;
+    flex-direction: column;
+
+    .menu-title {
+      width: 250px;
+      height: 30px;
+      background: $grey2;
+      color: $grey-text;
+      border: 1px solid $grey4;
+      line-height: 30px;
+      padding-left: 20px;
+      font-weight: bolder;
+    }
+
+    .clickable-item {
+      width: 250px;
       height: 30px;
       background: $grey3;
       color: $grey-text;
       border: 1px solid $grey1;
       line-height: 30px;
-      padding-left:20px;
+      padding-left: 40px;
+      font-style: italic;
 
       &:hover {
         background: $grey2;
-        cursor: default;
+      }
+    }
+
+    .disabled {
+      opacity: 0.5;
+
+      &:hover {
+        background: $grey3;
       }
     }
   }

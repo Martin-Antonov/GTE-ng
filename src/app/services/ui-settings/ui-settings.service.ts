@@ -15,7 +15,10 @@ export class UiSettingsService {
   saveFileActive: boolean;
   SPNEActive: boolean;
 
+  stratFormScale: number;
+
   constructor() {
+    this.stratFormScale = 1;
   }
 
   init() {

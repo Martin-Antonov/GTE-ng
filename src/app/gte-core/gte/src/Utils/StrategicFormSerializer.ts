@@ -1,5 +1,6 @@
 import {StrategicForm} from '../Model/StrategicForm';
 import {GTE_VERSION} from './Constants';
+import Fraction from 'fraction.js/fraction';
 
 export class StrategicFormSerializer {
   private strategicForm: StrategicForm;
@@ -109,6 +110,72 @@ export class StrategicFormSerializer {
     strategies.forEach((strat) => {
       result.push(strat.split(' ').join(separator));
     });
+    return result;
+  }
+
+  toTex() {
+    let result = '\\documentclass[12pt]{article}\n' +
+      '\\usepackage{color}\n' +
+      '\\usepackage{bimatrixgame}\n' +
+      '\\renewcommand{\\bimatrixrowcolor}{Red}\n' +
+      '\\renewcommand{\\bimatrixcolumncolor}{Blue}\n' +
+      '\\begin{document}\n' +
+      '\n' +
+      '\\bimatrixgame{1em}';
+
+    // Rows and Columns
+    const rows = this.strategicForm.p1rows.length;
+    const cols = this.strategicForm.p2cols.length;
+    result += '{' + rows + '}' + '{' + cols + '}';
+    // Player names
+    result += '{' + this.strategicForm.tree.players[1].label + '}' + '{' + this.strategicForm.tree.players[2].label + '}%\n';
+    // Strategy names
+    result += '{';
+    this.strategicForm.p1rows.forEach((row: string) => {
+      result += '{$' + row + '$}';
+    });
+    result += '}%\n';
+    result += '{';
+    this.strategicForm.p2cols.forEach((col: string) => {
+      result += '{$' + col + '$}';
+    });
+    result += '}\n{\n';
+    // Payoffs
+    for (let i = 0; i < rows; i++) {
+      result += '\\payoffpairs{' + (i + 1) + '}{';
+      for (let j = 0; j < cols; j++) {
+        const payoff = this.strategicForm.payoffsMatrix[i][j][0][0].outcomes[0];
+        const isBestResponse = this.strategicForm.payoffsMatrix[i][j][0][0].isBestResponce[0];
+        result = this.fillResultPerPlayerPayoff(result, payoff, isBestResponse);
+      }
+      result += '}{';
+      for (let j = 0; j < cols; j++) {
+        const payoff = this.strategicForm.payoffsMatrix[i][j][0][0].outcomes[1];
+        const isBestResponse = this.strategicForm.payoffsMatrix[i][j][0][0].isBestResponce[1];
+        result = this.fillResultPerPlayerPayoff(result, payoff, isBestResponse);
+      }
+      result += '}\n';
+    }
+    // Document end
+    result += '}\n\n\\end{document}';
+    return result;
+  }
+
+  private fillResultPerPlayerPayoff(result: string, payoff: Fraction, isBestResponse: boolean) {
+    if (isBestResponse) {
+      result += '{\\fbox';
+    }
+    if (payoff.d === 1) {
+      result += '{$' + (payoff.n * payoff.s) + '$}';
+      if (isBestResponse) {
+        result += '}';
+      }
+    } else {
+      result += '{$\\frac{' + (payoff.n * payoff.s) + '}{' + payoff.d + '}$}';
+      if (isBestResponse) {
+        result += '}';
+      }
+    }
     return result;
   }
 }

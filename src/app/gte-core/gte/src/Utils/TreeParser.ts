@@ -4,7 +4,6 @@ import {Player} from '../Model/Player';
 import {Node, NodeType} from '../Model/Node';
 import {ISet} from '../Model/ISet';
 
-import * as converter from 'xml-js';
 import Fraction from 'fraction.js/fraction';
 import {PLAYER_COLORS} from './Constants';
 
@@ -145,8 +144,8 @@ export class TreeParser {
   }
 
   fromXML(xmlTree: string) {
-    const jsonTree = converter.xml2json(xmlTree, {compact: true, spaces: 2});
-    console.log(jsonTree);
+    // const jsonTree = converter.xml2json(xmlTree, {compact: true, spaces: 2});
+    // console.log(jsonTree);
   }
 }
 
