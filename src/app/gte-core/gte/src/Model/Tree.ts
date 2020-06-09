@@ -13,6 +13,7 @@ import {Player} from './Player';
 import {ISet} from './ISet';
 import {LabelSetter} from './LabelSetter';
 import Fraction from 'fraction.js/fraction';
+import {TreeAlgorithms} from './Algorithms/TreeAlgorithms';
 
 /**The class which stores all the needed information for the tree - lists of nodes, moves, isets, players and the root */
 export class Tree {
@@ -22,6 +23,7 @@ export class Tree {
   iSets: Array<ISet>;
   players: Array<Player>;
   labelSetter: LabelSetter;
+  algorithms: TreeAlgorithms;
   private dfsNodes: Array<Node>;
 
   constructor() {
@@ -30,6 +32,7 @@ export class Tree {
     this.iSets = [];
     this.players = [];
     this.labelSetter = new LabelSetter();
+    this.algorithms = new TreeAlgorithms();
   }
 
   // region Nodes
@@ -472,61 +475,5 @@ export class Tree {
       }
     }
   }
-
-
-  backwardInduction(clonedTree: Tree) {
-    if (!clonedTree.checkAllNodesLabeled()) {
-      throw new Error(BACKWARDS_INDUCTION_NOT_ALL_LABELED);
-    }
-    if (this.iSets.length !== 0) {
-      throw new Error(BACKWARDS_INDUCTION_PERFECT_INFORMATION);
-    }
-    let movesCloned = clonedTree.moves.slice(0);
-    while (clonedTree.nodes.length !== 1) {
-      const leaves = clonedTree.getLeaves();
-      const parentNodes = [];
-      leaves.forEach((leaf: Node) => {
-        if (parentNodes.indexOf(leaf.parent) === -1) {
-          parentNodes.push(leaf.parent);
-        }
-      });
-
-      parentNodes.sort((x: Node, y: Node) => {
-        return x.depth > y.depth ? -1 : 1;
-      });
-
-      parentNodes.forEach((n: Node) => {
-        if (n.type === NodeType.CHANCE) {
-          n.payoffs.reset();
-          n.children.forEach((c: Node) => {
-            c.payoffs.multiply(c.parentMove.probability);
-            n.payoffs.add(c.payoffs.outcomes);
-          });
-          n.convertToLeaf();
-        } else if (n.type === NodeType.OWNED) {
-          let maxLeaf: Node = null;
-          let maxPayoff = new Fraction(-100000);
-          const playerIndex = clonedTree.players.indexOf(n.player);
-          n.payoffs.reset();
-          n.children.forEach((c: Node) => {
-            if (c.payoffs.outcomes[playerIndex - 1].compare(maxPayoff) > 0) {
-              maxPayoff = c.payoffs.outcomes[playerIndex - 1];
-              maxLeaf = c;
-            }
-          });
-          n.payoffs.outcomes = maxLeaf.payoffs.outcomes.slice(0);
-          this.moves[movesCloned.indexOf(maxLeaf.parentMove)].isBestInductionMove = true;
-        }
-
-        for (let i = 0; i < n.children.length; i++) {
-          clonedTree.removeNode(n.children[i]);
-          i--;
-        }
-      });
-    }
-    movesCloned = null;
-  }
-
-// endregion
 }
 

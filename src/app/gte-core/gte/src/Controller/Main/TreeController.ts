@@ -369,7 +369,11 @@ export class TreeController {
   /**A method for calculating SPNE with backwards induction*/
   calculateSPNE() {
     let clonedTree = this.treeParser.parse(this.treeParser.stringify(this.tree));
-    this.tree.backwardInduction(clonedTree);
+    const result = this.tree.algorithms.backwardInduction.execute(clonedTree);
+    for (let i = 0; i < this.tree.moves.length; i++) {
+      this.tree.moves[i].isBestInductionMove = result[i];
+    }
+
     this.treeView.moves.forEach((mV: MoveView) => {
       if (mV.move.isBestInductionMove) {
         mV.setOwnerColor();

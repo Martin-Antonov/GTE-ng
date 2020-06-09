@@ -132,6 +132,12 @@ export class TreesFileService {
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.svg');
   }
 
+  saveTreeToEF() {
+    const efFile = this.userActionController.viewExporter.toEf();
+    const blob = new Blob([efFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.ef');
+  }
+
   saveStrategicFormToSTF() {
     const stratFormFile = this.userActionController.strategicForm.serializer.toText(this.treeTabs[this.currentTabIndex].fileName);
     const blob = new Blob([stratFormFile], {type: 'text/plain;charset=utf-8'});

@@ -59,7 +59,6 @@ export class StrategicFormComponent implements OnInit {
       m2 += '\n';
     }
     result += '\n\n' + m1 + '\n' + m2;
-    console.log(result);
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
   }

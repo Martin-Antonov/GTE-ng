@@ -30,5 +30,4 @@ export class SaveMenuComponent implements OnInit {
   isStrategicFormDisabled() {
     return !(this.uis.strategicFormActive && this.userActionController && this.userActionController.strategicFormResult);
   }
-
 }

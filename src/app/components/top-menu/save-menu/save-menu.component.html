@@ -4,6 +4,7 @@
   <div class="clickable-item" (click)="this.tfs.saveTreeToImage();this.closeSaveMenu()">as .PNG</div>
   <div class="clickable-item" (click)="this.tfs.saveTreeToFig();this.closeSaveMenu()">as .FIG</div>
   <div class="clickable-item" (click)="this.tfs.saveTreeToSVG();this.closeSaveMenu()">as .SVG</div>
+  <div class="clickable-item" (click)="this.tfs.saveTreeToEF();this.closeSaveMenu()">as .EF</div>
   <div class="menu-title">Strategic Form</div>
   <div class="clickable-item" [ngClass]="{'disabled': this.isStrategicFormDisabled()}"
        (click)="this.tfs.saveStrategicFormToSTF();this.closeSaveMenu()">as .STF

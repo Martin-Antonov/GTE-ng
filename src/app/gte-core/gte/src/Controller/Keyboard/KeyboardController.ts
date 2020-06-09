@@ -32,23 +32,10 @@ export class KeyboardController {
   /**A method which assigns action to each key via the UserActionController*/
   attachHandlersToKeys() {
     // TestKey
-    // this.keys.SPACE.on('down', () => {
-    //   const children = this.userActionController.treeController.tree.nodes[0].children;
-    //   const treeV = this.userActionController.treeController.treeView;
-    //
-    //   const a = children[0];
-    //   children[0] = children[1];
-    //   children[1] = a;
-    //
-    //   // const b = treeV.nodes[1];
-    //   // treeV.nodes[1] = treeV.nodes[2];
-    //   // treeV.nodes[2] = b;
-    //
-    //   this.userActionController.treeController.resetTree(true, true);
-    // });
-    // this.keys.SPACE.on('down', () => {
-    //   this.userActionController.undoRedoActionController.playFromBeginning();
-    // });
+
+    this.keys.SPACE.on('down', () => {
+      // this.userActionController.undoRedoActionController.playFromBeginning();
+    });
     // Add Children
     this.keys.N.on('down', () => {
       if (!this.keys.CTRL.isDown && !this.keys.ALT.isDown && !this.userActionController.labelInput.active) {

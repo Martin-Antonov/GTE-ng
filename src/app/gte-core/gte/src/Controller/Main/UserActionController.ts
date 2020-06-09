@@ -16,7 +16,6 @@ import {UndoRedoActionController} from '../UndoRedo/UndoRedoActionController';
 import {ACTION} from '../UndoRedo/ActionsEnum';
 import {IStrategicFormResult} from '../../Utils/IStrategicFormResult';
 import Fraction from 'fraction.js/fraction';
-import {DeleteNodeAction} from '../UndoRedo/Actions/DeleteNodeAction';
 
 export class UserActionController {
   scene: Phaser.Scene;
@@ -442,6 +441,10 @@ export class UserActionController {
       mV.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
     });
     this.treeController.treeView.drawISets();
+  }
+
+  calculateBFI() {
+    return this.treeController.tree.algorithms.backwardForwardInduction.execute(this.treeController.tree, 'min');
   }
 
   calculateSPNE() {

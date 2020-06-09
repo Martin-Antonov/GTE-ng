@@ -340,4 +340,83 @@ export class ViewExporter {
 
     return draw.svg();
   }
+
+  toEf() {
+    const tree = this.treeController.tree;
+    const treeV = this.treeController.treeView;
+    let result = '';
+    // Players
+    const maxPlayerID = this.getMaxPlayerID();
+    for (let i = 1; i <= maxPlayerID; i++) {
+      result += 'player ' + i + ' name ' + tree.players[i].label + '\n';
+    }
+
+    const levels = [];
+    // Nodes
+    treeV.nodes.forEach((nV: NodeView) => {
+      const n = nV.node;
+      const level = nV.level * 2;
+      if (!levels[level]) {
+        levels[level] = [n];
+      } else {
+        levels[level].push(n);
+      }
+
+      // Node data
+      result += 'level ' + level + ' node ' + levels[level].length + ' ';
+      const playerIndex = tree.players.indexOf(n.player);
+
+      // Node player
+      if (n && playerIndex >= 0 && !n.iSet) {
+        result += 'player ' + playerIndex + ' ';
+      }
+      if (n.parent) {
+        const nParent = n.parent;
+        const nParentView = this.treeController.treeView.findNodeView(nParent);
+        // x-shift
+        const distance = Math.round((nV.x - nParentView.x) * 2) / 100;
+        result += 'xshift ' + distance + ' ';
+
+        // Parent
+        const parentIndex = levels[nParentView.level * 2].indexOf(n.parent) + 1;
+        result += 'from ' + nParentView.level * 2 + ',' + parentIndex + ' ';
+
+        // Moves
+
+        if (n.parent.type === NodeType.CHANCE) {
+          result += 'move \\frac{' + n.parentMove.probability.n + '}{' + n.parentMove.probability.d + '} ';
+        } else if (n.parent.type === NodeType.OWNED) {
+          const subscript = n.parentMove.subscript ? '_' + n.parentMove.subscript : '';
+          result += 'move ' + n.parentMove.label + subscript + ' ';
+        }
+        // payoffs
+        if (n.type === NodeType.LEAF) {
+          result += 'payoffs ' + n.payoffs.toString();
+        }
+      }
+      result += '\n';
+    });
+
+    // isets
+    this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
+      result += 'iset ';
+      iSetV.nodes.forEach((nV: NodeView) => {
+        result += nV.level * 2 + ',' + (levels[nV.level * 2].indexOf(nV.node) + 1) + ' ';
+      });
+      result += 'player ' + tree.players.indexOf(iSetV.iSet.player) + '\n';
+    });
+    return result;
+  }
+
+  private getMaxPlayerID() {
+    let maxId = -1;
+    this.treeController.tree.nodes.forEach((n) => {
+      const playerIndex = this.treeController.tree.players.indexOf(n.player);
+      if (maxId < playerIndex) {
+        maxId = playerIndex;
+      }
+    });
+
+    return maxId;
+  }
 }

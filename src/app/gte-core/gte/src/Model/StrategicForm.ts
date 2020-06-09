@@ -538,7 +538,6 @@ export class StrategicForm {
     });
     result += '\nReachable Rows: ' + this.reachableP1Rows.join(',');
     result += '\nReachable Cols: ' + this.reachableP2Cols.join(',');
-    console.log(result);
   }
 
   // For debugging purposes:
@@ -557,7 +556,6 @@ export class StrategicForm {
       }
       result += '\n\n\n';
     }
-    console.log(result);
   }
 
   destroy() {

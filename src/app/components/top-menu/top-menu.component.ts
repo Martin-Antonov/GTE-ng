@@ -6,6 +6,7 @@ import {UserActionControllerService} from '../../services/user-action-controller
 import {UiSettingsService} from '../../services/ui-settings/ui-settings.service';
 import {TreesFileService} from '../../services/trees-file/trees-file.service';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+import {SolverService} from '../../services/solver/solver.service';
 
 @Component({
   selector: 'app-top-menu',
@@ -22,7 +23,7 @@ export class TopMenuComponent implements OnInit {
   @ViewChild('loadInput', {static: false}) loadFileField;
 
   constructor(private uac: UserActionControllerService, public tts: TooltipsService,
-              public uis: UiSettingsService, private tfs: TreesFileService, private hotkeys: HotkeysService) {
+              public uis: UiSettingsService, private tfs: TreesFileService, private ss: SolverService, private hotkeys: HotkeysService) {
 
     this.hotkeys.add(new Hotkey('alt+n', (event: KeyboardEvent): boolean => {
       this.createNewTree();
@@ -52,8 +53,6 @@ export class TopMenuComponent implements OnInit {
 
   toggleStrategicForm() {
     this.uis.strategicFormActive = !this.uis.strategicFormActive;
-    if (!this.uis.strategicFormActive) {
-    }
   }
 
   toggleMatrixInput() {
@@ -62,6 +61,14 @@ export class TopMenuComponent implements OnInit {
 
   toggleSolver() {
     this.uis.solverActive = !this.uis.solverActive;
+  }
+
+  calculateBFI() {
+    const result = this.userActionController.calculateBFI();
+    if (result) {
+      this.uis.solverActive = true;
+      this.ss.convertBFISolution(result);
+    }
   }
 
   toggleSPNE() {

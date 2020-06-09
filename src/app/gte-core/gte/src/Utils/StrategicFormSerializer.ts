@@ -29,7 +29,6 @@ export class StrategicFormSerializer {
 
     // Strategies
     const maxMoveLength = this.getMaxMoveLength();
-    console.log('MAX MOVE LENGTH: ' + maxMoveLength);
     let separator;
     if (maxMoveLength === 1) {
       separator = '';
