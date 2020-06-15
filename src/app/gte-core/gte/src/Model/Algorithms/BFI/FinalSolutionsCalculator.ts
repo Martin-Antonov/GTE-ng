@@ -4,7 +4,6 @@ import {Tree} from '../../Tree';
 import {CoalitionsCalculator} from './CoalitionsCalculator';
 import {Payoffs} from '../../Payoffs';
 import {Player} from '../../Player';
-import {single} from 'rxjs/operators';
 
 export class FinalSolutionsCalculator {
   finalSolutions: Map<Node, Array<INodeCoalitionSolution>>;
@@ -49,13 +48,13 @@ export class FinalSolutionsCalculator {
           isBest: true,
           isRational: true
         });
-      } else if (convertedCoalitions.length === 2) { // If there are 2 players under the given node, take only both coalitions and calculate best and rational
+      } else { // If there are 2 players under the given node, take only both coalitions and calculate best and rational
         sln.forEach((singleSolution: INodeCoalitionSolution) => {
-          if (n.parent.player.id === 3) {
-            debugger;
-          }
           for (let i = 0; i < convertedCoalitions.length; i++) {
-            if (this.checkCoalitionInclusion(singleSolution.coalition, convertedCoalitions[i]) && !this.coalitionAlreadyExists(n, convertedCoalitions[i])) {
+            if (!this.checkCoalitionInclusion(singleSolution.coalition, n.player.id.toString()) &&
+              this.checkCoalitionInclusion(singleSolution.coalition, convertedCoalitions[i]) &&
+              !this.coalitionAlreadyExists(n, convertedCoalitions[i])) {
+
               this.finalSolutions.get(n).push({
                 coalition: singleSolution.coalition,
                 move: singleSolution.move,
@@ -66,29 +65,122 @@ export class FinalSolutionsCalculator {
             }
           }
         });
-        this.checkRationalityAndBestResponse(convertedCoalitions, this.finalSolutions.get(n), tree.players);
-      } else {
-        sln.forEach((singleSolution: INodeCoalitionSolution) => {
-          if (!this.checkCoalitionInclusion(singleSolution.coalition, n.player.id.toString())) {
-            this.finalSolutions.get(n).push({
-              coalition: singleSolution.coalition,
-              move: singleSolution.move,
-              payoffs: singleSolution.payoffs,
-              isBest: false,
-              isRational: false
-            });
-          }
-        });
         this.pushAlonePlayerSolution(n);
+        this.removeSameCoalitions(n);
         const allSolutionCoalitions = [];
         this.finalSolutions.get(n).forEach((singleSolution: INodeCoalitionSolution) => {
           allSolutionCoalitions.push(singleSolution.coalition);
         });
+
         this.checkRationalityAndBestResponse(allSolutionCoalitions, this.finalSolutions.get(n), tree.players);
       }
     });
   }
+  private pushAlonePlayerSolution(n: Node) {
+    const bestSolutions = [];
+    n.children.forEach((c: Node) => {
+      if (c.type === NodeType.LEAF) {
+        bestSolutions.push({
+          child: c, sln: {
+            coalition: this.nodeAllSolutions.get(n)[0].coalition,
+            move: c.parentMove,
+            payoffs: c.payoffs,
+            isRational: false,
+            isBest: false,
+          }
+        });
+        return;
+      }
+      const bestSolution = this.finalSolutions.get(c).find((sln: INodeCoalitionSolution) => {
+        return sln.isBest;
+      });
+      bestSolutions.push({child: c, sln: bestSolution});
+    });
 
+    bestSolutions.sort((x: { child: Node, sln: INodeCoalitionSolution }, y: { child: Node, sln: INodeCoalitionSolution }) => {
+      return y.sln.payoffs.outcomesAsDecimals[n.player.id - 1] - x.sln.payoffs.outcomesAsDecimals[n.player.id - 1];
+    });
+
+    const best: { child: Node, sln: INodeCoalitionSolution } = bestSolutions[0];
+
+    this.finalSolutions.get(n).unshift({
+      coalition: best.sln.coalition,
+      move: best.child.parentMove,
+      payoffs: best.sln.payoffs,
+      isRational: true,
+      isBest: false,
+    });
+  }
+
+  // Removes repeated coalitions for nodes with more players and further down the tree (e.g.) Could be removed, but shouldn't be touched really...
+  private coalitionAlreadyExists(n: Node, convertedCoalition: string) {
+    let result = false;
+
+    this.finalSolutions.get(n).forEach((singleSolution: INodeCoalitionSolution) => {
+      if (this.checkCoalitionInclusion(singleSolution.coalition, convertedCoalition)) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  // region Remove unnecessary coalitions for active player
+  // Main Method
+  private removeSameCoalitions(n: Node) {
+    const solutions = this.finalSolutions.get(n);
+    for (let i = 1; i < solutions.length; i++) {
+      for (let j = i + 1; j < solutions.length; j++) {
+        if (this.checkActivePlayerSameCoalition(solutions[i].coalition, solutions[j].coalition, n.player.id)) {
+          const secondSolution = solutions[j];
+          this.finalSolutions.get(n).splice(j, 1);
+          j--;
+          if (secondSolution.payoffs !== solutions[i].payoffs && this.isSecondSolutionBetterForNonActivePlayers(solutions[i], secondSolution, n.player.id)) {
+            solutions[i] = secondSolution;
+          }
+        }
+      }
+    }
+  }
+  // Checks whether the two coalitions are actually the same for the active player
+  private checkActivePlayerSameCoalition(coalitions1: string, coalitions2: string, id: number) {
+    const coalition1WithPlayer = coalitions1.split(' ').find((x: string) => {
+      return x.includes(id.toString());
+    });
+    const coalition2WithPLayer = coalitions2.split(' ').find((x: string) => {
+      return x.includes(id.toString());
+    });
+    return coalition1WithPlayer === coalition2WithPLayer;
+  }
+
+  // Checks whether we should replace the first occurrence of the same coalitions for the active player with the next found (if better for non-active players)
+  private isSecondSolutionBetterForNonActivePlayers(sol1: INodeCoalitionSolution, sol2: INodeCoalitionSolution, id: number): boolean {
+    const sol1CoalitionWithoutActivePlayer = sol1.coalition
+      .split(' ')
+      .filter((x: string) => {
+        return !x.includes(id.toString());
+      })
+      .join(' ');
+
+    const nonActivePlayers = [];
+    for (let i = 0; i < sol1CoalitionWithoutActivePlayer.length; i++) {
+      const player = sol1CoalitionWithoutActivePlayer[i];
+      if (player !== ' ') {
+        nonActivePlayers.push(player);
+      }
+    }
+    let isSecondRational = true;
+    nonActivePlayers.forEach((playerID: string) => {
+      if (!this.isNewSolutionRationalForPlayer(playerID, sol1.payoffs, sol2.payoffs)) {
+        isSecondRational = false;
+      }
+    });
+
+    return isSecondRational;
+  }
+  // endregion
+
+  // region Rationality and Best Response checks
+  // Main Method - checks pairwise whether the "next" solution is rational and better than the previous rational solution
   private checkRationalityAndBestResponse(coalitions: Array<string>, sln: Array<INodeCoalitionSolution>, playersFromTree: Array<Player>) {
     let i = 0;
     let j = 1;
@@ -128,46 +220,32 @@ export class FinalSolutionsCalculator {
     sln[i].isBest = true;
   }
 
+  // A simple method for checking whether the payoff is better for a given player in 2 payoffs.
   private isNewSolutionRationalForPlayer(playerID: string, payoffsOld: Payoffs, payoffsNew: Payoffs) {
     return payoffsOld.outcomesAsDecimals[Number(playerID) - 1] < payoffsNew.outcomesAsDecimals[Number(playerID) - 1];
   }
 
-  private pushAlonePlayerSolution(n: Node) {
-    const bestSolutions = [];
-    n.children.forEach((c: Node) => {
-      if (c.type === NodeType.LEAF) {
-        bestSolutions.push({
-          child: c, sln: {
-            coalition: this.nodeAllSolutions.get(n)[0].coalition,
-            move: c.parentMove,
-            payoffs: c.payoffs,
-            isRational: false,
-            isBest: false,
-          }
-        });
-        return;
+  // Checks whether the "converted" coalition for the active player is included in the main coalition.
+  private checkCoalitionInclusion(coalition: string, convertedCoalition: string): boolean {
+    const separatePlayers = convertedCoalition.split(' ');
+    // If players are separate
+    if (separatePlayers.length * 2 - 1 === convertedCoalition.length && convertedCoalition.length > 1) {
+      for (let i = 0; i < separatePlayers.length; i++) {
+        if (!this.checkCoalitionInclusion(coalition, separatePlayers[i])) {
+          return false;
+        }
       }
-      const bestSolution = this.finalSolutions.get(c).find((sln: INodeCoalitionSolution) => {
-        return sln.isBest;
-      });
-      bestSolutions.push({child: c, sln: bestSolution});
-    });
-
-    bestSolutions.sort((x: { child: Node, sln: INodeCoalitionSolution }, y: { child: Node, sln: INodeCoalitionSolution }) => {
-      return y.sln.payoffs.outcomesAsDecimals[n.player.id - 1] - x.sln.payoffs.outcomesAsDecimals[n.player.id - 1];
-    });
-
-    const best: { child: Node, sln: INodeCoalitionSolution } = bestSolutions[0];
-
-    this.finalSolutions.get(n).unshift({
-      coalition: best.sln.coalition,
-      move: best.child.parentMove,
-      payoffs: best.sln.payoffs,
-      isRational: true,
-      isBest: false,
-    });
+      return true;
+    } else {
+      return coalition.startsWith(convertedCoalition + ' ') ||
+        coalition.endsWith(' ' + convertedCoalition) ||
+        coalition.includes(' ' + convertedCoalition + ' ') ||
+        coalition === convertedCoalition;
+    }
   }
+  // endregion
 
+  // The rest is for logging final solution purposes
   private saveStrategies(tree: Tree) {
     const leaves = tree.getLeaves();
     this.finalSolutions.forEach((sln: Array<INodeCoalitionSolution>, n: Node) => {
@@ -193,22 +271,5 @@ export class FinalSolutionsCalculator {
     return strategy;
   }
 
-  private coalitionAlreadyExists(n: Node, convertedCoalition: string) {
-    let result = false;
 
-    this.finalSolutions.get(n).forEach((singleSolution: INodeCoalitionSolution) => {
-      if (this.checkCoalitionInclusion(singleSolution.coalition, convertedCoalition)) {
-        result = true;
-      }
-    });
-    return result;
-  }
-
-  private checkCoalitionInclusion(coalition: string, convertedCoalition: string): boolean {
-    // !!!!!!!!!!!!!if(convertedCoalition.split(' '))!!!!!!!!!!!!!!
-    return coalition.startsWith(convertedCoalition + ' ') ||
-      coalition.endsWith(' ' + convertedCoalition) ||
-      coalition.includes(' ' + convertedCoalition + ' ') ||
-      coalition === convertedCoalition;
-  }
 }
