@@ -10,7 +10,7 @@ import {UiSettingsService} from '../../../services/ui-settings/ui-settings.servi
 export class QuickstartComponent implements OnInit {
   @Input() quickstartButton: SquareButtonComponent;
 
-  constructor(private uis: UiSettingsService) { }
+  constructor(public uis: UiSettingsService) { }
 
   ngOnInit() {
   }
