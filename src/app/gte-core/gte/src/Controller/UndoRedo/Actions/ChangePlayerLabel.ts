@@ -21,6 +21,13 @@ export class ChangePlayerLabel extends AbstractAction {
         const nV = this.treeController.treeView.findNodeView(n);
         nV.ownerLabel.setText(n.player.label);
         nV.updateLabelPosition();
+
+        if (n.iSet) {
+          const iSetV = this.treeController.treeView.findISetView(n.iSet);
+          if (iSetV.label.text !== n.iSet.player.label) {
+            iSetV.label.setText(n.iSet.player.label);
+          }
+        }
       }
     });
   }

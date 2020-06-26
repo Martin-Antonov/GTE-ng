@@ -24,19 +24,27 @@ export class TreeDimensionsComponent implements OnInit {
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.events.on('tree-dimensions-update', () => {
+          this.updateTreeWidth();
+          this.updateTreeHeight();
+        });
+      }
     });
   }
 
   updateTreeWidth() {
+    this.treeWidth = this.treeWidth ? this.treeWidth : 50;
     this.userActionController.treeController.treeView.properties.treeWidth =
       this.userActionController.scene.sys.canvas.width * INITIAL_TREE_WIDTH * this.treeWidth * 2 / 100;
-    this.userActionController.treeController.resetTree(true, true);
+    this.userActionController.treeController.resetTree(true, false);
   }
 
   updateTreeHeight() {
+    this.treeHeight = this.treeHeight ? this.treeHeight : 50;
     this.userActionController.treeController.treeView.properties.levelHeight =
       this.userActionController.scene.sys.canvas.height * INITIAL_TREE_HEIGHT * this.treeHeight * 2 / 100;
-    this.userActionController.treeController.resetTree(true, true);
+    this.userActionController.treeController.resetTree(true, false);
   }
 
   saveInitialHeight() {

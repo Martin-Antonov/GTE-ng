@@ -42,6 +42,10 @@ export class UndoRedoActionController {
     this.actionsList[indexToUse].executeAction(undo);
     const indexChange = undo ? -1 : 1;
     this.currentIndex += indexChange;
+    this.treeController.treeView.nodes.forEach((nV: NodeView) => {
+      nV.level = nV.node.depth;
+    });
+    this.treeController.resetTree(true, true);
   }
 
   saveAction(action: ACTION, data?: any) {

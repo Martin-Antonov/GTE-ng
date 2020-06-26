@@ -270,6 +270,4 @@ export class FinalSolutionsCalculator {
     strategy = strategy.trim();
     return strategy;
   }
-
-
 }

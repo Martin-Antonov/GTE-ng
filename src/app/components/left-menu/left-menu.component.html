@@ -41,13 +41,13 @@
                      [tooltipText]="this.tooltips.select_children"
   ></app-square-button>
   <hr>
-  <app-square-button [imageKey]="'non-zero-sum.png'" [secondImageKey]="'zero-sum.png'"
+  <app-square-button #zeroSumComponent [imageKey]="'non-zero-sum.png'" [secondImageKey]="'zero-sum.png'"
                      (clicked)="this.userActionController.toggleZeroSum();"
                      [tooltipText]="this.tooltips.zero_sum"></app-square-button>
   <app-square-button [imageKey]="'random-payoffs.png'" (clicked)="this.userActionController.randomPayoffsHandler();"
                      style="margin-top:10px; margin-bottom:10px;"
                      [tooltipText]="this.tooltips.random_payoffs"></app-square-button>
-  <app-square-button [imageKey]="'fraction.png'" [secondImageKey]="'decimal.png'"
+  <app-square-button #fractionDecimalComponent [imageKey]="'fraction.png'" [secondImageKey]="'decimal.png'"
                      (clicked)="this.userActionController.toggleFractionDecimal();"
                      [tooltipText]="this.tooltips.fraction_decimal"></app-square-button>
   <hr>

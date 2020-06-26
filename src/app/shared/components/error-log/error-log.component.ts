@@ -37,16 +37,15 @@ export class ErrorLogComponent implements OnInit {
   constructor(private uac: UserActionControllerService) {
     this.uac.userActionController.subscribe(value => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.events.on(('show-error'), (err) => {
+          this.showError(err);
+        });
+      }
     });
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.userActionController.events.on(('show-error'), (err) => {
-        this.showError(err);
-      });
-    }, 2000);
-
     this.shouldShowError = false;
     this.errorTriangleURL = 'assets/images/error.png';
   }

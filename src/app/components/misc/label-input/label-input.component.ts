@@ -12,7 +12,6 @@ export class LabelInputComponent implements OnInit {
   @ViewChild('inputLabel', {static: false}) inputField;
 
   userActionController: UserActionController;
-
   constructor(private uac: UserActionControllerService) {
 
   }
@@ -20,14 +19,12 @@ export class LabelInputComponent implements OnInit {
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.labelInput.events.on('select-text', () => {
+          this.selectInputText();
+        }, this);
+      }
     });
-    setTimeout(() => {
-      this.userActionController.labelInput.events.on('select-text', () => {
-        this.selectInputText();
-      }, this);
-    }, 2000);
-
-
   }
 
   changeLabel() {

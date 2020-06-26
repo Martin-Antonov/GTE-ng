@@ -3,11 +3,12 @@
                      (clicked)="this.uis.settingsActive=!this.uis.settingsActive;"></app-square-button>
   <app-square-button #shortcutsButton [imageKey]="'shortcuts.png'" [secondImageKey]="'shortcuts-pressed.png'"
                      (clicked)="this.uis.shortcutsActive= !this.uis.shortcutsActive;"></app-square-button>
-  <app-square-button #consoleButton [imageKey]="'console.png'" [secondImageKey]="'console-pressed.png'"
-                     (clicked)="this.uis.consoleActive=!this.uis.settingsActive;"></app-square-button>
-  <app-square-button #tutorialButton [imageKey]="'tutorial.png'" [secondImageKey]="'tutorial-pressed.png'"
-                     (clicked)="this.uis.tutorialActive=!this.uis.tutorialActive;"></app-square-button>
+<!--  <app-square-button #consoleButton [imageKey]="'console.png'" [secondImageKey]="'console-pressed.png'"-->
+<!--                     (clicked)="this.uis.consoleActive=!this.uis.settingsActive;"></app-square-button>-->
+  <app-square-button #quickstartButton [imageKey]="'quickstart.png'" [secondImageKey]="'quickstart-pressed.png'"
+                     (clicked)="this.uis.quickstartActive=!this.uis.quickstartActive;"></app-square-button>
 
   <app-shortcuts *ngIf="this.uis.shortcutsActive" [shortcutsButton]="shortcutsButton"></app-shortcuts>
   <app-settings *ngIf="this.uis.settingsActive" [settingsButton]="settingsButton"></app-settings>
+  <app-quickstart *ngIf="this.uis.quickstartActive" [quickstartButton]="quickstartButton"></app-quickstart>
 </ng-container>

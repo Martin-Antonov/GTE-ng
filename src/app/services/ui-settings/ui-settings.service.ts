@@ -10,12 +10,13 @@ export class UiSettingsService {
   settingsActive: boolean;
   shortcutsActive: boolean;
   consoleActive: boolean;
-  tutorialActive: boolean;
+  quickstartActive: boolean;
   bestResponsesActive: boolean;
   saveFileActive: boolean;
   SPNEActive: boolean;
 
   stratFormScale: number;
+  quickstartDontShowChecked: boolean;
 
   constructor() {
     this.stratFormScale = 1;
@@ -28,9 +29,29 @@ export class UiSettingsService {
     this.settingsActive = false;
     this.shortcutsActive = false;
     this.consoleActive = false;
-    this.tutorialActive = false;
     this.bestResponsesActive = true;
     this.saveFileActive = false;
     this.SPNEActive = false;
+
+    this.quickstartActive = true;
+
+    try {
+      const dontShowQuickstart = localStorage.getItem('dont-show-quickstart');
+      if (dontShowQuickstart === '1') {
+        this.quickstartActive = false;
+        this.quickstartDontShowChecked = true;
+      }
+    } catch (err) {
+      console.log('LOCAL STORAGE NOT AVAILABLE!');
+    }
+  }
+
+  setQuickStartInactive() {
+    try {
+      const val = this.quickstartDontShowChecked ? '1' : '0';
+      localStorage.setItem('dont-show-quickstart', val);
+    } catch (err) {
+      console.log('LOCAL STORAGE NOT AVAILABLE!');
+    }
   }
 }

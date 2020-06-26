@@ -27,7 +27,6 @@ export class MoveTreeAction extends AbstractAction {
       nV.x += hDistance;
       nV.y += vDistance;
     });
-    this.treeController.resetTree(false, false);
   }
 
   destroy() {

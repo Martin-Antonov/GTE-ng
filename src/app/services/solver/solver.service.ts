@@ -20,6 +20,9 @@ export class SolverService {
       (result: any) => {
         this.algorithmResult = result.solver_output;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
+        this.algorithmResult += '<br /><em>D. Avis, G. Rosenberg, R. Savani, and B. von Stengel (2010),</br>' +
+          'Enumeration of Nash equilibria for two-player games.</br>' +
+          'Economic Theory 42, 9-37</em>';
       },
       (err) => {
         console.log(err);

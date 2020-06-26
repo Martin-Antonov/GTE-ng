@@ -18,8 +18,6 @@ export class ChangeTreeWidthAction extends AbstractAction {
     } else {
       this.treeController.treeView.properties.treeWidth = this.newWidth;
     }
-
-    this.treeController.resetTree(true, true);
   }
 
   destroy() {

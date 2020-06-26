@@ -69,9 +69,7 @@ export class TreeView {
     this.treeTweenManager.oldCoordinates = this.getOldCoordinates();
     if (this.properties.automaticLevelAdjustment && this.iSets.length !== 0) {
       this.crossingsMinimizer.equalizeInfoSetsLevels();
-    }
-
-    if (!this.properties.automaticLevelAdjustment) {
+    } else {
       this.nodes.forEach((nV: NodeView) => {
         nV.level = nV.node.depth;
       });
@@ -323,6 +321,7 @@ export class TreeView {
       }
     }
   }
+
   // endregion
 }
 

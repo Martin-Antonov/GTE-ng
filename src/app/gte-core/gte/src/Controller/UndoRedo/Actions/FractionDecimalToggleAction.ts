@@ -9,7 +9,7 @@ export class FractionDecimalToggleAction extends AbstractAction {
 
   executeAction(undo: boolean) {
     this.treeController.treeView.properties.fractionOn = !this.treeController.treeView.properties.fractionOn;
-    this.treeController.resetTree(false, false);
+    this.treeController.events.emit('fraction-decimal-undo');
   }
 
   destroy() {

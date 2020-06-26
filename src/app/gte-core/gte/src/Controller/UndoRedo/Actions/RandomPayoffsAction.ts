@@ -19,8 +19,6 @@ export class RandomPayoffsAction extends AbstractAction {
     for (let i = 0; i < this.payoffsBefore.length; i++) {
       leaves[i].payoffs.outcomes = payoffsToUse[i].slice(0);
     }
-
-    this.treeController.resetTree(false, false);
   }
 
   destroy() {

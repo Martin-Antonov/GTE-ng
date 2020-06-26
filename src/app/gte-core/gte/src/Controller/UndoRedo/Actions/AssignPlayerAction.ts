@@ -21,7 +21,6 @@ export class AssignPlayerAction extends AbstractAction {
         const node = this.getNodeFromAddress(serializedNode);
         node.convertToDefault();
       });
-      this.treeController.resetTree(false, false);
     } else {
       const nodesToAssignPlayer = [];
       this.serializedNodes.forEach((serializedNode: string) => {
@@ -30,7 +29,7 @@ export class AssignPlayerAction extends AbstractAction {
       });
       if (this.playerID === 0) {
         this.treeController.assignChancePlayerToNode(nodesToAssignPlayer);
-      } else{
+      } else {
         this.treeController.assignPlayerToNode(this.playerID, nodesToAssignPlayer);
       }
     }

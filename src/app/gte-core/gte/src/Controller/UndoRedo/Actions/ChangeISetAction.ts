@@ -53,7 +53,6 @@ export class ChangeISetAction extends AbstractAction {
         const node = this.getNodeFromAddress(serializedNode);
         node.convertToDefault();
       });
-      this.treeController.resetTree(false, false);
     }
   }
 

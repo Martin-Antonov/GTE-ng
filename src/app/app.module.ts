@@ -34,6 +34,8 @@ import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.com
 import { DraggableWindowComponent } from './shared/components/draggable-window/draggable-window.component';
 import {HotkeyModule} from 'angular2-hotkeys';
 import { TreeDimensionsComponent } from './gte-core/tree-dimensions/tree-dimensions.component';
+import { CookiesNoticeComponent } from './components/misc/cookies-notice/cookies-notice.component';
+import {QuickstartComponent} from './components/right-menu/quickstart/quickstart.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +61,8 @@ import { TreeDimensionsComponent } from './gte-core/tree-dimensions/tree-dimensi
     SaveMenuComponent,
     DraggableWindowComponent,
     TreeDimensionsComponent,
+    QuickstartComponent,
+    CookiesNoticeComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule,

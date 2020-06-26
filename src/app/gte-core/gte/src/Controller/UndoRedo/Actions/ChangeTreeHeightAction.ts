@@ -18,8 +18,6 @@ export class ChangeTreeHeightAction extends AbstractAction {
     } else {
       this.treeController.treeView.properties.levelHeight = this.newHeight;
     }
-
-    this.treeController.resetTree(true, true);
   }
 
   destroy() {

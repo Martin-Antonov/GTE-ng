@@ -18,7 +18,6 @@ export class ChangePayoffAction extends AbstractAction {
     const payoffs = undo ? this.oldPayoffs : this.newPayoffs;
     const node = this.getNodeFromAddress(this.savedNode);
     node.payoffs.saveFromString(payoffs);
-    this.treeController.resetTree(false, false);
   }
 
   destroy() {

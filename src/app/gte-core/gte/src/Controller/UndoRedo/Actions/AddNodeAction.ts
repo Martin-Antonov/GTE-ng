@@ -15,8 +15,6 @@ export class AddNodeAction extends AbstractAction {
   }
 
   executeAction(undo: boolean) {
-
-    // TODO: check problems with root
     if (undo) {
       const nodesToDelete = [];
       this.serializedNodes.forEach((serializedNode: string) => {

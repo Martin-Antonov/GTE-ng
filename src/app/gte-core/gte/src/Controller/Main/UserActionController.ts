@@ -3,11 +3,9 @@ import {StrategicForm} from '../../Model/StrategicForm';
 import {NodeView} from '../../View/NodeView';
 import {SelectionRectangle} from '../../Utils/SelectionRectangle';
 import {ISetView} from '../../View/ISetView';
-import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../Utils/Constants';
 import {ISet} from '../../Model/ISet';
 import {Node, NodeType} from '../../Model/Node';
 import {LabelInputHandler} from '../../Utils/LabelInputHandler';
-import {TreeViewProperties} from '../../View/TreeViewProperties';
 import {CutSpriteHandler} from '../../Utils/CutSpriteHandler';
 import {ViewExporter} from '../../Utils/ViewExporter';
 import {MoveView} from '../../View/MoveView';
@@ -101,8 +99,11 @@ export class UserActionController {
 
   /** Empties the selected nodes*/
   private emptySelectedNodes() {
+    const areNodesLabeled = this.treeController.tree.checkAllNodesLabeled();
     while (this.selectedNodes.length !== 0) {
-      this.selectedNodes.pop();
+      const nV = this.selectedNodes.pop();
+      nV.isSelected = false;
+      nV.resetNodeDrawing(areNodesLabeled, this.treeController.treeView.properties.zeroSumOn);
     }
   }
 
@@ -397,7 +398,7 @@ export class UserActionController {
       }
     } else if (this.labelInput.currentlySelected instanceof NodeView) {
       const nV = this.labelInput.currentlySelected as NodeView;
-      if (nV.ownerLabel.alpha === 1 && nV.node.player.label !== newLabel) {
+      if (nV.node.type === NodeType.OWNED && nV.node.player.label !== newLabel) {
         this.undoRedoActionController.saveAction(ACTION.CHANGE_PLAYER_LABEL,
           [nV.node.player.label, newLabel, this.treeController.tree.players.indexOf(nV.node.player)]);
         this.labelInput.changeLabel(newLabel);
@@ -480,9 +481,7 @@ export class UserActionController {
     const width = boundingRect.width;
     const height = boundingRect.height;
     this.scene.scale.setGameSize(width, height);
-    this.treeController.treeView.properties = new TreeViewProperties(this.scene.sys.canvas.height * INITIAL_TREE_HEIGHT,
-      this.scene.sys.canvas.width * INITIAL_TREE_WIDTH);
-    this.treeController.resetTree(true, false);
+    this.events.emit('tree-dimensions-update');
   }
 }
 

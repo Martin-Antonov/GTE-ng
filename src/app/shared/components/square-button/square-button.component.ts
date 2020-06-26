@@ -48,15 +48,19 @@ export class SquareButtonComponent implements OnInit {
   }
 
   clickHandler() {
+    this.flipImage();
+    if (!this.inactive) {
+      this.clicked.emit();
+    }
+  }
+
+  flipImage() {
     if (this.secondImageKey) {
       if (this.pathToImage.length === this.PATH_TO_ASSETS.length + this.imageKey.length) {
         this.pathToImage = this.PATH_TO_ASSETS + this.secondImageKey;
       } else {
         this.pathToImage = this.PATH_TO_ASSETS + this.imageKey;
       }
-    }
-    if (!this.inactive) {
-      this.clicked.emit();
     }
   }
 }

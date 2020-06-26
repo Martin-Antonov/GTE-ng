@@ -27,8 +27,6 @@ export class DecreasePlayersAction extends AbstractAction {
     } else {
       this.treeController.tree.removePlayer(this.treeController.tree.players[this.playerID]);
     }
-
-    this.treeController.resetTree(false, false);
   }
 
   destroy() {

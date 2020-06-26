@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserActionController} from '../../gte-core/gte/src/Controller/Main/UserActionController';
 import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
 import {NodeView} from '../../gte-core/gte/src/View/NodeView';
+import {SquareButtonComponent} from '../../shared/components/square-button/square-button.component';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class LeftMenuComponent implements OnInit {
   playerIsActive: boolean;
   playerColors: Array<string>;
   tooltips: ITooltips;
+  @ViewChild('zeroSumComponent', {static: false}) zeroSumComponent: SquareButtonComponent;
+  @ViewChild('fractionDecimalComponent', {static: false}) fractionDecimalComponent: SquareButtonComponent;
 
   constructor(private uac: UserActionControllerService, private tts: TooltipsService) {
   }
@@ -24,6 +27,14 @@ export class LeftMenuComponent implements OnInit {
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.treeController.events.on('zero-sum-undo', () => {
+          this.zeroSumComponent.flipImage();
+        });
+        this.userActionController.treeController.events.on('fraction-decimal-undo', () => {
+          this.fractionDecimalComponent.flipImage();
+        });
+      }
     });
     this.tts.getTooltips().subscribe((tooltips) => {
       this.tooltips = tooltips;
@@ -65,7 +76,8 @@ export class LeftMenuComponent implements OnInit {
         this.userActionController.treeController.tree.canCreateISet(nodes);
       } catch {
         return false;
-      } const distinctISets = this.userActionController.treeController.getDistinctISetsFromNodes(selectedNodes).length;
+      }
+      const distinctISets = this.userActionController.treeController.getDistinctISetsFromNodes(selectedNodes).length;
       for (let i = 0; i < selectedNodes.length; i++) {
         if (!selectedNodes[i].node.iSet) {
           return true;

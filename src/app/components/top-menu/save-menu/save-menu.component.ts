@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {TreesFileService} from '../../../services/trees-file/trees-file.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
@@ -9,8 +9,10 @@ import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/Us
   templateUrl: './save-menu.component.html',
   styleUrls: ['./save-menu.component.scss']
 })
-export class SaveMenuComponent implements OnInit {
+export class SaveMenuComponent implements AfterViewInit {
   userActionController: UserActionController;
+
+  @ViewChild('filename', {static: false}) fileNameInput: ElementRef;
 
   constructor(public tfs: TreesFileService, private uis: UiSettingsService, private uac: UserActionControllerService) {
     this.uac.userActionController.subscribe((value) => {
@@ -18,7 +20,11 @@ export class SaveMenuComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
+    this.fileNameInput.nativeElement.focus();
+    setTimeout(() => {
+    this.fileNameInput.nativeElement.select();
+    }, 50);
   }
 
   closeSaveMenu() {

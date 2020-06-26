@@ -23,7 +23,7 @@ export class MainScene extends Phaser.Scene {
     super('main');
   }
 
-  init(obj: {uac, tfs}) {
+  init(obj: { uac, tfs }) {
     this.uac = obj.uac;
     this.tfs = obj.tfs;
   }
@@ -48,9 +48,9 @@ export class MainScene extends Phaser.Scene {
   }
 
   onWindowResize() {
-    window.onresize = () => {
+    window.addEventListener('resize', () => {
       this.userActionController.gameResize();
-    };
+    });
   }
 
   /** The update method is built-into the engine for every state. It executes at most 60 times a second*/
