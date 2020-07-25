@@ -6,6 +6,7 @@ app-draggable-window {
     @include window-content();
     position: relative;
     overflow: hidden;
+
     .matrix-input-options {
       position: absolute;
       width: 75%;
@@ -15,6 +16,7 @@ app-draggable-window {
       flex-direction: row;
       justify-content: center;
       align-items: center;
+
       div {
         display: inline-block;
         width: 33%;
@@ -30,25 +32,37 @@ app-draggable-window {
           background: $grey-border;
         }
       }
+
       .middle-option {
         border-left: 1px solid $grey-border;
         border-right: 1px solid $grey-border;
       }
+
       .selected {
         background-color: #b0b0b0;
         color: $grey3;
+
         &:hover {
           background-color: #9e9e9e;
         }
       }
     }
+
     .from-text-active-form {
       text-align: center;
+
       textarea {
         white-space: pre-wrap;
         resize: none;
         overflow: auto;
+
+        &:focus {
+          &::placeholder {
+            color: $grey4;
+          }
+        }
       }
+
       button {
         width: 60px;
         height: 40px;
@@ -57,14 +71,17 @@ app-draggable-window {
         color: $grey-text;
       }
     }
+
     .from-matrix-active-form {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
       .dimensions-input {
         display: inline-block;
         margin-bottom: 20px;
+
         input {
           width: 20px;
           height: 20px;
@@ -72,20 +89,24 @@ app-draggable-window {
           margin-right: 10px;
         }
       }
+
       .player-matrix-container {
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
+
         .player-matrix {
           text-align: center;
           margin: 5px 20px;
           display: inline-block;
+
           table {
             border-left: 3px solid black;
             border-right: 3px solid black;
             border-radius: 10px;
             padding: 5px 15px;
+
             tr {
               td {
                 input {
@@ -100,6 +121,7 @@ app-draggable-window {
           }
         }
       }
+
       button {
         width: 60px;
         height: 40px;

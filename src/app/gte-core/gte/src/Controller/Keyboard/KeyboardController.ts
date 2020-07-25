@@ -26,7 +26,7 @@ export class KeyboardController {
       this.scene.input.keyboard.addKeys('SHIFT,CTRL,ALT,N,ZERO,I,PLUS,MINUS,SPACE,Z,D,U,C,S,R,Y,L,' +
         'TAB,ENTER,ESC,UP,DOWN,LEFT,RIGHT,ONE,TWO,THREE,FOUR,DELETE,NUMPAD_ADD,NUMPAD_SUBTRACT') as IKeyboardKeys;
 
-    this.scene.input.keyboard.removeCapture('ZERO,ONE,TWO,THREE,FOUR,N,I,SPACE,Z,D,U,C,S,R,Y,L,LEFT,RIGHT,DOWN,UP,SHIFT,MINUS,PLUS,NUMPAD_ADD,NUMPAD_SUBTRACT');
+    this.scene.input.keyboard.removeCapture('ZERO,ONE,TWO,THREE,FOUR,N,I,SPACE,Z,D,U,C,S,R,Y,L,LEFT,RIGHT,DOWN,UP,SHIFT,MINUS,ENTER,PLUS,NUMPAD_ADD,NUMPAD_SUBTRACT');
   }
 
   /**A method which assigns action to each key via the UserActionController*/

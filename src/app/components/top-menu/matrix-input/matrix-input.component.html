@@ -6,7 +6,6 @@
       <div (click)="activatePlayerMatrix()" class="middle-option" [ngClass]="{'selected':this.fromMatricesActive}">
         Player Matrices
       </div>
-      <div>From File</div>
     </div>
     <form *ngIf="this.fromTextActive" #matrixTextForm="ngForm" class="from-text-active-form" autocomplete="off">
       <br><br><label for="matrix-text-input">Input the game in the specified format:</label><br><br>
