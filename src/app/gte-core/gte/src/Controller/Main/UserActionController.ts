@@ -247,6 +247,7 @@ export class UserActionController {
         const newISets = this.getCurrentISets();
         this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets, selectedNotOwned]);
         this.checkCreateStrategicForm();
+        this.deselectNodesHandler();
       } catch (err) {
         this.events.emit('show-error', err);
         return;
