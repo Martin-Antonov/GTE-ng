@@ -63,11 +63,12 @@ export class Payoffs {
 
   multiply(number: Fraction) {
     for (let i = 0; i < this.outcomes.length; i++) {
-      this.outcomes[i].mul(number);
+      this.outcomes[i] = this.outcomes[i].mul(number);
     }
   }
 
   reset() {
+  this.outcomes = [];
     for (let i = 0; i < 4; i++) {
       this.outcomes.push(new Fraction(0));
     }

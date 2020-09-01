@@ -53,6 +53,8 @@ export class SolverService {
       });
       result += '<br />';
     });
+    result += '<br /><br /><em>Ismail, Mehmet <br/>The Story of Conflict and Cooperation (May 28, 2020).' +
+     ' <br/>Available at SSRN: https://ssrn.com/abstract=3234963</em>';
     this.algorithmResult = result;
   }
 

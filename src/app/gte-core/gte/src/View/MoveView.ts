@@ -92,6 +92,7 @@ export class MoveView extends Phaser.GameObjects.Image {
       this.label.setColor('#000')
         .setFontSize(this.from.circle.displayWidth * 1.05)
         .setFontStyle('normal');
+
     }
     this.subscript.setColor(color);
 
