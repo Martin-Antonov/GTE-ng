@@ -24,7 +24,7 @@
     "angular2-hotkeys": "^2.1.4",
     "core-js": "^2.5.4",
     "file-saver": "^2.0.1",
-    "mathjs": "^5.1.2",
+    "mathjs": "^7.5.1",
     "ng-click-outside": "^4.0.0",
     "phaser-ce": "^2.11.0",
     "rxjs": "^6.5.3",
