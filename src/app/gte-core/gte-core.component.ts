@@ -27,7 +27,7 @@ export class GteCoreComponent implements OnInit {
     const height = boundingRect.height;
 
     const config: GameConfig = {
-      type: Phaser.CANVAS,
+      type: Phaser.WEBGL,
       title: 'Game Theory Explorer',
       backgroundColor: '#fff',
       width: width,

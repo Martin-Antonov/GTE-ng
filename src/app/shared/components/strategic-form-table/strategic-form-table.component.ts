@@ -137,7 +137,6 @@ export class StrategicFormTableComponent implements OnInit {
       style['border'] = '1px solid #ff00ff';
       style['line-height'] = '110%';
       style['padding'] = '0 2px';
-
     }
     return style;
   }

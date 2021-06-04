@@ -15,7 +15,8 @@
     "typeRoots": [
       "node_modules/@types",
       "node_modules/phaser/types/phaser.d.ts",
-      "node_modules/fraction.js/fraction.d.ts"
+      "node_modules/fraction.js/fraction.d.ts",
+      "node_modules/angular2-hotkeys/t"
     ],
     "lib": [
       "es2017",

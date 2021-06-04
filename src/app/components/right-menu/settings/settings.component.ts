@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SquareButtonComponent} from '../../../shared/components/square-button/square-button.component';
+import {SquareButtonComponent} from '../../../../../../../../Graphz/graphz/src/app/shared/components/square-button/square-button.component';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';

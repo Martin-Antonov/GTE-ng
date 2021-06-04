@@ -84,7 +84,7 @@ export class NodeView extends Phaser.GameObjects.Container {
     }).setOrigin(0.5, 0);
 
     // Create gradient
-    const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, 100);
+    /**const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, 100);
     grd.addColorStop(0.000, 'rgba(255, 0, 0, 1.000)');
     grd.addColorStop(0.249, 'rgba(255, 0, 0, 1.000)');
     grd.addColorStop(0.250, 'rgba(0, 0, 255, 1.000)');
@@ -93,7 +93,7 @@ export class NodeView extends Phaser.GameObjects.Container {
     grd.addColorStop(0.749, 'rgba(0, 187, 0, 1.000)');
     grd.addColorStop(0.750, 'rgba(255, 0, 255, 1.000)');
     grd.addColorStop(1.000, 'rgba(255, 0, 255, 1.000)');
-    this.payoffsLabel.setFill(grd);
+    this.payoffsLabel.setFill(grd);*/
 
     this.payoffsLabel.setInteractive();
     this.payoffsLabel.lineSpacing = -5;

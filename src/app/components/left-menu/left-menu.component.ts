@@ -4,7 +4,7 @@ import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
 import {NodeView} from '../../gte-core/gte/src/View/NodeView';
-import {SquareButtonComponent} from '../../shared/components/square-button/square-button.component';
+import {SquareButtonComponent} from '../../../../../../../Graphz/graphz/src/app/shared/components/square-button/square-button.component';
 
 
 @Component({

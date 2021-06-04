@@ -86,13 +86,12 @@ export class MoveView extends Phaser.GameObjects.Image {
     if (this.move.from.type === NodeType.OWNED) {
       color = this.from.node.player.color.toString();
       this.label.setColor(color)
-        .setFontSize(this.from.circle.displayWidth * 1.28)
-        .setFontStyle('italic');
+  //      .setFontSize(this.from.circle.displayWidth * 1.28)
+   //     .setFontStyle('italic');
     } else if (this.move.from.type === NodeType.CHANCE) {
       this.label.setColor('#000')
-        .setFontSize(this.from.circle.displayWidth * 1.05)
-        .setFontStyle('normal');
-
+    //    .setFontSize(this.from.circle.displayWidth * 1.05)
+    //    .setFontStyle('normal');
     }
     this.subscript.setColor(color);
 
