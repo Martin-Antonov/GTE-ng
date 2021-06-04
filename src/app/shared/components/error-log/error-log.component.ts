@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {UserActionControllerService} from '../../../../../../../GTE PROJECT/GTE-v2/GTE-ng/src/app/services/user-action-controller/user-action-controller.service';
-import {UserActionController} from '../../../../../../../GTE PROJECT/GTE-v2/GTE-ng/src/app/gte-core/gte/src/Controller/Main/UserActionController';
 import {trigger, state, style, animate, transition} from '@angular/animations';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
+import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 
 @Component({
   selector: 'app-error-log',
@@ -57,5 +57,4 @@ export class ErrorLogComponent implements OnInit {
       this.shouldShowError = false;
     }, 7500);
   }
-
 }

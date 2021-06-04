@@ -12,11 +12,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2015",
+    "skipLibCheck": true,
     "typeRoots": [
       "node_modules/@types",
       "node_modules/phaser/types/phaser.d.ts",
       "node_modules/fraction.js/fraction.d.ts",
-      "node_modules/angular2-hotkeys/t"
+      "node_modules/angular2-hotkeys/index.d.ts"
     ],
     "lib": [
       "es2017",

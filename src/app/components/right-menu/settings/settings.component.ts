@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SquareButtonComponent} from '../../../../../../../../Graphz/graphz/src/app/shared/components/square-button/square-button.component';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../../../gte-core/gte/src/Utils/Constants';
 import {Move} from '../../../gte-core/gte/src/Model/Move';
 import {ACTION} from '../../../gte-core/gte/src/Controller/UndoRedo/ActionsEnum';
+import {SquareButtonComponent} from '../../../shared/components/square-button/square-button.component';
 
 @Component({
   selector: 'app-settings',

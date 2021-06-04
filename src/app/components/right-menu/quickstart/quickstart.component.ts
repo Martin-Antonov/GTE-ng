@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SquareButtonComponent} from '../../../../../../../../Graphz/graphz/src/app/shared/components/square-button/square-button.component';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
+import {SquareButtonComponent} from '../../../shared/components/square-button/square-button.component';
 
 @Component({
   selector: 'app-quickstart',
@@ -20,5 +20,4 @@ export class QuickstartComponent implements OnInit {
     this.uis.quickstartActive = false;
     this.uis.setQuickStartInactive();
   }
-
 }

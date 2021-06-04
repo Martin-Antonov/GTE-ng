@@ -9,11 +9,9 @@ import {BottomMenuComponent} from './components/bottom-menu/bottom-menu.componen
 import {PlayersBoxComponent} from './components/top-menu/players-box/players-box.component';
 import {TextButtonComponent} from './components/top-menu/text-button/text-button.component';
 import {TreeTabComponent} from './components/bottom-menu/tree-tab/tree-tab.component';
-import {SquareButtonComponent} from '../../../../../Graphz/graphz/src/app/shared/components/square-button/square-button.component';
 import {HttpClientModule} from '@angular/common/http';
 import {StrategicFormComponent} from './components/top-menu/strategic-form/strategic-form.component';
 import {AngularDraggableModule} from 'angular2-draggable';
-import {ClickableXComponent} from '../../../../../Graphz/graphz/src/app/shared/components/clickable-x/clickable-x.component';
 import {UserActionControllerService} from './services/user-action-controller/user-action-controller.service';
 import {TooltipsService} from './services/tooltips/tooltips.service';
 import {UiSettingsService} from './services/ui-settings/ui-settings.service';
@@ -27,15 +25,17 @@ import {StrategicFormTableComponent} from './shared/components/strategic-form-ta
 import {ShortcutsComponent} from './components/right-menu/shortcuts/shortcuts.component';
 import {ShortcutsService} from './services/shortcuts/shortcuts.service';
 import { SettingsComponent } from './components/right-menu/settings/settings.component';
-import { ErrorLogComponent } from '../../../../../Graphz/graphz/src/app/shared/components/error-log/error-log.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ClickOutsideModule} from 'ng-click-outside';
 import { SaveMenuComponent } from './components/top-menu/save-menu/save-menu.component';
-import { DraggableWindowComponent } from '../../../../../Graphz/graphz/src/app/shared/components/draggable-window/draggable-window.component';
 import {HotkeyModule} from 'angular2-hotkeys';
 import { TreeDimensionsComponent } from './gte-core/tree-dimensions/tree-dimensions.component';
 import { CookiesNoticeComponent } from './components/misc/cookies-notice/cookies-notice.component';
 import {QuickstartComponent} from './components/right-menu/quickstart/quickstart.component';
+import {SquareButtonComponent} from './shared/components/square-button/square-button.component';
+import {ClickableXComponent} from './shared/components/clickable-x/clickable-x.component';
+import {ErrorLogComponent} from './shared/components/error-log/error-log.component';
+import {DraggableWindowComponent} from './shared/components/draggable-window/draggable-window.component';
 
 @NgModule({
   declarations: [
