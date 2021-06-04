@@ -139,13 +139,13 @@ export class KeyboardController {
     });
 
     // Change to the next label
-    this.keys.TAB.on('down', () => {
-      if (this.keys.SHIFT.isDown) {
-        this.userActionController.activateLabelField(false);
-      } else {
-        // this.userActionController.activateLabelField(true);
-      }
-    });
+    // this.keys.TAB.on('down', () => {
+    //   if (this.keys.SHIFT.isDown) {
+    //     this.userActionController.activateLabelField(false);
+    //   } else {
+    //     this.userActionController.activateLabelField(true);
+    //   }
+    // });
 
     this.keys.L.on('down', () => {
       this.userActionController.selectChildren();

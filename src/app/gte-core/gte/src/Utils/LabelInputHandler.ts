@@ -42,7 +42,6 @@ export class LabelInputHandler {
 
 
   show(next: boolean) {
-    this.events.emit('select-text');
     if (this.shouldRecalculateOrder) {
       this.shouldRecalculateOrder = false;
       this.nodesBFSOrder = this.treeController.tree.BFSOnTree();
@@ -81,6 +80,7 @@ export class LabelInputHandler {
       }
     }
     this.setLabelCoords();
+    this.events.emit('select-text');
   }
 
   /**A helper method which calculates the next possible index of a labeled node*/
