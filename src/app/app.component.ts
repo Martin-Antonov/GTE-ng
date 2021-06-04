@@ -1,7 +1,9 @@
 import {Component} from '@angular/core';
 import {UiSettingsService} from './services/ui-settings/ui-settings.service';
 import {UserActionControllerService} from './services/user-action-controller/user-action-controller.service';
-import {UserActionController} from './gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from './gte-core/gte/src/Controller/Main/UserActionController';
+import {Title} from '@angular/platform-browser';
+import {GTE_VERSION} from './gte-core/gte/src/Utils/Constants';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,8 @@ export class AppComponent {
   title = 'gte-v2';
   userActionController: UserActionController;
 
-  constructor(private uis: UiSettingsService, private uac: UserActionControllerService) {
+  constructor(private uis: UiSettingsService, private uac: UserActionControllerService, private titleService: Title) {
+    this.titleService.setTitle(GTE_VERSION);
     this.uis.init();
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
@@ -20,7 +23,7 @@ export class AppComponent {
 
     // confirm on reload page
     window.addEventListener('beforeunload', function (e) {
-      let confirmationMessage = '';
+      const confirmationMessage = '';
       e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
       return confirmationMessage;              // Gecko, WebKit, Chrome <34
     });
@@ -29,7 +32,6 @@ export class AppComponent {
   resizeMiddleElement() {
     this.userActionController.gameResize();
   }
-
 
   closeSaveFile() {
     this.uis.saveFileActive = false;

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionControllerService} from '../../../../../../../GTE PROJECT/GTE-v2/GTE-ng/src/app/services/user-action-controller/user-action-controller.service';
+import {UserActionController} from '../../../../../../../GTE PROJECT/GTE-v2/GTE-ng/src/app/gte-core/gte/src/Controller/Main/UserActionController';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 
 @Component({
@@ -37,16 +37,15 @@ export class ErrorLogComponent implements OnInit {
   constructor(private uac: UserActionControllerService) {
     this.uac.userActionController.subscribe(value => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.events.on(('show-error'), (err) => {
+          this.showError(err);
+        });
+      }
     });
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.userActionController.errorSignal.add((err) => {
-        this.showError(err);
-      });
-    }, 2000);
-
     this.shouldShowError = false;
     this.errorTriangleURL = 'assets/images/error.png';
   }

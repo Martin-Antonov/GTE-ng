@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../gte-core/gte/src/Controller/Main/UserActionController';
 import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../services/ui-settings/ui-settings.service';
 import {TreesFileService} from '../../services/trees-file/trees-file.service';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+import {SolverService} from '../../services/solver/solver.service';
 
 @Component({
   selector: 'app-top-menu',
@@ -19,10 +20,10 @@ export class TopMenuComponent implements OnInit {
   logoSrc: string;
   strategicFormActive: boolean;
 
-  @ViewChild('loadInput', { static: false }) loadFileField;
+  @ViewChild('loadInput', {static: false}) loadFileField;
 
   constructor(private uac: UserActionControllerService, public tts: TooltipsService,
-              public uis: UiSettingsService, private tfs: TreesFileService, private hotkeys: HotkeysService) {
+              public uis: UiSettingsService, private tfs: TreesFileService, private ss: SolverService, private hotkeys: HotkeysService) {
 
     this.hotkeys.add(new Hotkey('alt+n', (event: KeyboardEvent): boolean => {
       this.createNewTree();
@@ -52,8 +53,6 @@ export class TopMenuComponent implements OnInit {
 
   toggleStrategicForm() {
     this.uis.strategicFormActive = !this.uis.strategicFormActive;
-    if (!this.uis.strategicFormActive) {
-    }
   }
 
   toggleMatrixInput() {
@@ -64,22 +63,29 @@ export class TopMenuComponent implements OnInit {
     this.uis.solverActive = !this.uis.solverActive;
   }
 
+  calculateBFI() {
+    const result = this.userActionController.calculateBFI();
+    if (result) {
+      this.uis.solverActive = true;
+      this.ss.convertBFISolution(result);
+    }
+  }
+
   toggleSPNE() {
     if (!this.userActionController.SPNEActive) {
       this.userActionController.calculateSPNE();
-    }
-    else {
+    } else {
       this.userActionController.resetSPNE();
     }
   }
 
   isUndoActive() {
-    return this.userActionController.undoRedoController.currentTreeIndex === 0;
+    return this.userActionController.undoRedoActionController.currentIndex === -1;
   }
 
   isRedoActive() {
-    return this.userActionController.undoRedoController.currentTreeIndex ===
-      this.userActionController.undoRedoController.treesList.length - 1;
+    return this.userActionController.undoRedoActionController.currentIndex ===
+      this.userActionController.undoRedoActionController.actionsList.length - 1;
   }
 
   toggleSaveMenu() {

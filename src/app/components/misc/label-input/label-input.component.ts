@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
@@ -9,10 +9,9 @@ import {Hotkey, HotkeysService} from 'angular2-hotkeys';
   styleUrls: ['./label-input.component.scss']
 })
 export class LabelInputComponent implements OnInit {
-  @ViewChild('inputLabel', { static: false }) inputField;
+  @ViewChild('inputLabel', {static: false}) inputField;
 
   userActionController: UserActionController;
-
   constructor(private uac: UserActionControllerService) {
 
   }
@@ -20,14 +19,12 @@ export class LabelInputComponent implements OnInit {
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.labelInput.events.on('select-text', () => {
+          this.selectInputText();
+        }, this);
+      }
     });
-    setTimeout(() => {
-      this.userActionController.labelInput.selectTextSignal.add(() => {
-        this.selectInputText();
-      }, this);
-    }, 2000);
-
-
   }
 
   changeLabel() {

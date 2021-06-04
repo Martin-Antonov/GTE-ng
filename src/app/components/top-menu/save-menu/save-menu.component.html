@@ -1,6 +1,19 @@
-<ul>
-  <li (click)="this.tfs.saveTreeToFile();this.closeSaveMenu()">Save as .GTE</li>
-  <li (click)="this.tfs.saveTreeToImage();this.closeSaveMenu()">Save as .PNG</li>
-  <li (click)="this.tfs.saveTreeToFig();this.closeSaveMenu()">Save as .FIG</li>
-  <li (click)="this.tfs.saveTreeToSVG();this.closeSaveMenu()">Save as .SVG</li>
-</ul>
+<div class="save-menu-container">
+  <div class="file-name">
+    <div class="label">Filename</div>
+    <input type="text" [(ngModel)]="tfs.treeTabs[tfs.currentTabIndex].fileName" #filename>
+  </div>
+  <div class="menu-title">Tree</div>
+  <div class="clickable-item" (click)="this.tfs.saveTreeToFile();this.closeSaveMenu()">as .GTE</div>
+  <div class="clickable-item" (click)="this.tfs.saveTreeToImage();this.closeSaveMenu()">as .PNG</div>
+  <div class="clickable-item" (click)="this.tfs.saveTreeToFig();this.closeSaveMenu()">as .FIG</div>
+  <div class="clickable-item" (click)="this.tfs.saveTreeToSVG();this.closeSaveMenu()">as .SVG</div>
+  <div class="clickable-item" (click)="this.tfs.saveTreeToEF();this.closeSaveMenu()">as .EF</div>
+  <div class="menu-title">Strategic Form</div>
+  <div class="clickable-item" [ngClass]="{'disabled': this.isStrategicFormDisabled()}"
+       (click)="this.tfs.saveStrategicFormToSTF();this.closeSaveMenu()">as .STF
+  </div>
+  <div class="clickable-item" [ngClass]="{'disabled': this.isStrategicFormDisabled()}"
+       (click)="this.tfs.saveStrategicFormToTEX();this.closeSaveMenu()">as .TEX
+  </div>
+</div>

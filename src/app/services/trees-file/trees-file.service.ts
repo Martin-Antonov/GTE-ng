@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {UserActionControllerService} from '../user-action-controller/user-action-controller.service';
-import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../gte-core/gte/src/Controller/Main/UserActionController';
 import {TreeFile} from './TreeFile';
 import {saveAs} from 'file-saver';
-import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedoController';
+import {UndoRedoController} from '../../gte-core/gte/src/Controller/UndoRedo/UndoRedoController';
 
 @Injectable({
   providedIn: 'root'
@@ -23,16 +23,16 @@ export class TreesFileService {
   }
 
   initiateFirstTree() {
-    let initialTree = new TreeFile('MyTree1');
+    const initialTree = new TreeFile('MyTree1');
     this.treeTabs.push(initialTree);
     this.currentTabIndex = 0;
   }
 
   addNewTree() {
     this.saveCurrentTree();
-    this.userActionController.emptySelectedNodes();
+    // this.userActionController.deselectNodesHandler();
     // Create the new tree and push it to tree tabs
-    let newTree = new TreeFile('MyTree' + (this.treeTabs.length + 1));
+    const newTree = new TreeFile('MyTree' + (this.treeTabs.length + 1));
     this.treeTabs.push(newTree);
     this.currentTabIndex = this.treeTabs.length - 1;
     this.userActionController.createNewTree();
@@ -43,7 +43,7 @@ export class TreesFileService {
   changeToTree(index: number) {
     if (index !== this.currentTabIndex) {
       this.saveCurrentTree();
-      this.userActionController.emptySelectedNodes();
+      // this.userActionController.deselectNodesHandler();
       this.userActionController.treeController.reloadTreeFromJSON(
         this.userActionController.treeController.treeParser.parse(this.treeTabs[index].currentTree),
         this.treeTabs[index].coordsList
@@ -68,11 +68,10 @@ export class TreesFileService {
     let closedTree = this.treeTabs.splice(index, 1);
     if (index !== 0) {
       this.currentTabIndex = index - 1;
-    }
-    else {
+    } else {
       this.currentTabIndex = this.treeTabs.length - 1;
     }
-    this.userActionController.emptySelectedNodes();
+    // this.userActionController.deselectNodesHandler();
     this.userActionController.treeController.reloadTreeFromJSON(
       this.userActionController.treeController.treeParser.parse(this.treeTabs[this.currentTabIndex].currentTree)
     );
@@ -82,8 +81,8 @@ export class TreesFileService {
   }
 
   private saveCurrentTree() {
-    let currentFile = this.treeTabs[this.currentTabIndex];
-    let undoRedoController = this.userActionController.undoRedoController;
+    const currentFile = this.treeTabs[this.currentTabIndex];
+    const undoRedoController = this.userActionController.undoRedoController;
     currentFile.coordsList = [];
 
     // Stringify and save current tree
@@ -102,24 +101,24 @@ export class TreesFileService {
 
   saveTreeToFile() {
     this.saveCurrentTree();
-    let treeToSave = this.treeTabs[this.currentTabIndex];
+    const treeToSave = this.treeTabs[this.currentTabIndex];
     treeToSave.urTreesList = null;
     treeToSave.urCurrentTreeIndex = null;
-    let text = JSON.stringify(treeToSave);
-    let blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
+    const text = JSON.stringify(treeToSave);
+    const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.gte');
   }
 
   saveTreeToFig() {
-    let figFile = this.userActionController.viewExporter.toFig();
-    let blob = new Blob([figFile], {type: 'text/plain;charset=us-ascii'});
+    const figFile = this.userActionController.viewExporter.toFig();
+    const blob = new Blob([figFile], {type: 'text/plain;charset=us-ascii'});
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.fig');
   }
 
   saveTreeToImage() {
     setTimeout(() => {
-      let cnvs = document.getElementsByTagName('canvas');
-      let name = this.treeTabs[this.currentTabIndex].fileName;
+      const cnvs = document.getElementsByTagName('canvas');
+      const name = this.treeTabs[this.currentTabIndex].fileName;
 
       (<any>cnvs[0]).toBlob(function (blob) {
         saveAs(blob, name + '.png');
@@ -128,22 +127,35 @@ export class TreesFileService {
   }
 
   saveTreeToSVG() {
-    let svgFile = this.userActionController.viewExporter.toSVG();
-    let blob = new Blob([svgFile], {type: 'text/plain;charset=utf-8'});
+    const svgFile: any = this.userActionController.viewExporter.toSVG();
+    const blob = new Blob([svgFile], {type: 'text/plain;charset=utf-8'});
     saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.svg');
   }
 
-  saveStrategicForm() {
-    let stratFormFile = this.userActionController.strategicForm.serializer.toText(this.treeTabs[this.currentTabIndex].fileName);
-    console.log(stratFormFile);
+  saveTreeToEF() {
+    const efFile = this.userActionController.viewExporter.toEf();
+    const blob = new Blob([efFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.ef');
+  }
+
+  saveStrategicFormToSTF() {
+    const stratFormFile = this.userActionController.strategicForm.serializer.toText(this.treeTabs[this.currentTabIndex].fileName);
+    const blob = new Blob([stratFormFile], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.stf');
+  }
+
+  saveStrategicFormToTEX() {
+    const stratFormTex = this.userActionController.strategicForm.serializer.toTex();
+    const blob = new Blob([stratFormTex], {type: 'text/plain;charset=utf-8'});
+    saveAs(blob, this.treeTabs[this.currentTabIndex].fileName + '.tex');
   }
 
   loadTreeFromFile(event) {
-    let input = event.target;
+    const input = event.target;
 
-    let reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = () => {
-      let text = reader.result;
+      const text = reader.result;
       this.newTreeFromFile(text as any);
     };
 

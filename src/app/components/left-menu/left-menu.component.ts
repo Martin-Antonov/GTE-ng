@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {UserActionController} from '../../gte-core/gte/src/Controller/UserActionController';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {UserActionController} from '../../gte-core/gte/src/Controller/Main/UserActionController';
 import {ITooltips} from '../../services/tooltips/tooltips';
 import {TooltipsService} from '../../services/tooltips/tooltips.service';
 import {UserActionControllerService} from '../../services/user-action-controller/user-action-controller.service';
 import {NodeView} from '../../gte-core/gte/src/View/NodeView';
+import {SquareButtonComponent} from '../../../../../../../Graphz/graphz/src/app/shared/components/square-button/square-button.component';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class LeftMenuComponent implements OnInit {
   playerIsActive: boolean;
   playerColors: Array<string>;
   tooltips: ITooltips;
+  @ViewChild('zeroSumComponent', {static: false}) zeroSumComponent: SquareButtonComponent;
+  @ViewChild('fractionDecimalComponent', {static: false}) fractionDecimalComponent: SquareButtonComponent;
 
   constructor(private uac: UserActionControllerService, private tts: TooltipsService) {
   }
@@ -24,6 +27,14 @@ export class LeftMenuComponent implements OnInit {
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+      if (value) {
+        this.userActionController.treeController.events.on('zero-sum-undo', () => {
+          this.zeroSumComponent.flipImage();
+        });
+        this.userActionController.treeController.events.on('fraction-decimal-undo', () => {
+          this.fractionDecimalComponent.flipImage();
+        });
+      }
     });
     this.tts.getTooltips().subscribe((tooltips) => {
       this.tooltips = tooltips;
@@ -41,55 +52,39 @@ export class LeftMenuComponent implements OnInit {
     this.playerIsActive = true;
   }
 
-  areNodesSelected() {
+  areNodesSelected(): boolean {
     if (this.userActionController) {
       return this.userActionController.selectedNodes.length === 0;
-    }
-    else {
+    } else {
       return true;
     }
-
   }
 
-  doSelectedHaveChildren() {
-    if (this.userActionController) {
-      let result = false;
-      this.userActionController.selectedNodes.forEach((nV: NodeView) => {
-        if (nV.node.children.length > 0) {
-          result = true;
-        }
-      });
-      return result;
-    }
-    else {
-      return false;
-    }
+  doSelectedHaveChildren(): boolean {
+    return this.userActionController && this.userActionController.doSelectedHaveChildren();
   }
 
   canCreateISet() {
     if (this.userActionController && this.userActionController.selectedNodes.length > 1) {
-      let selectedNodes = this.userActionController.selectedNodes;
-      let nodes = [];
+      const selectedNodes = this.userActionController.selectedNodes;
+      const nodes = [];
       selectedNodes.forEach((nV: NodeView) => {
         nodes.push(nV.node);
       });
 
       try {
         this.userActionController.treeController.tree.canCreateISet(nodes);
-      }
-      catch {
+      } catch {
         return false;
       }
-      let distinctISets = this.userActionController.treeController
-        .getDistinctISetsFromNodes(selectedNodes).length;
+      const distinctISets = this.userActionController.treeController.getDistinctISetsFromNodes(selectedNodes).length;
       for (let i = 0; i < selectedNodes.length; i++) {
         if (!selectedNodes[i].node.iSet) {
           return true;
         }
       }
       return distinctISets !== 1;
-    }
-    else {
+    } else {
       return false;
     }
   }

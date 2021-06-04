@@ -19,6 +19,7 @@
 
   <app-players-box></app-players-box>
 
+  <app-text-button [text]="'BFI'" (click)="this.calculateBFI()"></app-text-button>
   <app-text-button [text]="'SPNE'" (click)="this.toggleSPNE()"
   [isActive]="this.userActionController.SPNEActive"></app-text-button>
   <app-text-button [text]="'Strategic Form'" (click)="this.toggleStrategicForm()"

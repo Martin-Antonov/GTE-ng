@@ -1,4 +1,3 @@
-/// <reference path="../../../../../../node_modules/@types/mathjs/index.d.ts" />
 import {
   BACKWARDS_INDUCTION_NOT_ALL_LABELED,
   BACKWARDS_INDUCTION_PERFECT_INFORMATION,
@@ -9,11 +8,12 @@ import {
   SAME_PATH_ON_ROOT_ERROR_TEXT
 } from '../Utils/Constants';
 import {Move} from './Move';
-import * as  math from 'mathjs';
 import {Node, NodeType} from './Node';
 import {Player} from './Player';
 import {ISet} from './ISet';
 import {LabelSetter} from './LabelSetter';
+import Fraction from 'fraction.js/fraction';
+import {TreeAlgorithms} from './Algorithms/TreeAlgorithms';
 
 /**The class which stores all the needed information for the tree - lists of nodes, moves, isets, players and the root */
 export class Tree {
@@ -23,6 +23,7 @@ export class Tree {
   iSets: Array<ISet>;
   players: Array<Player>;
   labelSetter: LabelSetter;
+  algorithms: TreeAlgorithms;
   private dfsNodes: Array<Node>;
 
   constructor() {
@@ -31,6 +32,7 @@ export class Tree {
     this.iSets = [];
     this.players = [];
     this.labelSetter = new LabelSetter();
+    this.algorithms = new TreeAlgorithms();
   }
 
   // region Nodes
@@ -95,12 +97,13 @@ export class Tree {
       node.convertToChance(this.players[0]);
     }
   }
+
   // endregion
 
   // region Information Sets
   /** Adds an iSet to the list of isets */
   addISet(player: Player, nodes?: Array<Node>) {
-    let iSet = new ISet(player, nodes);
+    const iSet = new ISet(player, nodes);
     this.iSets.push(iSet);
     return iSet;
   }
@@ -116,17 +119,10 @@ export class Tree {
   /**A method which checks whether an information set can be created from a list of nodes.
    * If not, throws errors which are handled in the controller. Uses 4 helper methods.*/
   canCreateISet(nodes: Array<Node>) {
-    // NOTE: Marked as not needed - iSets can be created without players
-    // if(!this.checkIfNodesHavePlayers(nodes)){
-    //     throw new Error(NODES_MISSING_PLAYERS_ERROR_TEXT);
-    // }
-
     if (!this.checkNumberOfChildren(nodes)) {
       throw new Error(NODES_NUMBER_OF_CHILDREN_ERROR_TEXT);
     }
 
-    // The below method will throw an error when there are 2 different players among the nodes
-    // but will not throw an error if there is 1 player and some nodes without a player
     if (!this.checkIfNodesHaveTheSamePlayer(nodes)) {
       throw new Error(NODES_DIFFERENT_PLAYERS_ERROR_TEXT);
     }
@@ -141,7 +137,7 @@ export class Tree {
 
   /**Checks whether any 2 nodes of an array share a path to the root.*/
   private checkIfNodesSharePathToRoot(nodes: Array<Node>): boolean {
-    let allNodesFromISets = [];
+    const allNodesFromISets = [];
     nodes.forEach((n: Node) => {
 
       if (n.iSet) {
@@ -155,11 +151,11 @@ export class Tree {
       }
     });
     for (let i = 0; i < allNodesFromISets.length; i++) {
-      let n1 = allNodesFromISets[i];
-      let path1 = n1.getPathToRoot();
+      const n1 = allNodesFromISets[i];
+      const path1 = n1.getPathToRoot();
       for (let j = i + 1; j < allNodesFromISets.length; j++) {
-        let n2 = allNodesFromISets[j];
-        let path2 = n2.getPathToRoot();
+        const n2 = allNodesFromISets[j];
+        const path2 = n2.getPathToRoot();
         if (path1.indexOf(n2) !== -1 || path2.indexOf(n1) !== -1) {
           return true;
         }
@@ -231,9 +227,9 @@ export class Tree {
 
   /**Checks if selected nodes have the same player assigned*/
   private checkIfNodesHaveTheSamePlayer(nodes: Array<Node>): boolean {
-    let players = [];
+    const players = [];
     for (let i = 0; i < nodes.length; i++) {
-      let node = nodes[i];
+      const node = nodes[i];
       if (node.player && players.indexOf(node.player) === -1) {
         players.push(node.player);
       }
@@ -270,11 +266,11 @@ export class Tree {
 
   /**Breadth first search on the nodes of the tree*/
   BFSOnTree() {
-    let bfsNodes: Array<Node> = [];
-    let nodesQueue: Array<Node> = [];
+    const bfsNodes: Array<Node> = [];
+    const nodesQueue: Array<Node> = [];
     nodesQueue.push(this.root);
     while (nodesQueue.length > 0) {
-      let current = nodesQueue.shift();
+      const current = nodesQueue.shift();
       bfsNodes.push(current);
       current.children.forEach((c: Node) => {
         nodesQueue.push(c);
@@ -284,8 +280,8 @@ export class Tree {
   }
 
   /**Returns the number of leaves in the tree.*/
-  getLeaves() {
-    let leaves = [];
+  getLeaves(): Array<Node> {
+    const leaves = [];
     this.DFSOnTree();
     this.dfsNodes.forEach((n: Node) => {
       if (n.children.length === 0) {
@@ -297,7 +293,7 @@ export class Tree {
 
   /**Given a node, returns all nodes in the branch, defined by the node*/
   getBranchChildren(node: Node) {
-    let branchChildren = [];
+    const branchChildren = [];
     this.getBranchChildrenDFS(node, branchChildren);
     return branchChildren;
   }
@@ -337,19 +333,18 @@ export class Tree {
     this.nodes.forEach((n: Node) => {
       let shouldReset = false;
       if (n.type === NodeType.CHANCE) {
-        let sum = 0;
+        let sum = new Fraction(0);
         for (let i = 0; i < n.childrenMoves.length; i++) {
-          let move = n.childrenMoves[i];
+          const move = n.childrenMoves[i];
           if (!move.probability) {
             shouldReset = true;
             break;
           }
-          sum += move.probability;
+          sum = sum.add(move.probability);
         }
-        sum = parseFloat((sum).toFixed(4));
-        if (shouldReset || sum !== 1) {
+        if (shouldReset || sum.valueOf() !== 1) {
           n.childrenMoves.forEach((m: Move) => {
-            m.probability = 1 / n.childrenMoves.length;
+            m.probability = new Fraction(1, n.childrenMoves.length);
           });
         }
       }
@@ -361,7 +356,7 @@ export class Tree {
     if (move.from.type === NodeType.CHANCE) {
       this.chanceNodesSetProbabilities(move, text);
     } else {
-      let dashedArray = text.split('_');
+      const dashedArray = text.split('_');
       if (dashedArray.length === 1) {
         move.label = text;
         move.subscript = '';
@@ -376,7 +371,7 @@ export class Tree {
       }
 
       if (move.from.iSet !== null) {
-        let index = move.from.childrenMoves.indexOf(move);
+        const index = move.from.childrenMoves.indexOf(move);
         move.from.iSet.nodes.forEach((n: Node) => {
           n.childrenMoves[index].label = move.label;
           n.childrenMoves[index].subscript = move.subscript;
@@ -395,15 +390,16 @@ export class Tree {
   /** A method which sets the probabilities of a chance node, once a new probability is set externally*/
   private chanceNodesSetProbabilities(move: Move, text: string) {
     move.subscript = '';
-    let newProb = <number>math.number(<any>(math.fraction(text)));
+    const newProb = new Fraction(text);
 
     // If the user is just tabbing through probabilities
-    if (move.probability === newProb) {
+    if (move.probability.compare(newProb) === 0) {
       return;
     }
-    if (newProb >= 0 && newProb <= 1) {
+    const probAsDecimal = newProb.valueOf();
+    if (probAsDecimal >= 0 && probAsDecimal <= 1) {
       move.probability = newProb;
-      let probabilities = [];
+      const probabilities = [];
       let currentIndex = -1;
       // Take the current index of the move and take the probabilities
       for (let i = 0; i < move.from.childrenMoves.length; i++) {
@@ -414,35 +410,36 @@ export class Tree {
       }
 
       // Calculate the sum of all probabilities before the given element
-      let probSumBeforeCurrent = 0;
+      let probSumBeforeCurrent = new Fraction(0);
       for (let i = 0; i < currentIndex; i++) {
-        probSumBeforeCurrent += probabilities[i];
+        probSumBeforeCurrent = probSumBeforeCurrent.add(probabilities[i]);
       }
       // Rounding errors prevention
-      const totalProbability = parseFloat((probSumBeforeCurrent + newProb).toFixed(4));
+      const totalProbability = (probSumBeforeCurrent.add(newProb)).valueOf();
 
       // Case 0: Borderline case - if the last element is set with total probability less than 1
       // We reset all previous elements
       if (totalProbability < 1 && currentIndex === probabilities.length - 1) {
         for (let i = 0; i < currentIndex; i++) {
-          move.from.childrenMoves[i].probability = (1 - newProb) / (currentIndex);
+          const newValue = (new Fraction(1).sub(newProb)).div(currentIndex);
+          move.from.childrenMoves[i].probability = newValue;
         }
-      }
-      // Case 1: Standard case - the new probabilitiy with the previous does not exceed 1
-      // We set the remaining probabilities to be the average of the remaining
-      else if (totalProbability <= 1) {
+        // Case 1: Standard case - the new probabilitiy with the previous does not exceed 1
+        // We set the remaining probabilities to be the average of the remaining
+      } else if (totalProbability <= 1) {
         for (let i = currentIndex + 1; i < probabilities.length; i++) {
-          move.from.childrenMoves[i].probability = (1 - probSumBeforeCurrent - newProb) / (probabilities.length - currentIndex - 1);
+          const newValue = (new Fraction(1).sub(probSumBeforeCurrent).sub(newProb)).div(probabilities.length - currentIndex - 1);
+          move.from.childrenMoves[i].probability = newValue;
         }
-      }
-      // Case 2: If the previous + the current new probability exceed 1
-      // We set all probabilities afterwards to be 0, and the previous will be averaged of the remaining
-      else if (totalProbability > 1) {
+        // Case 2: If the previous + the current new probability exceed 1
+        // We set all probabilities afterwards to be 0, and the previous will be averaged of the remaining
+      } else if (totalProbability > 1) {
         for (let i = 0; i < currentIndex; i++) {
-          move.from.childrenMoves[i].probability = (1 - newProb) / (currentIndex);
+          const newValue = (new Fraction(1).sub(newProb)).div(currentIndex);
+          move.from.childrenMoves[i].probability = newValue;
         }
         for (let i = currentIndex + 1; i < probabilities.length; i++) {
-          move.from.childrenMoves[i].probability = 0;
+          move.from.childrenMoves[i].probability = new Fraction(0);
         }
       }
     }
@@ -454,8 +451,8 @@ export class Tree {
   /**A method for checking whether the game has perfect recall.*/
   perfectRecallCheck() {
     for (let i = 0; i < this.iSets.length; i++) {
-      let iSet = this.iSets[i];
-      let iSetReachability = [];
+      const iSet = this.iSets[i];
+      const iSetReachability = [];
       iSet.nodes.forEach((n: Node) => {
         let current = n.parent;
         let currentMove = n.parentMove;
@@ -468,9 +465,9 @@ export class Tree {
         }
       });
       for (let j = 0; j < iSetReachability.length; j++) {
-        let pair1 = iSetReachability[j];
+        const pair1 = iSetReachability[j];
         for (let k = j + 1; k < iSetReachability.length; k++) {
-          let pair2 = iSetReachability[k];
+          const pair2 = iSetReachability[k];
           if (pair1.node === pair2.node && pair1.move !== pair2.move) {
             throw new Error(IMPERFECT_RECALL_ERROR_TEXT);
           }
@@ -478,62 +475,5 @@ export class Tree {
       }
     }
   }
-
-
-  backwardInduction(clonedTree: Tree) {
-    if (!clonedTree.checkAllNodesLabeled()) {
-      throw new Error(BACKWARDS_INDUCTION_NOT_ALL_LABELED);
-    }
-    if (this.iSets.length !== 0) {
-      throw new Error(BACKWARDS_INDUCTION_PERFECT_INFORMATION);
-    }
-    let movesCloned = clonedTree.moves.slice(0);
-    while (clonedTree.nodes.length !== 1) {
-      let leaves = clonedTree.getLeaves();
-      let parentNodes = [];
-      leaves.forEach((leaf: Node) => {
-        if (parentNodes.indexOf(leaf.parent) === -1) {
-          parentNodes.push(leaf.parent);
-        }
-      });
-
-      parentNodes.sort((x: Node, y: Node) => {
-        return x.depth > y.depth ? -1 : 1;
-      });
-
-      parentNodes.forEach((n: Node) => {
-        if (n.type === NodeType.CHANCE) {
-          n.payoffs.outcomes = [0, 0, 0, 0];
-          n.children.forEach((c: Node) => {
-            c.payoffs.multiply(c.parentMove.probability);
-            n.payoffs.add(c.payoffs.outcomes);
-          });
-          n.convertToLeaf();
-
-        } else if (n.type === NodeType.OWNED) {
-          let maxLeaf: Node = null;
-          let maxPayoff = -100000;
-          let playerIndex = clonedTree.players.indexOf(n.player);
-          n.payoffs.outcomes = [0, 0, 0, 0];
-          n.children.forEach((c: Node) => {
-            if (c.payoffs.outcomes[playerIndex - 1] > maxPayoff) {
-              maxPayoff = c.payoffs.outcomes[playerIndex - 1];
-              maxLeaf = c;
-            }
-          });
-          n.payoffs.outcomes = maxLeaf.payoffs.outcomes.slice(0);
-          this.moves[movesCloned.indexOf(maxLeaf.parentMove)].isBestInductionMove = true;
-        }
-
-        for (let i = 0; i < n.children.length; i++) {
-          clonedTree.removeNode(n.children[i]);
-          i--;
-        }
-      });
-    }
-    movesCloned = null;
-  }
-
-// endregion
 }
 

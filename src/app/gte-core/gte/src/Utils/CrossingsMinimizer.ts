@@ -1,5 +1,3 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
 import {TreeView} from '../View/TreeView';
 import {Node} from '../Model/Node';
 import {ISetView} from '../View/ISetView';
@@ -53,11 +51,6 @@ export class CrossingsMinimizer {
       this.iSetContainmentCase();
     }
 
-    let maxDepth = this.treeView.getMaxDepth();
-    if (maxDepth * this.treeView.properties.levelHeight > this.treeView.game.height * 0.75) {
-      this.treeView.properties.levelHeight = ((1 / (maxDepth + 2)) * this.treeView.game.height);
-    }
-
     this.treeView.setYCoordinates();
     this.treeView.updateLeavesPositions();
     this.treeView.centerParents();
@@ -66,7 +59,7 @@ export class CrossingsMinimizer {
   }
 
   private pushBranchDown(nV: NodeView, newLevel: number) {
-    let branchNodes = this.treeView.tree.getBranchChildren(nV.node);
+    const branchNodes = this.treeView.tree.getBranchChildren(nV.node);
     branchNodes.forEach((bNode: Node) => {
       const bNodeView = this.treeView.findNodeView(bNode);
       bNodeView.level = newLevel + bNodeView.level;
@@ -179,28 +172,26 @@ export class CrossingsMinimizer {
   }
 
   private adjustHorizontally() {
-    let leavesLength = this.treeView.tree.getLeaves().length;
+    const leavesLength = this.treeView.tree.getLeaves().length;
     this.treeView.iSets.forEach((iSetV: ISetView) => {
       iSetV.nodes.forEach((nV: NodeView) => {
         let sign = 0;
-        let nodeInChildrenIndex = nV.node.parent.children.indexOf(nV.node);
+        const nodeInChildrenIndex = nV.node.parent.children.indexOf(nV.node);
         if (nV.node.parent.children.length / 2 - 0.5 === nodeInChildrenIndex) {
           return;
-        }
-        // Goes left
-        else if (nodeInChildrenIndex < nV.node.parent.children.length / 2) {
+          // Goes left
+        } else if (nodeInChildrenIndex < nV.node.parent.children.length / 2) {
           sign = -1;
-        }
-        else {
+        } else {
           sign = 1;
         }
 
-        let allBranchNodes = this.treeView.tree.getBranchChildren(nV.node);
+        const allBranchNodes = this.treeView.tree.getBranchChildren(nV.node);
         allBranchNodes.forEach((n: Node) => {
-          let nodeView = this.treeView.findNodeView(n);
+          const nodeView = this.treeView.findNodeView(n);
           if (nodeView.level !== nodeView.node.depth) {
-            let multiplier = nodeView.level - nodeView.node.depth;
-            nodeView.position.add(sign * multiplier * (this.treeView.properties.treeWidth / leavesLength), 0);
+            const multiplier = nodeView.level - nodeView.node.depth;
+            nodeView.setPosition(nodeView.x + sign * multiplier * (this.treeView.properties.treeWidth / leavesLength), nodeView.y);
           }
         });
       });

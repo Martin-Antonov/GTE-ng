@@ -1,48 +1,50 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
 import {NodeView} from '../View/NodeView';
 import {MoveView} from '../View/MoveView';
-import {Node} from '../Model/Node';
-import {TreeController} from '../Controller/TreeController';
+import {Node, NodeType} from '../Model/Node';
+import {TreeController} from '../Controller/Main/TreeController';
+import {ISetView} from '../View/ISetView';
 
 export class LabelInputHandler {
-  game: Phaser.Game;
+  scene: Phaser.Scene;
   active: boolean;
   shouldRecalculateOrder: boolean;
-  currentlySelected: Phaser.Sprite;
+  currentlySelected: Phaser.GameObjects.Image | NodeView;
   nodesBFSOrder: Array<Node>;
   leavesDFSOrder: Array<Node>;
   treeController: TreeController;
   fieldX: number;
   fieldY: number;
-  selectTextSignal: Phaser.Signal;
+  events: Phaser.Events.EventEmitter;
+  tab: Phaser.Input.Keyboard.Key;
 
-  constructor(game: Phaser.Game, treeController: TreeController) {
-    this.game = game;
+  constructor(scene: Phaser.Scene, treeController: TreeController) {
+    this.scene = scene;
     this.shouldRecalculateOrder = true;
     this.active = false;
     this.nodesBFSOrder = [];
     this.leavesDFSOrder = [];
     this.treeController = treeController;
-    this.selectTextSignal = new Phaser.Signal();
-    this.treeController.labelInputSignal.add((sprite: Phaser.Sprite) => {
-        this.activate(sprite);
-      }, this
-    );
+    this.events = new Phaser.Events.EventEmitter();
+    this.tab = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TAB);
+    this.tab.enabled = false;
+    this.treeController.events.on('label-clicked', (image: Phaser.GameObjects.Image) => {
+      this.activate(image);
+    });
   }
 
-  activate(sprite) {
+  activate(image: Phaser.GameObjects.Image) {
     this.active = true;
-    this.currentlySelected = sprite;
+    this.currentlySelected = image;
     this.setLabelCoords();
-    this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.TAB);
-    this.selectTextSignal.dispatch();
+    this.tab.enabled = true;
+    this.events.emit('select-text');
   }
 
 
   show(next: boolean) {
-    this.selectTextSignal.dispatch();
+    this.events.emit('select-text');
     if (this.shouldRecalculateOrder) {
+      this.shouldRecalculateOrder = false;
       this.nodesBFSOrder = this.treeController.tree.BFSOnTree();
       this.leavesDFSOrder = this.treeController.tree.getLeaves();
     }
@@ -59,17 +61,15 @@ export class LabelInputHandler {
       }
       // Activate the next move
       this.currentlySelected = this.treeController.treeView.findMoveView(this.nodesBFSOrder[nextIndex].parentMove);
-    }
-    // If we are currently looking at nodes
-    else if (this.currentlySelected instanceof NodeView) {
+      // If we are currently looking at nodes
+    } else if (this.currentlySelected instanceof NodeView) {
       // If owner label
-      if ((<NodeView>this.currentlySelected).ownerLabel.alpha === 1) {
-        let index = this.nodesBFSOrder.indexOf((<NodeView>this.currentlySelected).node);
-        let nextIndex = this.calculateNodeLabelIndex(next, index);
+      if ((<NodeView>this.currentlySelected).node.type === NodeType.OWNED) {
+        const index = this.nodesBFSOrder.indexOf((<NodeView>this.currentlySelected).node);
+        const nextIndex = this.calculateNodeLabelIndex(next, index);
         this.currentlySelected = this.treeController.treeView.findNodeView(this.nodesBFSOrder[nextIndex]);
-      }
-      // If payoffs label
-      else {
+        // If payoffs label
+      } else if ((<NodeView>this.currentlySelected).node.type === NodeType.LEAF) {
         const index = this.leavesDFSOrder.indexOf((<NodeView>this.currentlySelected).node);
         let nextIndex;
         if (next) {
@@ -98,9 +98,8 @@ export class LabelInputHandler {
           return i;
         }
       }
-    }
-    // If we want the previous
-    else {
+      // If we want the previous
+    } else {
       for (let i = current - 1; i >= 0; i--) {
         if (this.nodesBFSOrder[i].player && this.nodesBFSOrder[i].player !== this.treeController.tree.players[0]) {
           return i;
@@ -122,24 +121,27 @@ export class LabelInputHandler {
     if (this.active) {
       // If we are looking at moves
       if (this.currentlySelected instanceof MoveView) {
-        let moveV = (<MoveView>this.currentlySelected);
+        const moveV = (<MoveView>this.currentlySelected);
         this.treeController.tree.changeMoveLabel(moveV.move, newLabel);
         this.treeController.treeView.moves.forEach((mV: MoveView) => {
           mV.updateLabel(this.treeController.treeView.properties.fractionOn, this.treeController.treeView.properties.levelHeight);
         });
-      }
-      // If we are looking at nodes
-      else if (this.currentlySelected instanceof NodeView) {
-        let nodeV = (<NodeView>this.currentlySelected);
-        if (nodeV.ownerLabel.alpha === 1) {
+        // If we are looking at nodes
+      } else if (this.currentlySelected instanceof NodeView) {
+        const nodeV = (<NodeView>this.currentlySelected);
+        if (nodeV.node.type === NodeType.OWNED) {
           nodeV.node.player.label = newLabel;
           this.treeController.treeView.nodes.forEach((nV: NodeView) => {
             if (nV.node.player) {
-              nV.ownerLabel.setText(nV.node.player.label, true);
+              nV.ownerLabel.setText(nV.node.player.label);
               nV.updateLabelPosition();
             }
           });
-
+          this.treeController.treeView.iSets.forEach((iSetV: ISetView) => {
+            if (iSetV.label.alpha === 1) {
+              iSetV.label.setText(iSetV.nodes[0].node.player.label);
+            }
+          });
         } else {
           nodeV.node.payoffs.saveFromString(newLabel);
           this.treeController.treeView.nodes.forEach((nV: NodeView) => {
@@ -149,12 +151,12 @@ export class LabelInputHandler {
       }
       this.show(true);
     }
-    this.selectTextSignal.dispatch();
+    this.events.emit('select-text');
   }
 
   getLabelValue(): string {
     if (this.currentlySelected instanceof MoveView) {
-      let moveV = (<MoveView>this.currentlySelected);
+      const moveV = (<MoveView>this.currentlySelected);
       if (moveV.move.label) {
         let stringToReturn = moveV.move.label;
         if (moveV.move.subscript) {
@@ -165,10 +167,10 @@ export class LabelInputHandler {
         return moveV.label.text;
       }
     } else if (this.currentlySelected instanceof NodeView) {
-      let nodeV = (<NodeView>this.currentlySelected);
-      if (nodeV.ownerLabel.alpha === 1) {
+      const nodeV = (<NodeView>this.currentlySelected);
+      if (nodeV.node.type === NodeType.OWNED) {
         return nodeV.ownerLabel.text;
-      } else if (nodeV.payoffsLabel.alpha === 1) {
+      } else if (nodeV.node.type === NodeType.LEAF) {
         return nodeV.node.payoffs.toString();
       }
     }
@@ -180,15 +182,19 @@ export class LabelInputHandler {
       this.fieldX = this.currentlySelected.label.x;
       this.fieldY = this.currentlySelected.label.y;
     } else if (this.currentlySelected instanceof NodeView) {
-      let nodeV = (<NodeView>this.currentlySelected);
-      if (nodeV.ownerLabel.alpha === 1) {
-        this.fieldX = nodeV.ownerLabel.x;
-        this.fieldY = nodeV.ownerLabel.y;
-      } else if (nodeV.payoffsLabel.alpha === 1) {
-        this.fieldX = nodeV.payoffsLabel.x;
-        this.fieldY = nodeV.payoffsLabel.y + 50;
+      const nodeV = (<NodeView>this.currentlySelected);
+      if (nodeV.node.type === NodeType.OWNED) {
+        this.fieldX = nodeV.ownerLabel.x + nodeV.x;
+        this.fieldY = nodeV.ownerLabel.y + nodeV.y;
+      } else if (nodeV.node.type === NodeType.LEAF) {
+        this.fieldX = nodeV.payoffsLabel.x + nodeV.x;
+        this.fieldY = nodeV.payoffsLabel.y + nodeV.y + 50;
       }
     }
+    const wView = this.scene.cameras.main.worldView;
+
+    this.fieldX = ((this.fieldX - wView.left) / (wView.right - wView.left)) * this.scene.sys.canvas.width;
+    this.fieldY = ((this.fieldY - wView.top) / (wView.bottom - wView.top)) * this.scene.sys.canvas.height;
   }
 
 
@@ -198,6 +204,6 @@ export class LabelInputHandler {
     this.currentlySelected = null;
     this.fieldX = 0;
     this.fieldY = 0;
-    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TAB);
+    this.tab.enabled = false;
   }
 }

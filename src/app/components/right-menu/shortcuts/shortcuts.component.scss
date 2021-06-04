@@ -1,12 +1,16 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-app-draggable-window{
+app-draggable-window {
   .shortcuts-content {
     @include window-content();
+    align-items: normal;
+    overflow: auto;
+
     ul {
       li {
         margin: 5px 0;
+
         .command {
           font-family: $orbitron;
           font-weight: bold;

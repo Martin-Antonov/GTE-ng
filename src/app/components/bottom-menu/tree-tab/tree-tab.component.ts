@@ -12,18 +12,25 @@ export class TreeTabComponent implements OnInit {
   @Input() isSelected: string;
   @Output() close = new EventEmitter();
   @Output() select = new EventEmitter();
+
   constructor(public tfs: TreesFileService) {
   }
 
   ngOnInit() {
   }
 
-  closeTab(){
+  closeTab() {
     this.close.emit();
   }
 
-  selectTab(){
+  selectTab() {
     this.select.emit();
   }
 
+  test(element) {
+    if (element.value === '') {
+      this.tfs.treeTabs[this.index].fileName = 'My Tree X';
+    }
+    element.blur();
+  }
 }

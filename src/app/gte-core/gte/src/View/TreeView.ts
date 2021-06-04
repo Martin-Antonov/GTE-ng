@@ -1,6 +1,3 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
-
 import {ISetView} from './ISetView';
 import {ISet} from '../Model/ISet';
 import {NodeView} from './NodeView';
@@ -16,24 +13,26 @@ import {CrossingsMinimizer} from '../Utils/CrossingsMinimizer';
 /** A class for the graphical representation of the tree. The main algorithm for drawing and repositioning
  * the tree is in this class*/
 export class TreeView {
-  game: Phaser.Game;
+  scene: Phaser.Scene;
   tree: Tree;
   // The properties field determines the horizontal and vertical offsets between each level.
   properties: TreeViewProperties;
   nodes: Array<NodeView>;
   moves: Array<MoveView>;
   iSets: Array<ISetView>;
+
   private treeTweenManager: TreeTweenManager;
   private crossingsMinimizer: CrossingsMinimizer;
+  private treeHeight: number;
 
-  constructor(game: Phaser.Game, tree: Tree) {
-    this.game = game;
+  constructor(scene: Phaser.Scene, tree: Tree) {
+    this.scene = scene;
     this.tree = tree;
     this.nodes = [];
     this.moves = [];
     this.iSets = [];
-    this.properties = new TreeViewProperties(this.game.height * INITIAL_TREE_HEIGHT, this.game.width * INITIAL_TREE_WIDTH);
-    this.treeTweenManager = new TreeTweenManager(this.game);
+    this.properties = new TreeViewProperties(this.scene.sys.canvas.height * INITIAL_TREE_HEIGHT, this.scene.sys.canvas.width * INITIAL_TREE_WIDTH);
+    this.treeTweenManager = new TreeTweenManager(this.scene);
     this.crossingsMinimizer = new CrossingsMinimizer(this);
     this.initializeTree();
   }
@@ -41,71 +40,69 @@ export class TreeView {
   /**Given a tree from the Model, we initialize the treeView by adding the corresponding sprites*/
   private initializeTree() {
     this.tree.nodes.forEach((n: Node) => {
-      let nodeView = new NodeView(this.game, n);
+      const nodeView = new NodeView(this.scene, n);
       this.nodes.push(nodeView);
       if (n !== this.tree.root) {
-        let parent = this.findNodeView(n.parent);
-        this.moves.push(new MoveView(this.game, parent, nodeView));
+        const parent = this.findNodeView(n.parent);
+        this.moves.push(new MoveView(this.scene, parent, nodeView));
       }
     });
     this.tree.iSets.forEach((iSet: ISet) => {
       this.addISetView(iSet);
     });
     this.drawTree(true, false);
-
-    this.updateMoves();
   }
 
 
   // region Tree Drawing Algorithm
   /**This method contains the algorithm for drawing the tree in different scenarios*/
   drawTree(fullReset: boolean, startAnimations: boolean) {
-    this.treeTweenManager.oldCoordinates = this.getOldCoordinates();
-
-    if (this.properties.automaticLevelAdjustment && fullReset && this.iSets.length !== 0) {
-      this.crossingsMinimizer.equalizeInfoSetsLevels();
-    }
-
-    if (!this.properties.automaticLevelAdjustment) {
-      this.nodes.forEach((nV: NodeView) => {
-        nV.level = nV.node.depth;
-      });
-    }
-
-    let maxDepth = this.getMaxDepth();
-    if (maxDepth * this.properties.levelHeight > this.game.height * 0.75) {
-      this.properties.levelHeight = ((1 / (maxDepth + 2)) * this.game.height);
-    }
-
     if (fullReset) {
-      this.setYCoordinates();
-      this.updateLeavesPositions();
-      this.centerParents();
-      if (this.properties.automaticLevelAdjustment && this.iSets.length > 0) {
-        this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
-      }
-      this.centerGroupOnScreen();
-      this.drawISets();
-    }
-    if (startAnimations) {
-      this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);
-
-      // this.game.time.events.add(TREE_TWEEN_DURATION +, () => {
-      this.resetNodesAndMovesDisplay();
-      // });
-    }
-    else {
-      this.updateMoves();
+      this.fullResetTree(startAnimations);
+    } else {
       this.resetNodesAndMovesDisplay();
       this.drawISets();
     }
   }
 
+  private fullResetTree(startAnimations: boolean) {
+    this.treeTweenManager.oldCoordinates = this.getOldCoordinates();
+    if (this.properties.automaticLevelAdjustment && this.iSets.length !== 0) {
+      this.crossingsMinimizer.equalizeInfoSetsLevels();
+    } else {
+      this.nodes.forEach((nV: NodeView) => {
+        nV.level = nV.node.depth;
+      });
+    }
+
+    this.setYCoordinates();
+    this.updateLeavesPositions();
+    this.centerParents();
+    if (this.properties.automaticLevelAdjustment && this.iSets.length > 0) {
+      this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
+    }
+    this.centerGroupOnScreen();
+    this.drawISets();
+
+    if (startAnimations) {
+      this.treeTweenManager.startTweens(this.nodes, this.moves, this.tree.checkAllNodesLabeled(), this.properties);
+      this.resetNodesAndMovesDisplay(false);
+    } else {
+      this.resetNodesAndMovesDisplay();
+    }
+
+    if (this.treeHeight * 1.25 > this.scene.sys.canvas.height) {
+      this.scene.cameras.main.zoomTo((this.scene.sys.canvas.height / (this.treeHeight * 1.25)), 200);
+    } else {
+      this.scene.cameras.main.zoomTo(1, 200);
+    }
+  }
+
   /**In order to tween the nodes, we need to save the old coordinates for each node*/
   getOldCoordinates() {
-    let oldCoordinates = [];
+    const oldCoordinates = [];
     this.nodes.forEach((nV: NodeView) => {
-      oldCoordinates.push({x: nV.position.x, y: nV.position.y});
+      oldCoordinates.push({x: nV.x, y: nV.y});
     });
     return oldCoordinates;
   }
@@ -119,11 +116,11 @@ export class TreeView {
 
   /**Update the leaves' x coordinate first*/
   updateLeavesPositions() {
-    let leaves = this.tree.getLeaves();
-    let widthPerNode = this.properties.treeWidth / leaves.length;
+    const leaves = this.tree.getLeaves();
+    const widthPerNode = this.properties.treeWidth / leaves.length;
 
     for (let i = 0; i < leaves.length; i++) {
-      let nodeView = this.findNodeView(leaves[i]);
+      const nodeView = this.findNodeView(leaves[i]);
       nodeView.x = (widthPerNode * i);
     }
   }
@@ -132,19 +129,11 @@ export class TreeView {
   centerParents() {
     this.tree.BFSOnTree().reverse().forEach((n: Node) => {
       if (n.children.length !== 0) {
-        let currentNodeView = this.findNodeView(n);
-        let leftChildNodeView = this.findNodeView(n.children[0]);
-        let rightChildNodeView = this.findNodeView(n.children[n.children.length - 1]);
+        const currentNodeView = this.findNodeView(n);
+        const leftChildNodeView = this.findNodeView(n.children[0]);
+        const rightChildNodeView = this.findNodeView(n.children[n.children.length - 1]);
         currentNodeView.x = (leftChildNodeView.x + rightChildNodeView.x) / 2;
       }
-    });
-  }
-
-  /**A method which updates the rotation and position of the moves with regards to the parent and child nodes*/
-  updateMoves() {
-    this.moves.forEach((mV: MoveView) => {
-      mV.updateMovePosition();
-      mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
     });
   }
 
@@ -156,58 +145,68 @@ export class TreeView {
   }
 
   /** A method which resets the nodes and moves drawing*/
-  resetNodesAndMovesDisplay() {
-    let areAllNodesLabeled = this.tree.checkAllNodesLabeled();
+  resetNodesAndMovesDisplay(updateMovesPositions = true) {
+    const areAllNodesLabeled = this.tree.checkAllNodesLabeled();
     this.nodes.forEach(n => {
       n.resetNodeDrawing(areAllNodesLabeled, this.properties.zeroSumOn);
     });
 
     if (areAllNodesLabeled) {
       this.tree.resetLabels();
+    }
+    if (updateMovesPositions) {
       this.moves.forEach((mV: MoveView) => {
         mV.label.alpha = 1;
         mV.subscript.alpha = 1;
+
+        mV.updateMovePosition();
         mV.updateLabel(this.properties.fractionOn, this.properties.levelHeight);
       });
     }
-
   }
 
   /**Re-centers the tree on the screen*/
   centerGroupOnScreen() {
-    let left = this.game.width * 5;
-    let right = -this.game.width * 5;
-    let top = this.game.height * 5;
-    let bottom = -this.game.height * 5;
 
-    this.nodes.forEach(n => {
-      if (n.x < left) {
-        left = n.x;
+    const bounds = this.getTreeBounds();
+    this.treeHeight = bounds.height;
+
+    const treeCenterX = bounds.left + bounds.width / 2;
+    const treeCenterY = bounds.top + bounds.height / 1.8;
+
+    const offsetX = (this.scene.sys.canvas.width / 2 - treeCenterX);
+    const offsetY = (this.scene.sys.canvas.height / 2 - treeCenterY);
+
+    this.nodes.forEach((n: NodeView) => {
+      n.setPosition(n.x + offsetX, n.y + offsetY);
+    });
+  }
+
+  getTreeBounds(): { left: number, top: number, width: number, height: number } {
+    let left = this.scene.sys.canvas.width * 200;
+    let right = -this.scene.sys.canvas.width * 200;
+    let top = this.scene.sys.canvas.height * 200;
+    let bottom = -this.scene.sys.canvas.height * 200;
+
+    this.nodes.forEach((nV: NodeView) => {
+      if (nV.x < left) {
+        left = nV.x;
       }
-      if (n.x > right) {
-        right = n.x;
+      if (nV.x > right) {
+        right = nV.x;
       }
-      if (n.y < top) {
-        top = n.y;
+      if (nV.y < top) {
+        top = nV.y;
       }
-      if (n.y > bottom) {
-        bottom = n.y;
+      if (nV.y > bottom) {
+        bottom = nV.y;
       }
     });
 
-    let width = right - left;
-    let height = bottom - top;
+    const width = right - left;
 
-
-    let treeCenterX = left + width / 2;
-    let treeCenterY = top + height / 1.8;
-
-    let offsetX = (this.game.width / 2 - treeCenterX);
-    let offsetY = (this.game.height / 2 - treeCenterY);
-
-    this.nodes.forEach(n => {
-      n.position.set(n.x + offsetX, n.y + offsetY);
-    });
+    const height = bottom - top;
+    return {left: left, top: top, width: width, height: height};
   }
 
   // endregion
@@ -215,13 +214,13 @@ export class TreeView {
   // region Nodes
   /** Adds a child to a specified node*/
   addChildToNode(nodeV: NodeView) {
-    let node = nodeV.node;
-    let child = new Node();
+    const node = nodeV.node;
+    const child = new Node();
     this.tree.addChildToNode(node, child);
 
-    let childV = new NodeView(this.game, child, nodeV.x, nodeV.y);
+    const childV = new NodeView(this.scene, child, nodeV.x, nodeV.y);
     childV.level = nodeV.level + 1;
-    let move = new MoveView(this.game, nodeV, childV);
+    const move = new MoveView(this.scene, nodeV, childV);
 
     this.nodes.push(childV);
     this.moves.push(move);
@@ -231,7 +230,7 @@ export class TreeView {
   /** A helper method for finding the nodeView, given a Node*/
   findNodeView(node: Node): NodeView {
     for (let i = 0; i < this.nodes.length; i++) {
-      let nodeView = this.nodes[i];
+      const nodeView = this.nodes[i];
       if (nodeView.node === node) {
         return nodeView;
       }
@@ -242,7 +241,7 @@ export class TreeView {
   /**A helper method for finding the moveView, given a Move*/
   findMoveView(move: Move): MoveView {
     for (let i = 0; i < this.moves.length; i++) {
-      let moveView = this.moves[i];
+      const moveView = this.moves[i];
       if (moveView.move === move) {
         return moveView;
       }
@@ -260,9 +259,16 @@ export class TreeView {
           m.destroy();
         }
       });
+      // Remove the NodeView from any iSets it could be a part of
+      this.iSets.forEach((iSetV: ISetView) => {
+        const indexOfNodeView = iSetV.nodes.indexOf(nodeV);
+        if (indexOfNodeView !== -1) {
+          iSetV.nodes.splice(indexOfNodeView, 1);
+        }
+      });
       // Remove the nodeView from the treeView and destroy it
       this.nodes.splice(this.nodes.indexOf(nodeV), 1);
-      nodeV.events.onInputOut.dispatch(nodeV);
+      nodeV.emit('pointerout');
       nodeV.destroy();
     }
   }
@@ -272,11 +278,11 @@ export class TreeView {
   // region ISets
   /**A method for adding an iSetView*/
   addISetView(iSet: ISet) {
-    let nodes = [];
+    const nodes = [];
     iSet.nodes.forEach(n => {
       nodes.push(this.findNodeView(n));
     });
-    let iSetV = new ISetView(this.game, iSet, nodes);
+    const iSetV = new ISetView(this.scene, iSet, nodes);
     this.iSets.push(iSetV);
     return iSetV;
   }
@@ -284,7 +290,7 @@ export class TreeView {
   /**A helper method for finding the iSetView, given iSet*/
   findISetView(iSet: ISet): ISetView {
     for (let i = 0; i < this.iSets.length; i++) {
-      let iSetView = this.iSets[i];
+      const iSetView = this.iSets[i];
       if (iSetView.iSet === iSet) {
         return iSetView;
       }
@@ -308,7 +314,7 @@ export class TreeView {
   /**A method which removes broken iSets*/
   cleanISets() {
     for (let i = 0; i < this.iSets.length; i++) {
-      let iSetV = this.iSets[i];
+      const iSetV = this.iSets[i];
       if (!iSetV.iSet || !iSetV.iSet.nodes) {
         this.removeISetView(iSetV);
         i--;
@@ -317,15 +323,5 @@ export class TreeView {
   }
 
   // endregion
-
-  getMaxDepth() {
-    let maxDepth = -1;
-    this.nodes.forEach((nV: NodeView) => {
-      if (maxDepth < nV.level) {
-        maxDepth = nV.level;
-      }
-    });
-    return maxDepth;
-  }
 }
 

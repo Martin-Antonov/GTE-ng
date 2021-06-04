@@ -1,38 +1,30 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-import {ISET_LINE_WIDTH, LABEL_SIZE, OVERLAY_SCALE} from '../Utils/Constants';
+import {ISET_LINE_WIDTH, LABEL_SIZE, TREE_TWEEN_DURATION} from '../Utils/Constants';
 import {NodeView} from './NodeView';
 import {ISet} from '../Model/ISet';
 
 /**A class for drawing the iSet */
-export class ISetView extends Phaser.Sprite {
-  game: Phaser.Game;
-  bmd: Phaser.BitmapData;
+export class ISetView extends Phaser.GameObjects.Image {
+  scene: Phaser.Scene;
+  canvasTexture: Phaser.Textures.CanvasTexture;
   iSet: ISet;
-  label: Phaser.Text;
+  label: Phaser.GameObjects.Text;
   nodes: Array<NodeView>;
+  uuid: string;
 
-  constructor(game: Phaser.Game, iSet: ISet, nodes: Array<NodeView>) {
-    super(game, 0, 0, '');
-    this.game = game;
+  constructor(scene: Phaser.Scene, iSet: ISet, nodes: Array<NodeView>) {
+    super(scene, scene.sys.canvas.width / 2, scene.sys.canvas.height / 2, '');
+    this.scene = scene;
     this.iSet = iSet;
     this.nodes = nodes;
 
-    this.bmd = this.game.make.bitmapData(this.game.width, this.game.height);
+    this.uuid = this.getUUID();
+    this.canvasTexture = this.scene.textures.createCanvas(this.uuid, this.scene.sys.canvas.width, this.scene.sys.canvas.height);
     this.sortNodesLeftToRight();
     this.createISetBMD();
+    this.setTexture(this.uuid);
+    this.setInteractive(this.scene.input.makePixelPerfect());
+    this.scene.add.existing(this);
     this.createLabel();
-
-    this.inputEnabled = true;
-    this.input.priorityID = 100;
-    this.input.pixelPerfectClick = true;
-    this.input.pixelPerfectOver = true;
-
-    this.events.onInputOver.add(() => {
-      this.game.canvas.style.cursor = 'crosshair';
-    });
-    this.events.onInputOut.add(() => {
-      this.game.canvas.style.cursor = 'default';
-    });
   }
 
   removeNode(nodeV: NodeView) {
@@ -44,12 +36,16 @@ export class ISetView extends Phaser.Sprite {
   resetISet() {
     this.sortNodesLeftToRight();
     this.createISetBMD();
-    let rightNodePosition = this.nodes[Math.floor(this.nodes.length / 2)].position;
-    let leftNodePosition = this.nodes[Math.floor(this.nodes.length / 2) - 1].position;
-    this.label.position.set((rightNodePosition.x + leftNodePosition.x) * 0.5, (rightNodePosition.y + leftNodePosition.y) * 0.5);
+    const rightNode = this.nodes[Math.floor(this.nodes.length / 2)];
+    const leftNode = this.nodes[Math.floor(this.nodes.length / 2) - 1];
+    this.label.setPosition((rightNode.x + leftNode.x) * 0.5, (rightNode.y + leftNode.y) * 0.5);
     this.updateISetLabel();
-    this.game.add.tween(this)
-      .from({alpha: 0}, 300, Phaser.Easing.Default, true);
+    this.alpha = 0;
+    this.scene.tweens.add({
+      targets: this,
+      alpha: 0.15,
+      duration: TREE_TWEEN_DURATION / 2,
+    });
   }
 
   private updateISetLabel() {
@@ -60,7 +56,7 @@ export class ISetView extends Phaser.Sprite {
       this.label.alpha = 0;
     } else {
       this.label.alpha = 1;
-      this.label.fill = Phaser.Color.getWebRGB(this.iSet.player.color);
+      this.label.setColor(this.iSet.player.color);
     }
     this.nodes.forEach((nV: NodeView) => {
       nV.ownerLabel.alpha = 0;
@@ -76,52 +72,55 @@ export class ISetView extends Phaser.Sprite {
 
   /**Create e very thick line that goes through all the points*/
   private createISetBMD() {
-    this.bmd.clear();
-    this.bmd.ctx.lineWidth = this.game.height * ISET_LINE_WIDTH;
-    this.bmd.ctx.lineCap = 'round';
-    this.bmd.ctx.lineJoin = 'round';
-    this.bmd.ctx.strokeStyle = '#ffffff';
-    this.bmd.ctx.beginPath();
-    this.bmd.ctx.moveTo(this.nodes[0].x, this.nodes[0].y);
+    const ctx = this.canvasTexture.getContext();
+    const color = this.iSet.player ? this.iSet.player.color : '#000000';
+    this.canvasTexture.clear();
+    ctx.lineWidth = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(this.nodes[0].x, this.nodes[0].y);
     for (let i = 1; i < this.nodes.length; i++) {
-      this.bmd.ctx.lineTo(this.nodes[i].x, this.nodes[i].y);
+      ctx.lineTo(this.nodes[i].x, this.nodes[i].y);
     }
-
-    this.bmd.ctx.stroke();
-
-    this.loadTexture(this.bmd);
-
-    this.game.add.existing(this);
-    if (this.iSet.player) {
-      this.tint = this.iSet.player.color;
-    } else {
-      this.tint = 0x000000;
-    }
-    this.alpha = 0.15;
+    ctx.stroke();
   }
 
   private createLabel() {
+    const rightNode = this.nodes[Math.floor(this.nodes.length / 2)];
+    const leftNode = this.nodes[Math.floor(this.nodes.length / 2) - 1];
 
-    let rightNodePosition = this.nodes[Math.floor(this.nodes.length / 2)].position;
-    let leftNodePosition = this.nodes[Math.floor(this.nodes.length / 2) - 1].position;
-
-    this.label = this.game.add.text((rightNodePosition.x + leftNodePosition.x) * 0.5,
-      (rightNodePosition.y + leftNodePosition.y) * 0.5, '', null);
-    if (this.nodes[0].node.player) {
-      this.label.setText(this.nodes[0].node.player.label);
-    }
-    this.label.fontSize = this.nodes[0].width * LABEL_SIZE;
-    this.label.anchor.set(0.5, 0.5);
+    const text = this.nodes[0].node.player ? this.nodes[0].node.player.label : '';
+    this.label = this.scene.add.text((rightNode.x + leftNode.x) * 0.5,
+      (rightNode.y + leftNode.y) * 0.5, text, {
+        fontSize: this.nodes[0].circle.displayWidth * LABEL_SIZE,
+        fontStyle: 'bold',
+        fontFamily: 'Arial',
+      }).setOrigin(0.5, 0.5);
     if (!this.iSet.player) {
       this.label.alpha = 0;
     } else {
-      this.label.fill = Phaser.Color.getWebRGB(this.iSet.player.color);
+      this.label.setColor(this.iSet.player.color);
     }
+
+    this.label.setInteractive();
+  }
+
+  private getUUID() {
+    let dt = new Date().getTime();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      // tslint:disable-next-line:no-bitwise
+      const r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      // tslint:disable-next-line:no-bitwise
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
   }
 
   destroy() {
-    this.bmd.destroy();
-    this.bmd = null;
+    this.canvasTexture.destroy();
+    this.canvasTexture = null;
     this.nodes = [];
     this.nodes = null;
     this.label.destroy();

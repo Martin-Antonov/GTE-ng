@@ -1,0 +1,19 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+app-draggable-window {
+  transform: translate(-50%, 50%)
+}
+
+.container {
+  @include window-content();
+  flex-direction: column;
+
+  p {
+    text-align: center;
+  }
+
+  .dont-show-container {
+
+  }
+}

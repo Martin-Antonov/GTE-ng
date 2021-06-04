@@ -4,12 +4,13 @@ import {Player} from '../Model/Player';
 import {Node, NodeType} from '../Model/Node';
 import {ISet} from '../Model/ISet';
 
-import * as converter from 'xml-js';
+import Fraction from 'fraction.js/fraction';
+import {PLAYER_COLORS} from './Constants';
 
 export class TreeParser {
 
   private copyWithoutCircularReferences(tree: Tree) {
-    let strippedTree = {
+    const strippedTree = {
       players: [],
       nodes: [],
       iSets: [],
@@ -19,16 +20,16 @@ export class TreeParser {
 
     // Copy players
     tree.players.forEach((p: Player) => {
-      strippedTree.players.push(new Player(p.id, p.label, p.color));
+      strippedTree.players.push(new Player(p.id, p.label, PLAYER_COLORS[p.id - 1]));
     });
 
     // Copy the nodes without any connection to other nodes
     tree.nodes.forEach((n: Node) => {
-      let node = new Node();
+      const node = new Node();
       node.type = n.type;
       node.depth = n.depth;
       if (node.type === NodeType.OWNED || node.type === NodeType.CHANCE) {
-        let ownerIndex = tree.players.indexOf(n.player);
+        const ownerIndex = tree.players.indexOf(n.player);
         strippedTree.nodePlayerPair.push({nodeIndex: tree.nodes.indexOf(n), playerIndex: ownerIndex});
       }
       if (n.payoffs) {
@@ -40,7 +41,7 @@ export class TreeParser {
 
     // Copy moves
     tree.moves.forEach((m: Move) => {
-      let move = {
+      const move = {
         type: null,
         fromIndex: null,
         toIndex: null,
@@ -68,7 +69,7 @@ export class TreeParser {
 
     // Copy iSets
     tree.iSets.forEach((is: ISet) => {
-      let iSet = {
+      const iSet = {
         label: null,
         nodeIndexes: []
       };
@@ -83,23 +84,26 @@ export class TreeParser {
 
 
   stringify(tree: Tree) {
-    let decircularTree = this.copyWithoutCircularReferences(tree);
+    const decircularTree = this.copyWithoutCircularReferences(tree);
     return JSON.stringify(decircularTree);
   }
 
   parse(jsonTree: string) {
-    let strippedTree = JSON.parse(jsonTree);
+    const strippedTree = JSON.parse(jsonTree);
 
-    let clonedTree = new Tree();
+    const clonedTree = new Tree();
     strippedTree.players.forEach((pl: Player) => {
-      clonedTree.players.push(new Player(pl.id, pl.label, pl.color));
+      clonedTree.players.push(new Player(pl.id, pl.label, PLAYER_COLORS[pl.id - 1]));
     });
 
     strippedTree.nodes.forEach((n: Node) => {
-      let node = new Node();
+      const node = new Node();
       node.type = n.type;
       node.depth = n.depth;
-      node.payoffs.outcomes = n.payoffs.outcomes.slice(0);
+      node.payoffs.outcomes = [];
+      n.payoffs.outcomes.forEach((outcome) => {
+        node.payoffs.outcomes.push(new Fraction(outcome));
+      });
       clonedTree.nodes.push(node);
     });
 
@@ -108,7 +112,7 @@ export class TreeParser {
     });
 
     strippedTree.iSets.forEach(is => {
-      let iSet = new ISet();
+      const iSet = new ISet();
       is.nodeIndexes.forEach(i => {
         iSet.nodes.push(clonedTree.nodes[i]);
         clonedTree.nodes[i].iSet = iSet;
@@ -118,10 +122,10 @@ export class TreeParser {
     });
 
     strippedTree.moves.forEach(m => {
-      let move = new Move();
+      const move = new Move();
       move.label = m.label;
       move.subscript = m.subscript;
-      move.probability = m.probability;
+      move.probability = new Fraction(m.probability);
       move.manuallyAssigned = m.manuallyAssigned;
       move.from = clonedTree.nodes[m.fromIndex];
       move.to = clonedTree.nodes[m.toIndex];
@@ -140,8 +144,8 @@ export class TreeParser {
   }
 
   fromXML(xmlTree: string) {
-    let jsonTree = converter.xml2json(xmlTree, {compact: true, spaces: 2});
-    console.log(jsonTree);
+    // const jsonTree = converter.xml2json(xmlTree, {compact: true, spaces: 2});
+    // console.log(jsonTree);
   }
 }
 

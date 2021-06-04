@@ -1,60 +1,63 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
-
-import {SELECTION_INNER_COLOR} from './Constants';
-
 /** A class representing the rectangle which selects vertices*/
-export class SelectionRectangle extends Phaser.Sprite {
-  start: Phaser.Point;
-  active: boolean;
+export class SelectionRectangle extends Phaser.GameObjects.Image {
+  scene: Phaser.Scene;
 
-  constructor(game: Phaser.Game) {
-    super(game, 0, 0);
-    this.loadTexture(this.game.cache.getBitmapData('line'));
+  start: Phaser.Math.Vector2;
+  isActive: boolean;
 
-    this.start = new Phaser.Point();
-    this.tint = SELECTION_INNER_COLOR;
+  constructor(scene: Phaser.Scene) {
+    super(scene, 0, 0, null);
+    this.setTexture('dot');
 
+    this.start = new Phaser.Math.Vector2;
+    this.isActive = false;
     this.alpha = 0;
-
+    this.setOrigin(0, 0);
     this.active = true;
     // when we click and hold, we reset the rectangle.
-    this.game.input.onDown.add(() => {
-      if (this.active) {
-        this.width = 0;
-        this.height = 0;
-        this.start.x = this.game.input.activePointer.position.x;
-        this.start.y = this.game.input.activePointer.position.y;
-        this.position = this.start;
-        this.alpha = 0.3;
-        this.game.time.events.add(101, () => {
-          if (this.game.input.activePointer.isDown) {
-            this.game.canvas.style.cursor = 'crosshair';
+    this.scene.input.on('pointerdown', () => {
+      this.isActive = true;
+      this.displayWidth = 0;
+      this.displayHeight = 0;
+      const zoom = this.scene.cameras.main.zoom;
+      this.start.x = this.scene.input.activePointer.worldX;
+      this.start.y = this.scene.input.activePointer.worldY;
+      this.setPosition(this.start.x, this.start.y);
+      this.alpha = 0.3;
+      this.scene.time.addEvent({
+        delay: 101,
+        callback: () => {
+          if (this.scene.input.activePointer.isDown) {
+            this.scene.sys.canvas.style.cursor = 'crosshair';
           }
-        }, this);
-      }
-    }, this);
-
+        }
+      });
+    });
 
     // When we release, reset the rectangle
-    this.game.input.onUp.add(() => {
-      this.game.canvas.style.cursor = 'default';
-      if (this.active) {
+    this.scene.input.on('pointerup', () => {
+      this.scene.sys.canvas.style.cursor = 'default';
+      if (this.isActive) {
         this.alpha = 0;
-        this.width = 0;
-        this.height = 0;
+        this.displayWidth = 0;
+        this.displayHeight = 0;
+        this.isActive = false;
       }
     });
+    this.scene.input.on('gameout', () => {
+      this.scene.input.emit('pointerup');
+    });
     // On dragging, update the transform of the rectangle*/
-    this.game.input.addMoveCallback(this.onDrag, this);
-    this.game.add.existing(this);
-  }
+    this.scene.input.on('pointermove', () => {
+      if (this.scene.input.activePointer.isDown && this.active && this.alpha !== 0) {
+        this.displayWidth = Math.abs(this.scene.input.activePointer.worldX - this.start.x);
+        this.displayHeight = Math.abs(this.scene.input.activePointer.worldY - this.start.y);
 
-  /** The method which resizes the rectangle as we drag*/
-  onDrag() {
-    if (this.game.input.activePointer.isDown && this.active && this.alpha !== 0) {
-      this.height = this.game.input.activePointer.y - this.start.y;
-      this.width = this.game.input.activePointer.x - this.start.x;
-    }
+        this.displayOriginX = (this.scene.input.activePointer.worldX - this.start.x) < 0 ? 1 : 0;
+        this.displayOriginY = (this.scene.input.activePointer.worldY - this.start.y) < 0 ? 1 : 0;
+      }
+    });
+    this.scene.add.existing(this);
   }
 }
 

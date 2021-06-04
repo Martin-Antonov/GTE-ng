@@ -1,4 +1,3 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
 import {Player} from './Player';
 import {Node} from './Node';
 import {Move} from './Move';

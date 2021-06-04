@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {UserActionController} from '../../../gte-core/gte/src/Controller/UserActionController';
+import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/UserActionController';
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
 import {TreesFileService} from '../../../services/trees-file/trees-file.service';
-import * as math from 'mathjs';
 
 @Component({
   selector: 'app-strategic-form',
@@ -14,31 +13,28 @@ import * as math from 'mathjs';
 export class StrategicFormComponent implements OnInit {
   userActionController: UserActionController;
   stratFormScaleCSS: string;
-  private stratFormScale: number;
 
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
               private solver: SolverService,
-              private tts: TreesFileService) {
-  }
+              private tts: TreesFileService) {}
 
 
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
     });
-    this.stratFormScale = 1;
-    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+    this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
   }
 
   upScale(increment: number) {
-    this.stratFormScale *= increment;
-    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+    this.uis.stratFormScale *= increment;
+    this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
   }
 
   downScale(increment: number) {
-    this.stratFormScale *= 1 / increment;
-    this.stratFormScaleCSS = 'scale(' + this.stratFormScale + ')';
+    this.uis.stratFormScale *= 1 / increment;
+    this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
   }
 
   close() {
@@ -49,13 +45,13 @@ export class StrategicFormComponent implements OnInit {
     let result = '';
     let m1 = '';
     let m2 = '';
-    result += this.userActionController.strategicForm.p1rows.length + ' ' + this.userActionController.strategicForm.p2cols.length;
-    for (let i = 0; i < this.userActionController.strategicForm.payoffsMatrix.length; i++) {
-      const payoffsMatrix = this.userActionController.strategicForm.payoffsMatrix[i];
+    result += this.userActionController.strategicFormResult.p1rows.length + ' ' + this.userActionController.strategicFormResult.p2cols.length;
+    for (let i = 0; i < this.userActionController.strategicFormResult.payoffsMatrix.length; i++) {
+      const payoffsMatrix = this.userActionController.strategicFormResult.payoffsMatrix[i];
       for (let j = 0; j < payoffsMatrix.length; j++) {
         const payoffs = payoffsMatrix[j];
-        const m1PayoffAsFraction = math.format(math.fraction(payoffs[0][0].outcomes[0]));
-        const m2PayoffAsFraction = math.format(math.fraction(payoffs[0][0].outcomes[1]));
+        const m1PayoffAsFraction = payoffs[0][0].outcomes[0].toFraction();
+        const m2PayoffAsFraction = payoffs[0][0].outcomes[1].toFraction();
         m1 += m1PayoffAsFraction + ' ';
         m2 += m2PayoffAsFraction + ' ';
       }
@@ -63,12 +59,7 @@ export class StrategicFormComponent implements OnInit {
       m2 += '\n';
     }
     result += '\n\n' + m1 + '\n' + m2;
-    console.log(result);
     this.solver.postMatrixAsText(result);
     this.uis.solverActive = true;
-  }
-
-  saveStrategicForm() {
-    this.tts.saveStrategicForm();
   }
 }

@@ -1,4 +1,4 @@
-<app-draggable-window [width]="'500px'" [height]="'500px'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
+<app-draggable-window [width]="'30%'" [height]="'50%'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
                       (closeCallback)="this.close()" [title]="'Strategic Form'">
   <app-strategic-form-table *ngIf="this.userActionController && this.userActionController.strategicForm"
                             [stratFormScaleCSS]="this.stratFormScaleCSS"></app-strategic-form-table>
@@ -6,7 +6,6 @@
 
   <div class="buttons-container" *ngIf="this.userActionController && this.userActionController.strategicForm">
     <div class="button" (click)="this.postFromStrategicForm()">Solve</div>
-    <div class="button" (click)="this.saveStrategicForm()">Save</div>
   </div>
 
   <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">

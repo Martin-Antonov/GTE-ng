@@ -1,7 +1,5 @@
-/// <reference path="../../../../../../node_modules/@types/mathjs/index.d.ts" />
-
 import {Node} from './Node';
-import * as math from 'mathjs';
+import Fraction from 'fraction.js/fraction';
 
 /**The class Move which has from, to, label and probability */
 export class Move {
@@ -9,7 +7,7 @@ export class Move {
   to: Node;
   label: string;
   subscript: string;
-  probability: number;
+  probability: Fraction;
   manuallyAssigned: boolean;
   isBestInductionMove: boolean;
 
@@ -34,7 +32,7 @@ export class Move {
 
   /**Converts to a chance move with given probabilities */
   convertToChance(probability?: number) {
-    this.probability = probability || 0;
+    this.probability = new Fraction(probability || 0);
     this.label = null;
   }
 
@@ -46,10 +44,11 @@ export class Move {
 
   /**Returns the text of the probability, depending on the current mode*/
   getProbabilityText(fractional?: boolean) {
-    if (fractional && this.probability !== 1 && this.probability !== 0) {
-      return math.format(math.fraction(this.probability));
+    const probAsDecimal = this.probability.valueOf();
+    if (fractional && probAsDecimal !== 1 && probAsDecimal !== 0) {
+      return this.probability.toFraction();
     } else {
-      let result = math.format(math.round(math.number(this.probability), 2)).toString();
+      let result = (Math.round(this.probability.valueOf() * 100) / 100).toString();
       if (result.length !== 1) {
         result = result.substr(1);
       }

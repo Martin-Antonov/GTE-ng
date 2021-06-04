@@ -1,0 +1,7 @@
+<input type="range" id="tree-height" class="dimension" name="treeWidth" [(ngModel)]="this.treeHeight" [min]="0"
+       max="100" (input)="this.updateTreeHeight()" (mousedown)="saveInitialHeight()"
+       (mouseup)="saveHeightToUndo($event)">
+<input type="range" id="tree-width" class="dimension" name="treeWidth" [(ngModel)]="this.treeWidth" [min]="0" max="100"
+       (input)="this.updateTreeWidth()" (mousedown)="saveInitialWidth()" (mouseup)="saveWidthToUndo($event)">
+
+

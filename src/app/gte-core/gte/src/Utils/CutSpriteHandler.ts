@@ -1,43 +1,40 @@
-/// <reference path="../../../../../../node_modules/phaser-ce/typescript/phaser.d.ts" />
 import {ISetView} from '../View/ISetView';
-import {CUT_SPRITE_TINT, ISET_LINE_WIDTH} from './Constants';
+import {ISET_LINE_WIDTH} from './Constants';
 
 export class CutSpriteHandler {
-  cutSprite: Phaser.Sprite;
+  scene: Phaser.Scene;
+
+  cutSprite: Phaser.GameObjects.Image;
   cutInformationSet: ISetView;
-  game: Phaser.Game;
 
-  constructor(game: Phaser.Game) {
-    this.game = game;
+  constructor(scene: Phaser.Scene) {
+    this.scene = scene;
 
-    this.cutSprite = this.game.add.sprite(0, 0, 'scissors');
-    this.cutSprite.anchor.set(0.5, 0.5);
+    this.cutSprite = this.scene.add.image(0, 0, 'scissors');
     this.cutSprite.alpha = 0;
-    this.cutSprite.tint = CUT_SPRITE_TINT;
-    this.cutSprite.width = this.game.height * ISET_LINE_WIDTH;
-    this.cutSprite.height = this.game.height * ISET_LINE_WIDTH;
+    this.cutSprite.setDepth(3);
+
+    this.cutSprite.displayWidth = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
+    this.cutSprite.displayHeight = this.scene.sys.canvas.height * ISET_LINE_WIDTH;
   }
 
   update() {
     if (!this.cutInformationSet) {
       this.cutSprite.alpha = 0;
       return;
-    }
-    else if (this.cutSprite.alpha > 0 && this.cutInformationSet) {
-      let mouseXPosition = this.game.input.mousePointer.x;
-      let finalPosition = new Phaser.Point();
-      let nodeWidth = this.cutInformationSet.nodes[0].width * 0.5;
+    } else if (this.cutSprite.alpha > 0 && this.cutInformationSet) {
+      let mouseXPosition = this.scene.input.mousePointer.x;
+      let finalPosition = new Phaser.Math.Vector2();
+      let nodeWidth = this.cutInformationSet.nodes[0].displayWidth * 0.5;
 
       // Limit from the left for X coordinate
       if (mouseXPosition - nodeWidth < this.cutInformationSet.nodes[0].x) {
         finalPosition.x = this.cutInformationSet.nodes[0].x + nodeWidth;
-      }
-      // Limit from the right for X coordinate
-      else if (mouseXPosition + nodeWidth > this.cutInformationSet.nodes[this.cutInformationSet.nodes.length - 1].x) {
+        // Limit from the right for X coordinate
+      } else if (mouseXPosition + nodeWidth > this.cutInformationSet.nodes[this.cutInformationSet.nodes.length - 1].x) {
         finalPosition.x = this.cutInformationSet.nodes[this.cutInformationSet.nodes.length - 1].x - nodeWidth;
-      }
-      // Or just follow the mouse (X coordinate)
-      else {
+        // Or just follow the mouse (X coordinate)
+      } else {
         finalPosition.x = mouseXPosition;
       }
 
@@ -51,16 +48,15 @@ export class CutSpriteHandler {
       }
 
       // set the y difference to be proportional to the x difference
-      const closestLeftNodePosition = this.cutInformationSet.nodes[closestLeftNodeIndex].position;
-      const closestRightNodePosition = this.cutInformationSet.nodes[closestLeftNodeIndex + 1].position;
+      const closestLeftNodePosition = new Phaser.Math.Vector2(this.cutInformationSet.nodes[closestLeftNodeIndex].x,
+        this.cutInformationSet.nodes[closestLeftNodeIndex].y);
+      const closestRightNodePosition = new Phaser.Math.Vector2(this.cutInformationSet.nodes[closestLeftNodeIndex + 1].x,
+        this.cutInformationSet.nodes[closestLeftNodeIndex + 1].y);
       const proportionInX = (finalPosition.x - closestLeftNodePosition.x) /
         (closestRightNodePosition.x - closestLeftNodePosition.x);
-      // console.log(proportionInX);
       finalPosition.y = closestLeftNodePosition.y + proportionInX * (closestRightNodePosition.y - closestLeftNodePosition.y);
 
-      this.cutSprite.position.x = finalPosition.x;
-      this.cutSprite.position.y = finalPosition.y;
-
+      this.cutSprite.setPosition(finalPosition.x, finalPosition.y);
       finalPosition = null;
       mouseXPosition = null;
       nodeWidth = null;

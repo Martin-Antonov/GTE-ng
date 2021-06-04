@@ -5,8 +5,7 @@
   </ng-container>
 </ng-container>
 <div class="middle-element"></div>
-<div class="copyright">LSE 2018 <span *ngIf="this.tfs.userActionController">fps {{this.tfs.userActionController.game.time.fps}}</span>
-</div>
+<div class="copyright">LSE 2020 <span *ngIf="this.tfs.userActionController">{{version}}</span></div>
 
 <app-draggable-window [title]="" [isResizeable]="false" [height]="'150px'" [width]="'300px'" [top]="'calc(50% - 75px)'" [right]="'calc(50% - 150px)'"
                       (closeCallback)="this.confirmationActive=false;"
@@ -16,5 +15,4 @@
     <app-text-button [isActive]="false" [text]="'Yes'" (click)="this.closeTab(this.currentTabIndex)"></app-text-button>
     <app-text-button [isActive]="false" [text]="'No'" (click)="this.confirmationActive=false"></app-text-button>
   </div>
-
 </app-draggable-window>

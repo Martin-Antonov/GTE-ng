@@ -4,6 +4,7 @@
 :host {
   height: 100%;
   float: left;
+
   .tab-container {
     position: relative;
     display: flex;
@@ -21,19 +22,22 @@
 
     .tree-name-container {
       position: relative;
-      display: flex;
       height: 60%;
+      width: 80%;
+      border: none;
       align-items: center;
       color: $grey-text;
       font-size: 0.8em;
       font-weight: lighter;
       padding: 0 5px;
+      background-color: transparent;
     }
 
     .middle-element {
       margin: auto;
     }
   }
+
   .selected {
     background-color: $grey3;
   }

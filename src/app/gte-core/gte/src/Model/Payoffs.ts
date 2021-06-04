@@ -1,46 +1,42 @@
 /**The class Payoff which is an array of numbers*/
 import {MAX_RANDOM_PAYOFFS} from '../Utils/Constants';
-import * as math from 'mathjs';
+import Fraction from 'fraction.js/fraction';
 
 export class Payoffs {
-  outcomes: Array<number>;
-  outcomesAsFractions: Array<any>;
+  outcomes: Array<Fraction>;
   outcomesAsDecimals: Array<any>;
   isBestResponce: Array<boolean>;
   private playersCount: number;
 
-  constructor(payoffs?: Array<number>) {
+  constructor(payoffs?: Array<Fraction>) {
     this.playersCount = 2;
-
+    this.outcomes = [];
     if (payoffs) {
-      this.outcomes = payoffs.slice(0);
+      payoffs.forEach((payoff: Fraction) => {
+        this.outcomes.push(new Fraction(payoff.n, payoff.d));
+      });
+    } else {
+      this.reset();
     }
-    else {
-      this.outcomes = [0, 0, 0, 0];
-    }
-    this.outcomesAsFractions = [];
     this.outcomesAsDecimals = [];
     this.isBestResponce = [false, false, false, false];
   }
 
   /**A method converting text payoffs from the input field, and placing them to the corresponding leaves*/
   saveFromString(payoffs: string) {
-    let payoffsAsStringArray = payoffs.split(' ');
+    const payoffsAsStringArray = payoffs.split(' ');
     for (let i = 0; i < payoffsAsStringArray.length; i++) {
       if (i > 3) {
         return;
       }
-      let currentPayoff = parseFloat(payoffsAsStringArray[i]);
-      if (currentPayoff === 0 || currentPayoff) {
-        this.outcomes[i] = currentPayoff;
-      }
+      this.outcomes[i] = new Fraction(payoffsAsStringArray[i]);
     }
   }
 
   /**A method for setting random payoffs to leaves*/
   setRandomPayoffs() {
     for (let i = 0; i < this.outcomes.length; i++) {
-      this.outcomes[i] = Math.floor(Math.random() * MAX_RANDOM_PAYOFFS);
+      this.outcomes[i] = new Fraction(Math.floor(Math.random() * MAX_RANDOM_PAYOFFS));
     }
   }
 
@@ -51,44 +47,50 @@ export class Payoffs {
 
   /**A method for converting the game into a zero-sum game*/
   convertToZeroSum() {
-    let sum = 0;
+    let sum = new Fraction(0);
     for (let i = 0; i < this.playersCount - 1; i++) {
-      sum += this.outcomes[i];
+      sum = sum.add(this.outcomes[i]);
     }
-    this.outcomes[this.playersCount - 1] = -sum;
+    this.outcomes[this.playersCount - 1] = sum.mul(-1);
   }
 
   /**A helper method for the functionality of the strategic form*/
-  add(payoffsToAdd: Array<number>) {
+  add(payoffsToAdd: Array<Fraction>) {
     for (let i = 0; i < this.outcomes.length; i++) {
-      this.outcomes[i] += payoffsToAdd[i];
+      this.outcomes[i] = this.outcomes[i].add(payoffsToAdd[i]);
     }
   }
 
-  multiply(number: number) {
+  multiply(number: Fraction) {
     for (let i = 0; i < this.outcomes.length; i++) {
-      this.outcomes[i] *= number;
+      this.outcomes[i] = this.outcomes[i].mul(number);
     }
   }
 
-  /**A helper method for the visual representation of outcomes. Uses an external library mathjs.*/
+  reset() {
+  this.outcomes = [];
+    for (let i = 0; i < 4; i++) {
+      this.outcomes.push(new Fraction(0));
+    }
+  }
+
+  /**A helper method for the visual representation of outcomes.*/
   round() {
     for (let i = 0; i < this.outcomes.length; i++) {
-      this.outcomes[i] = parseFloat(math.format(math.round(this.outcomes[i], 2)));
+      this.outcomesAsDecimals[i] = Math.round(this.outcomes[i].valueOf() * 100) / 100;
     }
   }
 
-  /**A helper method for the visual representation of outcomes. Uses an external library mathjs.*/
+  /**A helper method for the visual representation of outcomes*/
   setOutcomes() {
     for (let i = 0; i < this.outcomes.length; i++) {
-      this.outcomesAsFractions[i] = math.fraction(this.outcomes[i]);
-      this.outcomesAsDecimals[i] = math.round(this.outcomes[i], 2);
+      this.outcomesAsDecimals[i] = Math.round(this.outcomes[i].valueOf() * 100) / 100;
     }
   }
 
   /**A method for printing and visualizing payoffs*/
   toString() {
-    let numbersToShow = [];
+    const numbersToShow = [];
     for (let i = 0; i < this.playersCount; i++) {
       numbersToShow.push(this.outcomes[i]);
     }
