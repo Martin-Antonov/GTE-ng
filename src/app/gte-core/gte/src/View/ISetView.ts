@@ -94,10 +94,11 @@ export class ISetView extends Phaser.GameObjects.Image {
     const text = this.nodes[0].node.player ? this.nodes[0].node.player.label : '';
     this.label = this.scene.add.text((rightNode.x + leftNode.x) * 0.5,
       (rightNode.y + leftNode.y) * 0.5, text, {
-        fontSize: this.nodes[0].circle.displayWidth * LABEL_SIZE,
         fontStyle: 'bold',
         fontFamily: 'Arial',
-      }).setOrigin(0.5, 0.5);
+      })
+      .setOrigin(0.5, 0.5)
+      .setFontSize(this.nodes[0].circle.displayWidth * LABEL_SIZE);
     if (!this.iSet.player) {
       this.label.alpha = 0;
     } else {

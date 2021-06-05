@@ -31,21 +31,21 @@ export class MoveView extends Phaser.GameObjects.Image {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'italic',
-      fontSize: this.from.circle.displayWidth * 1.28,
       metrics: LABEL_METRICS
     }).setOrigin(0.5, 0.5)
-      .setPadding(3, 0, 3, 0);
+      .setPadding(3, 0, 3, 0)
+      .setFontSize(this.from.circle.displayWidth * 1.28);
 
     this.label.setInteractive();
     this.subscript = this.scene.add.text(0, 0, this.move.subscript, {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'normal',
-      fontSize: this.from.circle.displayWidth * 1.05,
       metrics: SUBSCRIPT_METRICS
     })
       .setOrigin(0, 0.5)
-      .setPadding(0, 0, 3, 0);
+      .setPadding(0, 0, 3, 0)
+      .setFontSize(this.from.circle.displayWidth * 1.05);
     this.setDepth(-1);
     this.scene.add.existing(this);
   }
@@ -86,12 +86,12 @@ export class MoveView extends Phaser.GameObjects.Image {
     if (this.move.from.type === NodeType.OWNED) {
       color = this.from.node.player.color.toString();
       this.label.setColor(color)
-       .setFontSize(this.from.circle.displayWidth * 1.28)
-       .setFontStyle('italic');
+        .setFontSize(this.from.circle.displayWidth * 1.28)
+        .setFontStyle('italic');
     } else if (this.move.from.type === NodeType.CHANCE) {
       this.label.setColor('#000')
-       .setFontSize(this.from.circle.displayWidth * 1.05)
-       .setFontStyle('normal');
+        .setFontSize(this.from.circle.displayWidth * 1.05)
+        .setFontStyle('normal');
     }
     this.subscript.setColor(color);
 

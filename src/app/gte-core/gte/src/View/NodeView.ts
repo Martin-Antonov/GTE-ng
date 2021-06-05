@@ -66,22 +66,21 @@ export class NodeView extends Phaser.GameObjects.Container {
     const color = this.node.player ? this.node.player.color : '#000000';
 
     this.ownerLabel = this.scene.add.text(this.labelHorizontalOffset * this.circle.displayWidth * 0.75, -this.circle.displayWidth, text, {
-      fontSize: this.circle.displayWidth * LABEL_SIZE,
       color: color,
       fontStyle: 'bold',
       fontFamily: 'Arial',
       metrics: OWNER_METRICS
-    });
+    }).setFontSize(this.circle.displayWidth * LABEL_SIZE);
     this.ownerLabel.setInteractive();
 
     this.payoffsLabel = this.scene.add.text(0, 0, '', {
-      fontSize: this.circle.displayWidth * PAYOFF_SIZE,
       fontStyle: 'bold',
       align: 'right',
       fontFamily: 'Arial',
       color: '#000',
       metrics: PAYOFF_METRICS
-    }).setOrigin(0.5, 0);
+    }).setOrigin(0.5, 0)
+      .setFontSize(this.circle.displayWidth * PAYOFF_SIZE);
 
     // Create gradient
     const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, 100);
