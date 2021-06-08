@@ -471,7 +471,6 @@ export class UserActionController {
     this.strategicFormResult = null;
     this.strategicForm.destroy();
     if (this.treeController.tree.checkAllNodesLabeled()) {
-      const start = Date.now();
       this.strategicFormResult = this.strategicForm.generateStrategicForm(this.treeController.tree);
     }
   }

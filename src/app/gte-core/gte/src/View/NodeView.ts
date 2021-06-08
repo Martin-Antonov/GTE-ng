@@ -1,8 +1,6 @@
 import {
   LABEL_SIZE,
   NODE_RADIUS,
-  OWNER_METRICS,
-  PAYOFF_METRICS,
   PAYOFF_SIZE,
   PLAYER_COLORS, PLAYER_COLORS_NUMBER,
   PREVIEW_CIRCLE_COLOR,
@@ -69,7 +67,6 @@ export class NodeView extends Phaser.GameObjects.Container {
       color: color,
       fontStyle: 'bold',
       fontFamily: 'Arial',
-      metrics: OWNER_METRICS
     }).setFontSize(this.circle.displayWidth * LABEL_SIZE);
     this.ownerLabel.setInteractive();
 
@@ -78,7 +75,6 @@ export class NodeView extends Phaser.GameObjects.Container {
       align: 'right',
       fontFamily: 'Arial',
       color: '#000',
-      metrics: PAYOFF_METRICS
     }).setOrigin(0.5, 0)
       .setFontSize(this.circle.displayWidth * PAYOFF_SIZE);
 
@@ -157,10 +153,12 @@ export class NodeView extends Phaser.GameObjects.Container {
         this.payoffsLabel.setAlpha(1);
         const payoffsString = this.node.payoffs.toString();
         const labelsArray = payoffsString.split(' ');
-        this.payoffsLabel.text = '';
+        let payoffsText = '';
+
         for (let i = 0; i < labelsArray.length; i++) {
-          this.payoffsLabel.text += labelsArray[i] + '\n';
+          payoffsText += labelsArray[i] + '\n';
         }
+        this.payoffsLabel.setText(payoffsText);
         this.payoffsLabel.setAlpha(1);
         this.payoffsLabel.input.enabled = true;
       } else {

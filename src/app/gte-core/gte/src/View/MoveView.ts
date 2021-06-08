@@ -1,7 +1,6 @@
 import {NodeType} from '../Model/Node';
 import {NodeView} from './NodeView';
 import {Move} from '../Model/Move';
-import {LABEL_METRICS, SUBSCRIPT_METRICS} from '../Utils/Constants';
 
 /** A class which represents how the move looks like, it has a reference to the start and end points and the label text*/
 export class MoveView extends Phaser.GameObjects.Image {
@@ -31,7 +30,6 @@ export class MoveView extends Phaser.GameObjects.Image {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'italic',
-      metrics: LABEL_METRICS
     }).setOrigin(0.5, 0.5)
       .setPadding(3, 0, 3, 0)
       .setFontSize(this.from.circle.displayWidth * 1.28);
@@ -41,7 +39,6 @@ export class MoveView extends Phaser.GameObjects.Image {
       align: 'center',
       fontFamily: 'Arial',
       fontStyle: 'normal',
-      metrics: SUBSCRIPT_METRICS
     })
       .setOrigin(0, 0.5)
       .setPadding(0, 0, 3, 0)

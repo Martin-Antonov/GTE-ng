@@ -6,8 +6,8 @@ export class LabelSetter {
 
   constructor() {
     this.labels = [];
-    this.labels[0] = 'ABCDEFGHIJK'.split('');
-    this.labels[1] = 'abcdefghijklmno'.split('');
+    this.labels[0] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    this.labels[1] = 'abcdefghijklmnopqrstuvwxyz'.split('');
     this.labels[2] = 'LMNOPQRSTUVWXYZ'.split('');
     this.labels[3] = 'pqrstuvwxyz'.split('');
   }

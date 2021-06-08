@@ -52,12 +52,7 @@ export class LabelInputHandler {
       const index = this.nodesBFSOrder.indexOf((<MoveView>this.currentlySelected).move.to);
 
       // Calculate the next index in the BFS order to go to. If the last node, go to the next after the root, i.e. index 1
-      let nextIndex;
-      if (next) {
-        nextIndex = this.nodesBFSOrder.length !== index + 1 ? index + 1 : 1;
-      } else {
-        nextIndex = index === 1 ? this.nodesBFSOrder.length - 1 : index - 1;
-      }
+      let nextIndex = this.calculateMoveLabelIndex(next, index);
       // Activate the next move
       this.currentlySelected = this.treeController.treeView.findMoveView(this.nodesBFSOrder[nextIndex].parentMove);
       // If we are currently looking at nodes
@@ -81,6 +76,25 @@ export class LabelInputHandler {
     }
     this.setLabelCoords();
     this.events.emit('select-text');
+  }
+
+  /**Get next move index. If the parent is an infoset, skip until you reach a different infoset.*/
+  private calculateMoveLabelIndex(next: boolean, index: number) {
+    let nextIndex = this.getNextMoveIndex(next, index);
+    let parent = this.nodesBFSOrder[nextIndex].parentMove.from;
+    while (parent.iSet && parent.iSet.nodes.indexOf(parent) !== 0) {
+      nextIndex = this.getNextMoveIndex(next, nextIndex);
+      parent = this.nodesBFSOrder[nextIndex].parentMove.from;
+    }
+    return nextIndex;
+  }
+
+  private getNextMoveIndex(next: boolean, index: number) {
+    if (next) {
+      return this.nodesBFSOrder.length !== index + 1 ? index + 1 : 1;
+    } else {
+      return index === 1 ? this.nodesBFSOrder.length - 1 : index - 1;
+    }
   }
 
   /**A helper method which calculates the next possible index of a labeled node*/

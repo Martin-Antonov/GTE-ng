@@ -55,7 +55,7 @@ export class LabelInputComponent implements OnInit {
     this.selectInputText();
   }
 
-  private hide() {
+  hide() {
     this.userActionController.labelInput.hide();
   }
 
