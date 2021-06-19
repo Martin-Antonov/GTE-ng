@@ -111,7 +111,6 @@ export class UserActionController {
   createNewTree() {
     this.deleteNodeHandler(this.treeController.treeView.nodes[0]);
     this.addNodesHandler(this.treeController.treeView.nodes[0]);
-    this.checkCreateStrategicForm();
   }
 
   /**A method for deselecting nodes.*/
@@ -166,7 +165,6 @@ export class UserActionController {
       this.treeController.addNodeHandler(nodesV);
       this.undoRedoActionController.saveAction(ACTION.ADD_NODE, nodesV);
     }
-    this.checkCreateStrategicForm();
   }
 
   /** A method for deleting nodes (keyboard DELETE).*/
@@ -191,7 +189,6 @@ export class UserActionController {
       this.selectedNodes.splice(this.selectedNodes.indexOf(nV), 1);
     });
 
-    this.checkCreateStrategicForm();
     this.undoRedoController.saveNewTree();
   }
 
@@ -208,7 +205,6 @@ export class UserActionController {
         this.treeController.assignPlayerToNode(playerID, nodesV);
       }
       this.undoRedoActionController.saveAction(ACTION.ASSIGN_PLAYER, {playerID: playerID, nodesV: nodesV});
-      this.checkCreateStrategicForm();
     }
   }
 
@@ -225,7 +221,6 @@ export class UserActionController {
       this.treeController.tree.removePlayer(this.treeController.tree.players[lastPlayerIndex]);
       this.treeController.resetTree(false, false);
       this.undoRedoActionController.saveAction(ACTION.DECREASE_PLAYERS_COUNT, [nodesWithRemovedPlayer, lastPlayerIndex]);
-      this.checkCreateStrategicForm();
     }
   }
 
@@ -246,7 +241,6 @@ export class UserActionController {
         this.treeController.createISet(this.selectedNodes);
         const newISets = this.getCurrentISets();
         this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets, selectedNotOwned]);
-        this.checkCreateStrategicForm();
         this.deselectNodesHandler();
       } catch (err) {
         this.events.emit('show-error', err);
@@ -262,7 +256,6 @@ export class UserActionController {
       this.treeController.removeISetsByNodesHandler(this.selectedNodes);
       const newISets = this.getCurrentISets();
       this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets]);
-      this.checkCreateStrategicForm();
     }
   }
 
@@ -314,7 +307,6 @@ export class UserActionController {
       const newISets = this.getCurrentISets();
       this.undoRedoActionController.saveAction(ACTION.CHANGE_INFO_SETS, [oldISets, newISets]);
       this.treeController.resetTree(true, true);
-      this.checkCreateStrategicForm();
     }, this);
   }
 
@@ -342,7 +334,6 @@ export class UserActionController {
   undoRedoHandler(undo: boolean) {
     this.emptySelectedNodes();
     this.undoRedoActionController.changeTree(undo);
-    this.checkCreateStrategicForm();
   }
 
   /**A method for assigning random payoffs*/
@@ -351,7 +342,6 @@ export class UserActionController {
     this.treeController.assignRandomPayoffs();
     const payoffsAfter = this.getCurrentPayoffs();
     this.undoRedoActionController.saveAction(ACTION.ASSIGN_RANDOM_PAYOFFS, [payoffsBefore, payoffsAfter]);
-    this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the zero sum on or off*/
@@ -360,7 +350,6 @@ export class UserActionController {
     this.treeController.treeView.properties.zeroSumOn = !this.treeController.treeView.properties.zeroSumOn;
     this.treeController.resetTree(false, false);
     this.undoRedoActionController.saveAction(ACTION.ZERO_SUM_TOGGLE, payoffs);
-    this.checkCreateStrategicForm();
   }
 
   /**A method which toggles the fractional or decimal view of chance moves*/
@@ -394,7 +383,6 @@ export class UserActionController {
         const oldLabel = mV.move.from.type === NodeType.CHANCE ? mV.move.probability : mV.move.label;
         this.undoRedoActionController.saveAction(ACTION.CHANGE_MOVE_LABEL, [oldLabel, mV.move, newLabel]);
         this.labelInput.changeLabel(newLabel);
-        this.checkCreateStrategicForm();
         return;
       }
     } else if (this.labelInput.currentlySelected instanceof NodeView) {
@@ -403,12 +391,10 @@ export class UserActionController {
         this.undoRedoActionController.saveAction(ACTION.CHANGE_PLAYER_LABEL,
           [nV.node.player.label, newLabel, this.treeController.tree.players.indexOf(nV.node.player)]);
         this.labelInput.changeLabel(newLabel);
-        this.checkCreateStrategicForm();
         return;
       } else if (nV.node.payoffs.toString() !== newLabel) {
         this.undoRedoActionController.saveAction(ACTION.CHANGE_PAYOFF, [nV.node.payoffs.toString(), newLabel, nV.node]);
         this.labelInput.changeLabel(newLabel);
-        this.checkCreateStrategicForm();
         return;
       }
     }

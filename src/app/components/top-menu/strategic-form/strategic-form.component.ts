@@ -4,6 +4,7 @@ import {UserActionControllerService} from '../../../services/user-action-control
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
 import {TreesFileService} from '../../../services/trees-file/trees-file.service';
+import {MAX_NODES_COUNT_FOR_STRATEGIC_FORM} from '../../../gte-core/gte/src/Utils/Constants';
 
 @Component({
   selector: 'app-strategic-form',
@@ -17,14 +18,20 @@ export class StrategicFormComponent implements OnInit {
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
               private solver: SolverService,
-              private tts: TreesFileService) {}
+              private tts: TreesFileService) {
+  }
 
 
   ngOnInit() {
     this.uac.userActionController.subscribe((value) => {
       this.userActionController = value;
+      this.userActionController.checkCreateStrategicForm();
     });
     this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
+  }
+
+  get areThereTooManyNodes(): boolean {
+    return this.userActionController.treeController.tree.nodes.length > MAX_NODES_COUNT_FOR_STRATEGIC_FORM;
   }
 
   upScale(increment: number) {
@@ -42,6 +49,7 @@ export class StrategicFormComponent implements OnInit {
   }
 
   postFromStrategicForm() {
+    this.userActionController.checkCreateStrategicForm();
     let result = '';
     let m1 = '';
     let m2 = '';

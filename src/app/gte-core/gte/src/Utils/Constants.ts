@@ -44,3 +44,4 @@ export const STRATEGIC_FORM_DELIMITER = ' ';
 // Other constants
 export const MAX_RANDOM_PAYOFFS = 21;
 export const CLICK_THRESHOLD = 200;
+export const MAX_NODES_COUNT_FOR_STRATEGIC_FORM = 22;

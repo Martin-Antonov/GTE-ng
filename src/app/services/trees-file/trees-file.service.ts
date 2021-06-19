@@ -49,7 +49,6 @@ export class TreesFileService {
         this.treeTabs[index].coordsList
       );
       this.currentTabIndex = index;
-      this.userActionController.checkCreateStrategicForm();
       this.userActionController.undoRedoController.destroy();
       this.userActionController.undoRedoController = new UndoRedoController(this.userActionController.treeController);
       if (this.treeTabs[index].urTreesList) {

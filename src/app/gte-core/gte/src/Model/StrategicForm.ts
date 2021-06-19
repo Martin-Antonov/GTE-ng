@@ -1,5 +1,5 @@
 /**The class which will calculate the strategic form from the given tree */
-import {STRATEGIC_FORM_DELIMITER, STRATEGIC_NOT_LABELED_ERROR_TEXT} from '../Utils/Constants';
+import {MAX_NODES_COUNT_FOR_STRATEGIC_FORM, STRATEGIC_FORM_DELIMITER, STRATEGIC_NOT_LABELED_ERROR_TEXT} from '../Utils/Constants';
 import {Move} from './Move';
 import {Node, NodeType} from './Node';
 import {Tree} from './Tree';
@@ -11,6 +11,8 @@ import Fraction from 'fraction.js/fraction';
 
 export class StrategicForm {
   tree: Tree;
+
+  notAvailable: boolean;
 
   p1Strategies: Array<Array<Move>>;
   p2Strategies: Array<Array<Move>>;
@@ -41,13 +43,17 @@ export class StrategicForm {
 
   constructor() {
     this.serializer = new StrategicFormSerializer(this);
+    this.notAvailable = true;
   }
 
   // region Generate strategies
   /**Generates the strategic form, which is stored in two arrays of strategies for P1 and P2*/
   generateStrategicForm(tree: Tree) {
     this.tree = tree;
-
+    if (this.tree.nodes.length > MAX_NODES_COUNT_FOR_STRATEGIC_FORM) {
+      this.notAvailable = true;
+      return null;
+    }
     this.checkStrategicFormPossible();
 
     // The order of information sets is breadth-first. If at some point we wish to change this - swap with dfs.
@@ -109,6 +115,8 @@ export class StrategicForm {
       p1Strategies: this.p1Strategies, p2Strategies: this.p2Strategies, p3Strategies: this.p3Strategies, p4Strategies: this.p4Strategies,
       payoffsMatrix: this.payoffsMatrix
     };
+
+    this.notAvailable = false;
     return result;
   }
 

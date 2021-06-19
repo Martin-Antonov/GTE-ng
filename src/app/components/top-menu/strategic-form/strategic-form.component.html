@@ -6,9 +6,16 @@
 
   <div class="buttons-container" *ngIf="this.userActionController && this.userActionController.strategicForm">
     <div class="button" (click)="this.postFromStrategicForm()">Solve</div>
+    <div class="button" (click)="this.userActionController.checkCreateStrategicForm()">Refresh</div>
   </div>
 
-  <div *ngIf="!this.userActionController || !this.userActionController.strategicForm" class="not-available-text">
+  <div *ngIf="this.userActionController && this.areThereTooManyNodes" class="not-available-text">
+    Too many nodes to calculate strategic form...
+  </div>
+
+  <div
+    *ngIf="!this.userActionController || !this.userActionController.strategicForm || (this.userActionController.strategicForm.notAvailable && !this.areThereTooManyNodes)"
+    class="not-available-text">
     Strategic form not available...
   </div>
 
