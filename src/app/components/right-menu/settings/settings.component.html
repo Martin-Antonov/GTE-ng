@@ -1,30 +1,39 @@
 <app-draggable-window [width]="'30%'" [height]="'55%'" [isResizeable]="false" [top]="'5%'" [right]="'4%'"
                       (closeCallback)="this.close()" [title]="'Settings'">
-    <div class="settings-content">
-      <form #settingsForm="ngForm" autocomplete="off">
-        <div class="tree-dimensions">
-        </div>
-        <div class="player-preferred-lists">
-          <label for="p1List">P1 Moves List: </label>
-          <input type="text" id="p1List" name="p1List" [(ngModel)]="this.playerLists[0]" (change)="this.updatePlayerList(0)" [(value)]="this.playerLists[0]"><br>
-          <label for="p2List">P2 Moves List: </label>
-          <input type="text" id="p2List" name="p2List" [(ngModel)]="this.playerLists[1]" (change)="this.updatePlayerList(1)" [(value)]="this.playerLists[1]"><br>
-          <label for="p3List">P3 Moves List: </label>
-          <input type="text" id="p3List" name="p3List" [(ngModel)]="this.playerLists[2]" (change)="this.updatePlayerList(2)" [(value)]="this.playerLists[2]"><br>
-          <label for="p4List">P4 Moves List: </label>
-          <input type="text" id="p4List" name="p4List" [(ngModel)]="this.playerLists[3]" (change)="this.updatePlayerList(3)" [(value)]="this.playerLists[3]"><br>
-        </div>
+  <div class="settings-content">
+    <form #settingsForm="ngForm" autocomplete="off">
+<!--      <div class="tree-direction">-->
+<!--        <label for="tree-direction">Tree Direction: </label>-->
+<!--        <div id="tree-direction" class="tree-direction-buttons">-->
+<!--          <div *ngFor="let el of [0,1,2,3]" class="direction-button" [ngClass]="{'selected' : currentDirection===el}"-->
+<!--               (click)="changeDirection(el)"><img [ngStyle]="{transform: 'rotate('+el*90+'deg)'}" src="assets/images/direction.png"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="player-preferred-lists">
+        <label for="p1List">P1 Moves List: </label>
+        <input type="text" id="p1List" name="p1List" [(ngModel)]="this.playerLists[0]"
+               (change)="this.updatePlayerList(0)" [(value)]="this.playerLists[0]"><br>
+        <label for="p2List">P2 Moves List: </label>
+        <input type="text" id="p2List" name="p2List" [(ngModel)]="this.playerLists[1]"
+               (change)="this.updatePlayerList(1)" [(value)]="this.playerLists[1]"><br>
+        <label for="p3List">P3 Moves List: </label>
+        <input type="text" id="p3List" name="p3List" [(ngModel)]="this.playerLists[2]"
+               (change)="this.updatePlayerList(2)" [(value)]="this.playerLists[2]"><br>
+        <label for="p4List">P4 Moves List: </label>
+        <input type="text" id="p4List" name="p4List" [(ngModel)]="this.playerLists[3]"
+               (change)="this.updatePlayerList(3)" [(value)]="this.playerLists[3]"><br>
+      </div>
 
-        <div class="toggle-button-container">
-          <label for="autoLevels">Minimize crossings:</label>
-          <span></span>
-          <input type="checkbox" id="autoLevels" class="checkbox" (change)="this.toggleAutoLevels()">
-        </div>
-        <div class="toggle-button-container">
-          <label for="bestResponses">Best Responses:</label>
-          <span></span>
-          <input type="checkbox" id="bestResponses" class="checkbox" (change)="this.toggleBestResponses()">
-        </div>
-      </form>
-    </div>
+      <div class="toggle-button-container">
+        <label for="autoLevels">Minimize crossings:</label>
+        <span></span>
+        <input type="checkbox" id="autoLevels" class="checkbox" (change)="this.toggleAutoLevels()">
+      </div>
+      <div class="toggle-button-container">
+        <label for="bestResponses">Best Responses:</label>
+        <span></span>
+        <input type="checkbox" id="bestResponses" class="checkbox" (change)="this.toggleBestResponses()">
+      </div>
+    </form>
+  </div>
 </app-draggable-window>

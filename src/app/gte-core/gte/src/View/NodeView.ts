@@ -27,6 +27,7 @@ export class NodeView extends Phaser.GameObjects.Container {
   // Horizontal offset: -1 for left, 1 for right;
   labelHorizontalOffset: number;
   private radius: number;
+  private test: Phaser.GameObjects.DOMElement;
 
   constructor(scene: Phaser.Scene, node: Node, x?: number, y?: number) {
     super(scene, x, y);
@@ -54,8 +55,9 @@ export class NodeView extends Phaser.GameObjects.Container {
 
     this.square = this.scene.add.rectangle(0, 0, this.radius * 2, this.radius * 2, 0x000000)
       .setAlpha(0);
-
-    this.add([this.circle, this.square, this.previewSelected]);
+    this.test = this.scene.add.dom(0, 0, 'div', null, '0\n0\n0\n0');
+    this.test.setOrigin(0.5, 0);
+    this.add([this.circle, this.square, this.previewSelected, this.test]);
   }
 
   /** A method which creates the label for the Node*/
@@ -69,17 +71,17 @@ export class NodeView extends Phaser.GameObjects.Container {
       fontFamily: 'Arial',
     }).setFontSize(this.circle.displayWidth * LABEL_SIZE);
     this.ownerLabel.setInteractive();
-
+    const payoffsFontSize = Math.round(this.circle.displayWidth * PAYOFF_SIZE);
     this.payoffsLabel = this.scene.add.text(0, 0, '', {
       fontStyle: 'bold',
       align: 'right',
       fontFamily: 'Arial',
       color: '#000',
     }).setOrigin(0.5, 0)
-      .setFontSize(this.circle.displayWidth * PAYOFF_SIZE);
+      .setFontSize(payoffsFontSize);
 
     // Create gradient
-    const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, 100);
+    const grd = this.scene.sys.canvas.getContext('2d').createLinearGradient(0, 0, 0, payoffsFontSize * 4 - 5);
     grd.addColorStop(0.000, 'rgba(255, 0, 0, 1.000)');
     grd.addColorStop(0.249, 'rgba(255, 0, 0, 1.000)');
     grd.addColorStop(0.250, 'rgba(0, 0, 255, 1.000)');

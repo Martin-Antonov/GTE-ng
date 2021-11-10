@@ -7,8 +7,9 @@ import {Node} from '../Model/Node';
 import {Tree} from '../Model/Tree';
 import {TreeViewProperties} from './TreeViewProperties';
 import {TreeTweenManager} from '../Utils/TreeTweenManager';
-import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH, TREE_TWEEN_DURATION} from '../Utils/Constants';
+import {INITIAL_TREE_HEIGHT, INITIAL_TREE_WIDTH} from '../Utils/Constants';
 import {CrossingsMinimizer} from '../Utils/CrossingsMinimizer';
+import {Direction} from './Direction';
 
 /** A class for the graphical representation of the tree. The main algorithm for drawing and repositioning
  * the tree is in this class*/
@@ -81,6 +82,7 @@ export class TreeView {
     if (this.properties.automaticLevelAdjustment && this.iSets.length > 0) {
       this.crossingsMinimizer.minimizeCrossingsBetweenInfoSets();
     }
+    this.changeTreeOrientation();
     this.centerGroupOnScreen();
     this.drawISets();
 
@@ -165,9 +167,32 @@ export class TreeView {
     }
   }
 
-  /**Re-centers the tree on the screen*/
-  centerGroupOnScreen() {
+  private changeTreeOrientation() {
+    const dir = this.properties.treeDirection;
 
+    if (dir === Direction.TB) {
+      return;
+    } else if (dir === Direction.BT) {
+      this.nodes.forEach((nV: NodeView) => {
+        nV.y = -nV.y;
+      });
+    } else if (dir === Direction.LR) {
+      this.nodes.forEach((nV: NodeView) => {
+        const x = nV.x;
+        const y = nV.y;
+        nV.setPosition(y, x);
+      });
+    } else if (dir === Direction.RL) {
+      this.nodes.forEach((nV: NodeView) => {
+        const x = nV.x;
+        const y = nV.y;
+        nV.setPosition(-y, x);
+      });
+    }
+  }
+
+  /**Re-centers the tree on the screen*/
+  private centerGroupOnScreen(): void {
     const bounds = this.getTreeBounds();
     this.treeHeight = bounds.height;
 

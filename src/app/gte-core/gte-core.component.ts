@@ -32,7 +32,10 @@ export class GteCoreComponent implements OnInit {
       backgroundColor: '#fff',
       width: width,
       height: height,
-      parent: 'phaser-div'
+      parent: 'phaser-div',
+      dom: {
+        createContainer: true
+      },
     };
 
     const game = new GTE(config);

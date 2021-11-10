@@ -1,15 +1,55 @@
 @import "../../../shared/constants";
 @import "../../../shared/mixins";
 
-app-draggable-window{
+app-draggable-window {
   .settings-content {
     @include window-content();
+
+    label {
+      font-size: 0.8em;
+      color: $grey3;
+    }
+
+    .tree-direction {
+      display: flex;
+      align-items: center;
+
+      .tree-direction-buttons {
+        display: flex;
+        margin: 0 0 5px 5px;
+        width: 68%;
+        justify-content: space-between;
+
+        .direction-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 30px;
+          height: 30px;
+          border: 2px solid $grey-border;
+          border-radius: 3px;
+          background-color: $grey4;
+
+          &:hover {
+            background-color: lightgrey;
+          }
+
+          &.selected {
+            background-color: white;
+          }
+
+          img {
+            transform-origin: center;
+            width: 80%;
+            height: 80%;
+          }
+        }
+      }
+    }
+
     .player-preferred-lists {
       margin-bottom: 20px;
-      label {
-        font-size: 0.8em;
-        color: $grey3;
-      }
+
       input {
         margin-bottom: 5px;
         margin-left: 5px;
@@ -17,16 +57,15 @@ app-draggable-window{
         color: $grey4;
       }
     }
+
     .toggle-button-container {
       display: flex;
       align-items: center;
-      span{
+
+      span {
         margin: auto;
       }
-      label {
-        font-size: 0.8em;
-        color: $grey3;
-      }
+
       .checkbox {
         &:hover {
           &:before {
@@ -34,6 +73,7 @@ app-draggable-window{
             cursor: pointer;
           }
         }
+
         position: relative;
         width: 40px;
         height: 20px;
@@ -50,10 +90,12 @@ app-draggable-window{
         &:checked {
           background: #ff7e6a;
           transition: background 0.5s ease-in-out;
+
           &:before {
             left: 20px;
           }
         }
+
         &:before {
           content: '';
           position: absolute;
@@ -67,6 +109,7 @@ app-draggable-window{
           -moz-transform: scale(.98, .96);
           transition: 0.3s;
           -moz-transition: 0.3s;
+
           &:hover {
             background: cornflowerblue;
           }

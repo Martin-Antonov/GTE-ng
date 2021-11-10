@@ -17,10 +17,11 @@ export class SettingsComponent implements OnInit {
   treeWidth: number;
   treeHeight: number;
   userActionController: UserActionController;
-
   playerLists: Array<string>;
+  currentDirection: number;
 
   constructor(private uis: UiSettingsService, private uas: UserActionControllerService) {
+    this.currentDirection = 0;
     this.uas.userActionController.subscribe(value => {
       this.userActionController = value;
     });
@@ -63,5 +64,11 @@ export class SettingsComponent implements OnInit {
 
   toggleBestResponses() {
     this.uis.bestResponsesActive = !this.uis.bestResponsesActive;
+  }
+
+  changeDirection(dir: number) {
+    this.currentDirection = dir;
+    this.userActionController.treeController.treeView.properties.treeDirection = dir;
+    this.userActionController.treeController.resetTree(true, true);
   }
 }
