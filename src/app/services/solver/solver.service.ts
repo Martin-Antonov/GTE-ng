@@ -7,9 +7,9 @@ import {Node} from '../../gte-core/gte/src/Model/Node';
   providedIn: 'root'
 })
 export class SolverService {
-  private url = `http://test.api.logos.bg/api/solve/`;
+  private url = `http://localhost:8000/api/solve/`;
+  private se_url = `http://localhost:8000/api/seqsolve/`;
   algorithmResult: string;
-
   constructor(private http: HttpClient) {
   }
 
@@ -22,7 +22,23 @@ export class SolverService {
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
         this.algorithmResult += '<br /><em>D. Avis, G. Rosenberg, R. Savani, and B. von Stengel (2010),</br>' +
           'Enumeration of Nash equilibria for two-player games.</br>' +
-          'Economic Theory 42, 9-37</em>';
+          'Economic Theory 42, 9-37 </em>';
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  postGameTree(efFile: string) {
+    const data = new FormData();
+    data.append('game_text', efFile);
+    this.http.post(this.se_url, data).subscribe(
+      (result: any) => {
+        this.algorithmResult = result.solver_output;
+        this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
+        this.algorithmResult += '<br /><em>Moritz Graf</br>' +
+          'Computation of Sequential Equilibria with Cones and Cylinders</br></em>';
       },
       (err) => {
         console.log(err);

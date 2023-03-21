@@ -1,0 +1,23 @@
+<app-draggable-window [width]="'30%'" [height]="'50%'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
+                      (closeCallback)="this.close()" [title]="'Sequential Solver'">
+
+  <div class="not-available-text">
+    Hier könnte ihre Warteschlange stehen
+  </div>
+
+  <div class="buttons-container" *ngIf="this.userActionController && this.userActionController.strategicForm">
+    <div class="button" (click)="this.postGameTree()">Solve</div>
+    <div class="button" >Refresh</div>
+  </div>
+
+
+  <ng-container bottom>
+    <div class="zoom-button">
+      <img [src]="'assets/images/zoom-out.png'" alt="zoom out button" (click)="this.downScale(1.2)">
+    </div>
+    <div class="zoom-button">
+      <img [src]="'assets/images/zoom-in.png'" alt="zoom in button" (click)="this.upScale(1.2)">
+    </div>
+  </ng-container>
+
+</app-draggable-window>

@@ -19,6 +19,7 @@ export class TopMenuComponent implements OnInit {
   tooltips: ITooltips;
   logoSrc: string;
   strategicFormActive: boolean;
+  sequentialFormActive: boolean;
 
   @ViewChild('loadInput', {static: false}) loadFileField;
 
@@ -49,6 +50,7 @@ export class TopMenuComponent implements OnInit {
     });
     this.logoSrc = 'assets/images/logo.png';
     this.strategicFormActive = false;
+    this.sequentialFormActive = false;
   }
 
   toggleStrategicForm() {
@@ -77,6 +79,10 @@ export class TopMenuComponent implements OnInit {
     } else {
       this.userActionController.resetSPNE();
     }
+  }
+
+  toggleSequentialForm() {
+    this.uis.sequentialFormActive = !this.uis.sequentialFormActive;
   }
 
   isUndoActive() {
