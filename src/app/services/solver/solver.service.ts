@@ -38,7 +38,8 @@ export class SolverService {
         this.algorithmResult = result.solver_output;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
         this.algorithmResult += '<br /><em>Moritz Graf</br>' +
-          'Computation of Sequential Equilibria with Cones and Cylinders</br></em>';
+          'Computation of Sequential Equilibria with Cones and Cylinders</br>' + 
+          'Master Thesis, University of Freiburg, 2022 </br></em>';
       },
       (err) => {
         console.log(err);
