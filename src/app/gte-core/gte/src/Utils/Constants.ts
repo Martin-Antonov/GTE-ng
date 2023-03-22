@@ -1,4 +1,4 @@
-export const GTE_VERSION = 'GTE v2.2.5';
+export const GTE_VERSION = 'GTE v2.2.5 SE';
 
 // Boot Menu Constants
 export const INITIAL_TREE_WIDTH = 0.5;

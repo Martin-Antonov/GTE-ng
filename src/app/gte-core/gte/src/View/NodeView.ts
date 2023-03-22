@@ -27,7 +27,7 @@ export class NodeView extends Phaser.GameObjects.Container {
   // Horizontal offset: -1 for left, 1 for right;
   labelHorizontalOffset: number;
   private radius: number;
-  private test: Phaser.GameObjects.DOMElement;
+  // private test: Phaser.GameObjects.DOMElement;
 
   constructor(scene: Phaser.Scene, node: Node, x?: number, y?: number) {
     super(scene, x, y);
@@ -55,9 +55,10 @@ export class NodeView extends Phaser.GameObjects.Container {
 
     this.square = this.scene.add.rectangle(0, 0, this.radius * 2, this.radius * 2, 0x000000)
       .setAlpha(0);
-    this.test = this.scene.add.dom(0, 0, 'div', null, '0\n0\n0\n0');
-    this.test.setOrigin(0.5, 0);
-    this.add([this.circle, this.square, this.previewSelected, this.test]);
+    // this.test = this.scene.add.dom(0, 0, 'div', null, '0\n0\n0\n0');
+    // this.test.setOrigin(0.5, 0);
+    // this.add([this.circle, this.square, this.previewSelected, this.test]);
+    this.add([this.circle, this.square, this.previewSelected]);
   }
 
   /** A method which creates the label for the Node*/
