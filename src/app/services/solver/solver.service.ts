@@ -30,9 +30,10 @@ export class SolverService {
     );
   }
 
-  postGameTree(efFile: string) {
+  postGameTree(efFile: string, config) {
     const data = new FormData();
     data.append('game_text', efFile);
+    data.append('config', config)
     this.http.post(this.se_url, data).subscribe(
       (result: any) => {
         this.algorithmResult = result.solver_output;

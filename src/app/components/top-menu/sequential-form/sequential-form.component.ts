@@ -14,6 +14,11 @@ import {MAX_NODES_COUNT_FOR_STRATEGIC_FORM} from '../../../gte-core/gte/src/Util
 export class SequentialFormComponent implements OnInit {
   userActionController: UserActionController;
   stratFormScaleCSS: string;
+  efForm : string
+  include_nash : boolean
+  include_sequential: boolean
+  restrict_strategy: boolean
+  restrict_belief: boolean
 
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
@@ -28,6 +33,11 @@ export class SequentialFormComponent implements OnInit {
       // this.userActionController.checkCreateStrategicForm();
     });
     this.stratFormScaleCSS = 'scale(' + this.uis.stratFormScale + ')';
+    this.createEfForm()
+    this.include_nash = true
+    this.include_sequential = true
+    this.restrict_strategy = false
+    this.restrict_belief = false
   }
 
   get areThereTooManyNodes(): boolean {
@@ -49,9 +59,24 @@ export class SequentialFormComponent implements OnInit {
   }
 
   postGameTree() {
-    const efFile = this.userActionController.viewExporter.toEf();
-    // const blob = new Blob([efFile], {type: 'text/plain;charset=utf-8'});
-    this.solver.postGameTree(efFile);
+    let config = ""
+    if (this.include_nash)
+      config += "include_nash\n"
+    if (this.include_sequential)
+      config += "include_sequential\n"
+    if (this.restrict_strategy)
+      config += "restrict_strategy\n"
+    if (this.restrict_belief)
+      config += "restrict_belief\n"
+
+    this.solver.postGameTree(this.efForm, config);
     this.uis.solverActive = true;
   }
+
+  createEfForm(){
+    const efFile = this.userActionController.viewExporter.toEf();
+    this.efForm = efFile
+  }
+
+
 }

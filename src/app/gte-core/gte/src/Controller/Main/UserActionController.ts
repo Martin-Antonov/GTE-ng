@@ -462,6 +462,7 @@ export class UserActionController {
   }
 
 
+
   gameResize() {
     const element = document.getElementById('phaser-div');
     const boundingRect = element.getBoundingClientRect();
