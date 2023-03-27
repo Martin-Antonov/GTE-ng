@@ -8,8 +8,10 @@ import {Node} from '../../gte-core/gte/src/Model/Node';
 })
 export class SolverService {
   private url = `http://localhost:8000/api/solve/`;
-  private se_url = `http://localhost:8000/api/seqsolve/`;
+  private se_url = `http://localhost:8000/api/seqsolve/solve`;
+  private se_url_read = `http://localhost:8000/api/seqsolve/read`;
   algorithmResult: string;
+  variableNames: string;
   constructor(private http: HttpClient) {
   }
 
@@ -29,17 +31,29 @@ export class SolverService {
       }
     );
   }
-
-  postGameTree(efFile: string, config) {
+  postGameToRead(efFile:string) {
     const data = new FormData();
     data.append('game_text', efFile);
+    this.http.post(this.se_url_read, data).subscribe(
+      (result: any) => {
+        this.variableNames = result.variable_names;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+  postGameTree(efFile: string, variable_overwrites : string, config : string) {
+    const data = new FormData();
+    data.append('game_text', efFile);
+    data.append('variable_overwrites', variable_overwrites)
     data.append('config', config)
     this.http.post(this.se_url, data).subscribe(
       (result: any) => {
         this.algorithmResult = result.solver_output;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
         this.algorithmResult += '<br /><em>Moritz Graf</br>' +
-          'Computation of Sequential Equilibria with Cones and Cylinders</br>' + 
+          'Computation of Sequential Equilibria with Cones and Cylinders</br>' +
           'Master Thesis, University of Freiburg, 2022 </br></em>';
       },
       (err) => {

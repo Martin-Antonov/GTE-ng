@@ -14,11 +14,12 @@ import {MAX_NODES_COUNT_FOR_STRATEGIC_FORM} from '../../../gte-core/gte/src/Util
 export class SequentialFormComponent implements OnInit {
   userActionController: UserActionController;
   stratFormScaleCSS: string;
-  efForm : string
-  include_nash : boolean
-  include_sequential: boolean
-  restrict_strategy: boolean
-  restrict_belief: boolean
+  efForm : string;
+  variableMaps : string;
+  include_nash : boolean;
+  include_sequential: boolean;
+  restrict_strategy: boolean;
+  restrict_belief: boolean;
 
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
@@ -69,14 +70,22 @@ export class SequentialFormComponent implements OnInit {
     if (this.restrict_belief)
       config += "restrict_belief\n"
 
-    this.solver.postGameTree(this.efForm, config);
+    var lines = this.solver.variableNames.split('\n')
+    let variable_overwrites = ""
+    for(var i=1; i<lines.length;i++) {
+      let parts = lines[i].split(":")
+      if (parts.length == 3) {
+        variable_overwrites += parts[1].trim() + ":" + parts[2].trim() + "\n"
+      }
+    }
+    this.solver.postGameTree(this.efForm, variable_overwrites, config);
     this.uis.solverActive = true;
   }
 
   createEfForm(){
     const efFile = this.userActionController.viewExporter.toEf();
+    this.solver.postGameToRead(efFile)
     this.efForm = efFile
   }
-
 
 }

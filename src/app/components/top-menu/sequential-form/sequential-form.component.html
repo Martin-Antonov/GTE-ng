@@ -1,11 +1,15 @@
-<app-draggable-window [width]="'30%'" [height]="'50%'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
+<app-draggable-window [width]="'40%'" [height]="'65%'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
                       (closeCallback)="this.close()" [title]="'Sequential Solver'">
+
 
   <div class="matrix-input-content">
     <textarea cols="40" rows="15" id="ef-text-input"
                 name="efTextInput" [(ngModel)]="this.efForm"></textarea>
+    <textarea cols="40" rows="15" id="ef-text-input2"
+                name="efTextInput" [(ngModel)]="this.solver.variableNames"></textarea>
   </div>
 
+  <div></div>
   <div class="dimensions-input" align="center">
     <div>Equilibria: </div>
     <label for="nash">Nash</label>
