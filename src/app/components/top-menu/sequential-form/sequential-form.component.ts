@@ -20,6 +20,7 @@ export class SequentialFormComponent implements OnInit {
   include_sequential: boolean;
   restrict_strategy: boolean;
   restrict_belief: boolean;
+  showEdit: boolean;
 
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
@@ -39,6 +40,7 @@ export class SequentialFormComponent implements OnInit {
     this.include_sequential = true
     this.restrict_strategy = false
     this.restrict_belief = false
+    this.showEdit = false
   }
 
   get areThereTooManyNodes(): boolean {
@@ -87,5 +89,6 @@ export class SequentialFormComponent implements OnInit {
     this.solver.postGameToRead(efFile)
     this.efForm = efFile
   }
+
 
 }

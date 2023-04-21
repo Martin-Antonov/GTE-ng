@@ -10,8 +10,10 @@ export class SolverService {
   private url = `http://localhost:8000/api/solve/`;
   private se_url = `http://localhost:8000/api/seqsolve/solve`;
   private se_url_read = `http://localhost:8000/api/seqsolve/read`;
+  private se_url_status = `http://localhost:8000/api/seqsolve/status`;
   algorithmResult: string;
   variableNames: string;
+  seqSolverId: string;
   constructor(private http: HttpClient) {
   }
 
@@ -31,6 +33,7 @@ export class SolverService {
       }
     );
   }
+
   postGameToRead(efFile:string) {
     const data = new FormData();
     data.append('game_text', efFile);
@@ -50,11 +53,29 @@ export class SolverService {
     data.append('config', config)
     this.http.post(this.se_url, data).subscribe(
       (result: any) => {
+        this.seqSolverId = result.id
+        this.postStatusRequest()
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  postStatusRequest() {
+    const data = new FormData();
+    data.append('id', this.seqSolverId);
+    this.http.post(this.se_url_status, data).subscribe(
+      (result: any) => {
         this.algorithmResult = result.solver_output;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
-        this.algorithmResult += '<br /><em>Moritz Graf</br>' +
-          'Computation of Sequential Equilibria with Cones and Cylinders</br>' +
-          'Master Thesis, University of Freiburg, 2022 </br></em>';
+        if(result.solver_status == "Completed") {
+          this.algorithmResult += '<br /><em>Moritz Graf</br>' +
+            'Computation of Sequential Equilibria with Cones and Cylinders</br>' +
+            'Master Thesis, University of Freiburg, 2022 </br></em>';
+        }
+        if(result.solver_active && this.seqSolverId == result.expected_id)
+          this.postStatusRequest();
       },
       (err) => {
         console.log(err);

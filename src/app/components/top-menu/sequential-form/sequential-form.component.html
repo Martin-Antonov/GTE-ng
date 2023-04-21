@@ -2,12 +2,13 @@
                       (closeCallback)="this.close()" [title]="'Sequential Solver'">
 
 
-  <div class="matrix-input-content">
+  <div [ngStyle]="{'visibility': this.showEdit ? 'visible' : 'hidden'}" class="matrix-input-content">
     <textarea cols="40" rows="15" id="ef-text-input"
                 name="efTextInput" [(ngModel)]="this.efForm"></textarea>
     <textarea cols="40" rows="15" id="ef-text-input2"
                 name="efTextInput" [(ngModel)]="this.solver.variableNames"></textarea>
   </div>
+
 
   <div></div>
   <div class="dimensions-input" align="center">
@@ -27,6 +28,7 @@
   <div class="buttons-container" *ngIf="this.userActionController && this.userActionController.strategicForm">
     <div class="button" (click)="this.postGameTree()">Solve</div>
     <div class="button" (click)="this.createEfForm()">Refresh</div>
+    <div class="button" (click)="this.showEdit = !this.showEdit">Edit</div>
   </div>
 
 
