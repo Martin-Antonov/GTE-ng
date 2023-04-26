@@ -62,6 +62,9 @@ export class SequentialFormComponent implements OnInit {
   }
 
   postGameTree() {
+    if(!this.showEdit) {
+      this.createEfForm()
+    }
     let config = ""
     if (this.include_nash)
       config += "include_nash\n"
