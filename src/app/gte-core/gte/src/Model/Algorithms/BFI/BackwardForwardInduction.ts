@@ -26,7 +26,6 @@ export class BackwardForwardInduction implements IAlgorithm {
     if (tree.iSets.length !== 0) {
       throw new Error(BACKWARDS_INDUCTION_PERFECT_INFORMATION);
     }
-
     const coalitions = this.coalitionsCalculator.calculate(tree);
     const nodes = this.getNodeOrder(tree);
     this.nodeAllSolutions = new Map();
@@ -56,7 +55,7 @@ export class BackwardForwardInduction implements IAlgorithm {
       });
     });
     this.sortCoalitionsPerNode();
-
+    debugger;
     const finalSolution = this.finalSolutionsCalculator.calculate(this.nodeAllSolutions, tree);
     this.logResult(nodes, finalSolution);
     return finalSolution;

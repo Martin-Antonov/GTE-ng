@@ -6,9 +6,9 @@ import Fraction from 'fraction.js/fraction';
 import {Move} from '../Move';
 
 export class BackwardInduction implements IAlgorithm {
-/**
-* @returns A boolean array, which shows whether every move in the tree is best or not.
-*/
+  /**
+   * @returns A boolean array, which shows whether every move in the tree is best or not.
+   */
   execute(tree: Tree): Array<boolean> {
     if (!tree.checkAllNodesLabeled()) {
       throw new Error(BACKWARDS_INDUCTION_NOT_ALL_LABELED);
@@ -57,6 +57,10 @@ export class BackwardInduction implements IAlgorithm {
           result[movesCloned.indexOf(maxLeaf.parentMove)] = true;
         }
 
+        const childrenContainNonLeaves = n.children.some((c: Node) => c.children.length !== 0);
+        if (childrenContainNonLeaves) {
+          return;
+        }
         for (let i = 0; i < n.children.length; i++) {
           tree.removeNode(n.children[i]);
           i--;
