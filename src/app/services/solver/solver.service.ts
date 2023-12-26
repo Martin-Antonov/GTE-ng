@@ -70,9 +70,9 @@ export class SolverService {
         this.algorithmResult = result.solver_output;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
         if(result.solver_status == "Completed") {
-          this.algorithmResult += '<br /><em>Moritz Graf</br>' +
-            'Computation of Sequential Equilibria with Cones and Cylinders</br>' +
-            'Master Thesis, University of Freiburg, 2022 </br></em>';
+          this.algorithmResult += '<br /><em>M. Graf, T. Engesser, and B.Nebel,</br>' +
+            'Symbolic Computation of Sequential Equilibria.</br>' +
+            'Proceedings of AAMAS 2024.</br></em>';
         }
         if(result.solver_active && this.seqSolverId == result.expected_id)
           this.postStatusRequest();
