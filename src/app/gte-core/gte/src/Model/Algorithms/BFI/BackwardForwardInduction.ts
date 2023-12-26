@@ -55,7 +55,6 @@ export class BackwardForwardInduction implements IAlgorithm {
       });
     });
     this.sortCoalitionsPerNode();
-    debugger;
     const finalSolution = this.finalSolutionsCalculator.calculate(this.nodeAllSolutions, tree);
     this.logResult(nodes, finalSolution);
     return finalSolution;
