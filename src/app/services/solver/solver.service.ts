@@ -70,7 +70,7 @@ export class SolverService {
         this.algorithmResult = result.solver_output;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
         if(result.solver_status == "Completed") {
-          this.algorithmResult += '<br /><em>M. Graf, T. Engesser, and B.Nebel,</br>' +
+          this.algorithmResult += '<br /><em>M. Graf, T. Engesser, and B. Nebel,</br>' +
             'Symbolic Computation of Sequential Equilibria.</br>' +
             'Proceedings of AAMAS 2024.</br></em>';
         }
