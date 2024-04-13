@@ -5,6 +5,7 @@ import {Injectable} from '@angular/core';
 })
 export class UiSettingsService {
   strategicFormActive: boolean;
+  sequentialFormActive: boolean;
   matrixInputActive: boolean;
   solverActive: boolean;
   settingsActive: boolean;
@@ -24,6 +25,7 @@ export class UiSettingsService {
 
   init() {
     this.strategicFormActive = false;
+    this.sequentialFormActive = false;
     this.matrixInputActive = false;
     this.solverActive = false;
     this.settingsActive = false;

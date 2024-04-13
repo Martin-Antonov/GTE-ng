@@ -1,0 +1,40 @@
+<app-draggable-window [width]="'40%'" [height]="'65%'" [isResizeable]="true" [top]="'5%'" [right]="'2%'"
+                      (closeCallback)="this.close()" [title]="'Sequential Solver'">
+
+
+  <div [ngStyle]="{'visibility': this.showEdit ? 'visible' : 'hidden'}" class="matrix-input-content">
+    <textarea cols="40" rows="15" id="ef-text-input"
+              name="efTextInput" [(ngModel)]="this.efForm"></textarea>
+    <textarea cols="40" rows="15" id="ef-text-input2"
+              name="efTextInput" [(ngModel)]="this.solver.variableNames"></textarea>
+  </div>
+
+  <div class="dimensions-input" align="center">
+    <div>Equilibria:</div>
+    <label for="nash">Nash</label>
+    <input type="checkbox" id="nash" name="nash" [(ngModel)]="this.includeNash">
+    <label for="seq">Sequential</label>
+    <input type="checkbox" id="seq" name="seq" [(ngModel)]="this.includeSequential">
+  </div>
+  <div class="dimensions-input" align="center">
+    <div>Restrictions:</div>
+    <label for="rs">Pure Strategies </label>
+    <input type="checkbox" id="rs" name="rs" [(ngModel)]="this.restrictStrategy">
+    <label for="rb">Pure Beliefs </label>
+    <input type="checkbox" id="rb" name="rb" [(ngModel)]="this.restrictBelief">
+  </div>
+  <div class="buttons-container" *ngIf="this.userActionController && this.userActionController.strategicForm">
+    <div class="button" (click)="this.postGameTree()">Solve</div>
+    <div class="button" (click)="this.createEfForm()">Refresh</div>
+    <div class="button" (click)="this.showEdit = !this.showEdit">Edit</div>
+  </div>
+
+  <ng-container bottom>
+    <div class="zoom-button">
+      <img [src]="'assets/images/zoom-out.png'" alt="zoom out button" (click)="this.downScale(1.2)">
+    </div>
+    <div class="zoom-button">
+      <img [src]="'assets/images/zoom-in.png'" alt="zoom in button" (click)="this.upScale(1.2)">
+    </div>
+  </ng-container>
+</app-draggable-window>

@@ -11,6 +11,7 @@ import {TextButtonComponent} from './components/top-menu/text-button/text-button
 import {TreeTabComponent} from './components/bottom-menu/tree-tab/tree-tab.component';
 import {HttpClientModule} from '@angular/common/http';
 import {StrategicFormComponent} from './components/top-menu/strategic-form/strategic-form.component';
+import {SequentialFormComponent} from './components/top-menu/sequential-form/sequential-form.component';
 import {AngularDraggableModule} from 'angular2-draggable';
 import {UserActionControllerService} from './services/user-action-controller/user-action-controller.service';
 import {TooltipsService} from './services/tooltips/tooltips.service';
@@ -50,6 +51,7 @@ import {DraggableWindowComponent} from './shared/components/draggable-window/dra
     TreeTabComponent,
     SquareButtonComponent,
     StrategicFormComponent,
+    SequentialFormComponent,
     ClickableXComponent,
     MatrixInputComponent,
     SolverComponent,

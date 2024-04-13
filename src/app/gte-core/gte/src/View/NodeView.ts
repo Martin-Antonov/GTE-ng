@@ -27,7 +27,6 @@ export class NodeView extends Phaser.GameObjects.Container {
   // Horizontal offset: -1 for left, 1 for right;
   labelHorizontalOffset: number;
   private radius: number;
-  private test: Phaser.GameObjects.DOMElement;
 
   constructor(scene: Phaser.Scene, node: Node, x?: number, y?: number) {
     super(scene, x, y);
