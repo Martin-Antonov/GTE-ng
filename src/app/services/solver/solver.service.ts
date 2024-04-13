@@ -7,7 +7,7 @@ import {Node} from '../../gte-core/gte/src/Model/Node';
   providedIn: 'root'
 })
 export class SolverService {
-  private url = `http://test.api.logos.bg/api/solve/`;
+  private url = `https://solve-t7wq7ngkpa-uc.a.run.app`;
   algorithmResult: string;
 
   constructor(private http: HttpClient) {
@@ -18,7 +18,7 @@ export class SolverService {
     data.append('game_text', matrix);
     this.http.post(this.url, data).subscribe(
       (result: any) => {
-        this.algorithmResult = result.solver_output;
+        this.algorithmResult = result;
         this.algorithmResult.replace(/(\r\n|\n|\r)/gm, '<br />');
         this.algorithmResult += '<br /><em>D. Avis, G. Rosenberg, R. Savani, and B. von Stengel (2010),</br>' +
           'Enumeration of Nash equilibria for two-player games.</br>' +
