@@ -3,7 +3,6 @@ import {UserActionController} from '../../../gte-core/gte/src/Controller/Main/Us
 import {UserActionControllerService} from '../../../services/user-action-controller/user-action-controller.service';
 import {UiSettingsService} from '../../../services/ui-settings/ui-settings.service';
 import {SolverService} from '../../../services/solver/solver.service';
-import {TreesFileService} from '../../../services/trees-file/trees-file.service';
 import {MAX_NODES_COUNT_FOR_STRATEGIC_FORM} from '../../../gte-core/gte/src/Utils/Constants';
 
 @Component({
@@ -17,8 +16,7 @@ export class StrategicFormComponent implements OnInit {
 
   constructor(private uac: UserActionControllerService,
               private uis: UiSettingsService,
-              private solver: SolverService,
-              private tts: TreesFileService) {
+              private solver: SolverService) {
   }
 
 
@@ -49,25 +47,13 @@ export class StrategicFormComponent implements OnInit {
   }
 
   postFromStrategicForm() {
-    this.userActionController.checkCreateStrategicForm();
-    let result = '';
-    let m1 = '';
-    let m2 = '';
-    result += this.userActionController.strategicFormResult.p1rows.length + ' ' + this.userActionController.strategicFormResult.p2cols.length;
-    for (let i = 0; i < this.userActionController.strategicFormResult.payoffsMatrix.length; i++) {
-      const payoffsMatrix = this.userActionController.strategicFormResult.payoffsMatrix[i];
-      for (let j = 0; j < payoffsMatrix.length; j++) {
-        const payoffs = payoffsMatrix[j];
-        const m1PayoffAsFraction = payoffs[0][0].outcomes[0].toFraction();
-        const m2PayoffAsFraction = payoffs[0][0].outcomes[1].toFraction();
-        m1 += m1PayoffAsFraction + ' ';
-        m2 += m2PayoffAsFraction + ' ';
-      }
-      m1 += '\n';
-      m2 += '\n';
+    try {
+      this.userActionController.checkCreateStrategicForm();
+      const result = this.solver.createStrategicFormString(this.userActionController.strategicFormResult);
+      this.solver.postMatrixAsText(result);
+      this.uis.solverActive = true;
+    } catch (error) {
+      this.userActionController.events.emit('show-error', error);
     }
-    result += '\n\n' + m1 + '\n' + m2;
-    this.solver.postMatrixAsText(result);
-    this.uis.solverActive = true;
   }
 }

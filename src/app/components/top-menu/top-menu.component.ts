@@ -14,7 +14,6 @@ import {SolverService} from '../../services/solver/solver.service';
   styleUrls: ['./top-menu.component.scss']
 })
 export class TopMenuComponent implements OnInit {
-
   userActionController: UserActionController;
   tooltips: ITooltips;
   logoSrc: string;
@@ -24,7 +23,7 @@ export class TopMenuComponent implements OnInit {
   @ViewChild('loadInput', {static: false}) loadFileField;
 
   constructor(private uac: UserActionControllerService, public tts: TooltipsService,
-              public uis: UiSettingsService, private tfs: TreesFileService, private ss: SolverService, private hotkeys: HotkeysService) {
+              public uis: UiSettingsService, private tfs: TreesFileService, private hotkeys: HotkeysService) {
 
     this.hotkeys.add(new Hotkey('alt+n', (event: KeyboardEvent): boolean => {
       this.createNewTree();
@@ -57,34 +56,6 @@ export class TopMenuComponent implements OnInit {
     this.uis.strategicFormActive = !this.uis.strategicFormActive;
   }
 
-  toggleMatrixInput() {
-    this.uis.matrixInputActive = !this.uis.matrixInputActive;
-  }
-
-  toggleSolver() {
-    this.uis.solverActive = !this.uis.solverActive;
-  }
-
-  calculateBFI() {
-    const result = this.userActionController.calculateBFI();
-    if (result) {
-      this.uis.solverActive = true;
-      this.ss.convertBFISolution(result);
-    }
-  }
-
-  toggleSPNE() {
-    if (!this.userActionController.SPNEActive) {
-      this.userActionController.calculateSPNE();
-    } else {
-      this.userActionController.resetSPNE();
-    }
-  }
-
-  toggleSequentialForm() {
-    this.uis.sequentialFormActive = !this.uis.sequentialFormActive;
-  }
-
   isUndoActive() {
     return this.userActionController.undoRedoActionController.currentIndex === -1;
   }
@@ -104,11 +75,5 @@ export class TopMenuComponent implements OnInit {
 
   loadTreeFromFile(event) {
     this.tfs.loadTreeFromFile(event);
-  }
-
-  closeSaveFile() {
-    if (this.uis.saveFileActive) {
-      this.uis.saveFileActive = false;
-    }
   }
 }

@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {INodeCoalitionSolution} from '../../gte-core/gte/src/Model/Algorithms/BFI/INodeCoalitionSolution';
 import {Node} from '../../gte-core/gte/src/Model/Node';
 import {IReadResponse, ISolveRequest, IStatusResponse} from './interfaces';
+import {IStrategicFormResult} from '../../gte-core/gte/src/Utils/IStrategicFormResult';
 
 @Injectable({
   providedIn: 'root'
@@ -49,10 +50,10 @@ export class SolverService {
     );
   }
 
-  postGameTree(efFile: string, variable_overwrites: string, config: string) {
+  postGameTree(efFile: string, variableOverwrites: string, config: string) {
     const data = new FormData();
     data.append('game_text', efFile);
-    data.append('variable_overwrites', variable_overwrites);
+    data.append('variable_overwrites', variableOverwrites);
     data.append('config', config);
     this.http.post(this.seUrl, data).subscribe(
       (result: ISolveRequest) => {
@@ -115,4 +116,24 @@ export class SolverService {
     this.algorithmResult = result;
   }
 
+  createStrategicFormString(strategicFormResult: IStrategicFormResult): string {
+    let result = '';
+    let m1 = '';
+    let m2 = '';
+    result += strategicFormResult.p1rows.length + ' ' + strategicFormResult.p2cols.length;
+    for (let i = 0; i < strategicFormResult.payoffsMatrix.length; i++) {
+      const payoffsMatrix = strategicFormResult.payoffsMatrix[i];
+      for (let j = 0; j < payoffsMatrix.length; j++) {
+        const payoffs = payoffsMatrix[j];
+        const m1PayoffAsFraction = payoffs[0][0].outcomes[0].toFraction();
+        const m2PayoffAsFraction = payoffs[0][0].outcomes[1].toFraction();
+        m1 += m1PayoffAsFraction + ' ';
+        m2 += m2PayoffAsFraction + ' ';
+      }
+      m1 += '\n';
+      m2 += '\n';
+    }
+    result += '\n\n' + m1 + '\n' + m2;
+    return result;
+  }
 }

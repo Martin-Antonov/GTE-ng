@@ -79,13 +79,18 @@ export class MatrixInputComponent implements OnInit {
   }
 
   postMatrixAsPlayersInput() {
-    const m1 = this.saveMatrixToString(this.p1T);
-    const m2 = this.saveMatrixToString(this.p2T);
+    try {
+      const m1 = this.saveMatrixToString(this.p1T);
+      const m2 = this.saveMatrixToString(this.p2T);
 
-    const result = this.matrixInputModel.rows + ' ' + this.matrixInputModel.cols + '\n\n' + m1 + '\n' + m2;
+      const result = this.matrixInputModel.rows + ' ' + this.matrixInputModel.cols + '\n\n' + m1 + '\n' + m2;
 
-    this.solver.postMatrixAsText(result);
-    this.uis.solverActive = true;
+      this.solver.postMatrixAsText(result);
+      this.uis.solverActive = true;
+    } catch (err) {
+      this.userActionController.events.emit('show-error', err);
+    }
+
   }
 
   postMatrixAsText() {

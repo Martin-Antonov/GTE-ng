@@ -16,16 +16,28 @@
     height: 32px;
     width: 100%;
     padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &.draggable {
+      &:hover {
+        cursor: move;
+      }
+    }
+
     .window-title {
       font-family: $myriad-pro;
       color: $grey-text;
       float: left;
       line-height: 32px;
     }
+
     app-clickable-x {
       float: right;
     }
   }
+
   .bottom-field {
     position: absolute;
     display: flex;

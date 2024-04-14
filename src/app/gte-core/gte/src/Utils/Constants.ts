@@ -29,7 +29,7 @@ export const NODES_NUMBER_OF_CHILDREN_ERROR_TEXT = 'Cannot create an information
   'children or are leaves.';
 export const IMPERFECT_RECALL_ERROR_TEXT = 'The game tree does not have perfect recall';
 export const BACKWARDS_INDUCTION_NOT_ALL_LABELED = 'Not all nodes have a player assigned';
-export const BACKWARDS_INDUCTION_PERFECT_INFORMATION = 'Cannot calculate SPNE for games with imperfect information.';
+export const BACKWARDS_INDUCTION_PERFECT_INFORMATION = 'Cannot calculate SPNE/BFI for games with imperfect information.';
 
 // ISets
 export const ISET_LINE_WIDTH = 0.05;

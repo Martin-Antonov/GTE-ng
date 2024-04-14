@@ -432,17 +432,21 @@ export class UserActionController {
   }
 
   calculateBFI() {
-    return this.treeController.tree.algorithms.backwardForwardInduction.execute(this.treeController.tree, 'min');
+    try {
+      return this.treeController.tree.algorithms.backwardForwardInduction.execute(this.treeController.tree, 'min');
+    } catch (err) {
+      this.events.emit('show-error', err);
+    }
   }
 
   calculateSPNE() {
-    // try {
+    try {
       this.treeController.calculateSPNE();
       this.SPNEActive = true;
-    // } catch (err) {
-    //   this.events.emit('show-error', err);
-    //   this.SPNEActive = false;
-    // }
+    } catch (err) {
+      this.events.emit('show-error', err);
+      this.SPNEActive = false;
+    }
   }
 
   resetSPNE() {

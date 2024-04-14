@@ -64,7 +64,6 @@ app-draggable-window {
       }
 
       button {
-        width: 60px;
         height: 40px;
         @include clickableButton();
         display: inline-block;
@@ -123,7 +122,6 @@ app-draggable-window {
       }
 
       button {
-        width: 60px;
         height: 40px;
         @include clickableButton();
         display: inline-block;

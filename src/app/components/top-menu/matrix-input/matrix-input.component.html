@@ -11,7 +11,7 @@
       <br><br><label for="matrix-text-input">Input the game in the specified format:</label><br><br>
       <textarea [placeholder]="this.textMatrixPlaceholder" cols="40" rows="15" id="matrix-text-input"
                 name="matrixTextInput" [(ngModel)]="this.matrixInputModel.wholeMatrix"></textarea><br><br>
-      <button type="submit" (click)="this.postMatrixAsText()">Solve</button>
+      <button type="submit" (click)="this.postMatrixAsText()">Solve with lrsnash</button>
     </form>
     <form *ngIf="this.fromMatricesActive" #playersMatrixForm="ngForm" class="from-matrix-active-form"
           autocomplete="off">
@@ -47,7 +47,7 @@
           </table>
         </div>
       </div>
-      <button type="submit" (click)="this.postMatrixAsPlayersInput()">Solve</button>
+      <button type="submit" (click)="this.postMatrixAsPlayersInput()">Solve with lrsnash</button>
     </form>
   </div>
 </app-draggable-window>

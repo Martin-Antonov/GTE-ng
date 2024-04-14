@@ -19,16 +19,21 @@
 
   <app-players-box></app-players-box>
 
-  <app-text-button [text]="'BFI'" (click)="this.calculateBFI()"></app-text-button>
-  <app-text-button [text]="'SPNE'" (click)="this.toggleSPNE()"
-  [isActive]="this.userActionController.SPNEActive"></app-text-button>
-  <app-text-button [text]="'SE'" (click)="this.toggleSequentialForm()"
-  [isActive]="this.uis.sequentialFormActive"></app-text-button>
+  <app-text-button [isActive]="this.uis.algorithmsMenuOpen" [text]="'Algorithms'" (click)="this.uis.algorithmsMenuOpen = true"></app-text-button>
   <app-text-button [text]="'Strategic Form'" (click)="this.toggleStrategicForm()"
                    [isActive]="this.uis.strategicFormActive"></app-text-button>
-  <app-text-button [text]="'Matrix Input'" (click)="this.toggleMatrixInput()"
-                   [isActive]="this.uis.matrixInputActive"></app-text-button>
-  <app-text-button [text]="'Solver'" (click)="this.toggleSolver()" [isActive]="this.uis.solverActive"></app-text-button>
+
+
+  <!--  <app-text-button [text]="'SE'" (click)="this.toggleSequentialForm()"-->
+  <!--  [isActive]="this.uis.sequentialFormActive"></app-text-button>-->
+
+  <!--  <app-text-button [text]="'Matrix Input'" (click)="this.toggleMatrixInput()"-->
+  <!--                   [isActive]="this.uis.matrixInputActive"></app-text-button>-->
+  <!--  <app-text-button [text]="'Solver'" (click)="this.toggleSolver()" [isActive]="this.uis.solverActive"></app-text-button>-->
+
+  <app-algorithms-menu *ngIf="this.uis.algorithmsMenuOpen"
+                       (click)="this.uis.algorithmsMenuOpen = false;">
+  </app-algorithms-menu>
 
   <app-strategic-form *ngIf="this.uis.strategicFormActive"></app-strategic-form>
   <app-sequential-form *ngIf="this.uis.sequentialFormActive"></app-sequential-form>

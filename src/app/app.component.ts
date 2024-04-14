@@ -33,7 +33,8 @@ export class AppComponent {
     this.userActionController.gameResize();
   }
 
-  closeSaveFile() {
+  closeMenus() {
     this.uis.saveFileActive = false;
+    this.uis.algorithmsMenuOpen = false;
   }
 }

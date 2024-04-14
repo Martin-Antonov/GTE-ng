@@ -33,7 +33,6 @@ export class ErrorLogComponent implements OnInit {
   shouldShowError: boolean;
   errorTriangleURL: string;
 
-  // TODO: ASK about how to subscribe!
   constructor(private uac: UserActionControllerService) {
     this.uac.userActionController.subscribe(value => {
       this.userActionController = value;

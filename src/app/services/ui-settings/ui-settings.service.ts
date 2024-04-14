@@ -4,17 +4,18 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class UiSettingsService {
-  strategicFormActive: boolean;
-  sequentialFormActive: boolean;
-  matrixInputActive: boolean;
-  solverActive: boolean;
-  settingsActive: boolean;
-  shortcutsActive: boolean;
-  consoleActive: boolean;
-  quickstartActive: boolean;
-  bestResponsesActive: boolean;
-  saveFileActive: boolean;
-  SPNEActive: boolean;
+  strategicFormActive = false;
+  sequentialFormActive = false;
+  matrixInputActive = false;
+  solverActive = false;
+  settingsActive = false;
+  shortcutsActive = false;
+  consoleActive = false;
+  quickstartActive = true;
+  bestResponsesActive = true;
+  saveFileActive = false;
+  SPNEActive = false;
+  algorithmsMenuOpen = false;
 
   stratFormScale: number;
   quickstartDontShowChecked: boolean;
@@ -24,19 +25,6 @@ export class UiSettingsService {
   }
 
   init() {
-    this.strategicFormActive = false;
-    this.sequentialFormActive = false;
-    this.matrixInputActive = false;
-    this.solverActive = false;
-    this.settingsActive = false;
-    this.shortcutsActive = false;
-    this.consoleActive = false;
-    this.bestResponsesActive = true;
-    this.saveFileActive = false;
-    this.SPNEActive = false;
-
-    this.quickstartActive = true;
-
     try {
       const dontShowQuickstart = localStorage.getItem('dont-show-quickstart');
       if (dontShowQuickstart === '1') {

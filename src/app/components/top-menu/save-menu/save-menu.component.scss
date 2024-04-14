@@ -62,9 +62,11 @@
       line-height: 30px;
       padding-left: 40px;
       font-style: italic;
+      transition: background 0.1s;
 
       &:hover {
         background: $grey2;
+        cursor: pointer;
       }
     }
 
@@ -73,6 +75,7 @@
 
       &:hover {
         background: $grey3;
+        cursor: default;
       }
     }
   }

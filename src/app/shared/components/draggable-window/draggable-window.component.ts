@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 import {DraggableWindowService} from './service/draggable-window.service';
 
@@ -10,6 +10,7 @@ import {DraggableWindowService} from './service/draggable-window.service';
 export class DraggableWindowComponent implements OnInit {
 
   @Input() isResizeable: boolean;
+  @Input() isDraggable = true;
   @Input() width: string;
   @Input() height: string;
   @Input() top: string;

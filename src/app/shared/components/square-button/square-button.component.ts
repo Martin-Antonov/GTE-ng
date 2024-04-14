@@ -35,16 +35,10 @@ export class SquareButtonComponent implements OnInit {
 
   @HostListener('mouseenter') onMouseEnter() {
     this.background = this.inactive ? '#424242' : '#555';
-    if (this.tooltipText) {
-      this.shouldShowAnimation = true;
-    }
   }
 
   @HostListener('mouseleave') onMouseLeave() {
     this.background = '#424242';
-    if (this.tooltipText) {
-      this.shouldShowAnimation = false;
-    }
   }
 
   clickHandler() {

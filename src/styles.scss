@@ -26,3 +26,23 @@ html {;
 .invalid {
   border: 1px solid red;
 }
+
+.ng-tooltip {
+  position: absolute;
+  max-width: 300px;
+  font-size: 14px;
+  text-align: center;
+  padding: 4px 10px;
+  background-color: $tooltip-color;
+  border: 1px solid black;
+  z-index: 1000;
+  opacity: 0;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+  transition: opacity 0s;
+}
+
+.ng-tooltip-show {
+  opacity: 1;
+  transition: opacity 200ms 400ms;
+
+}

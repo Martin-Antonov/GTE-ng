@@ -6,25 +6,29 @@ app-draggable-window {
   .buttons-container {
     display: flex;
     flex-direction: row;
-    align-items:center;
-    justify-content:center;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
-    width:150px;
-    height:50px;
+    height: 50px;
+
     .button {
-      width: 70px;
       height: 30px;
       text-align: center;
       line-height: 30px;
       margin: 0 5px;
+      padding: 4px 8px;
       background: $grey2;
       color: $grey-text;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       @include clickableButton();
     }
   }
+
   .not-available-text {
     position: absolute;
     text-align: center;
@@ -33,6 +37,7 @@ app-draggable-window {
     transform: translate(-50%, -50%);
     color: $grey-text;
   }
+
   .zoom-button {
     position: relative;
     top: 50%;
@@ -41,9 +46,11 @@ app-draggable-window {
     height: 25px;
     display: inline-block;
     margin-right: 2px;
+
     &:hover {
       background-color: $grey3;
     }
+
     img {
       position: relative;
       top: 50%;

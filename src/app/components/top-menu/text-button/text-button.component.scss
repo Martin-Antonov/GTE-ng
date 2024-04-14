@@ -7,23 +7,13 @@
   margin-left: 5px;
   margin-right: 5px;
   @include removeSelection();
+  @include clickableButton();
+  padding: 4px 24px;
+  font-family: $myriad-pro;
+  color: $grey-text;
 
-  .text-button-wrapper {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-top: 4px;
-    @include clickableButton();
-    font-family: $myriad-pro;
-    color: $grey-text;
-  }
-  .isActive {
+  &.isActive {
     background-color: $grey4;
     color: $grey1;
-    &:hover{
-      background-color: #b0b0b0;
-    }
   }
 }

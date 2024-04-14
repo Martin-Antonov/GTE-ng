@@ -37,6 +37,8 @@ import {SquareButtonComponent} from './shared/components/square-button/square-bu
 import {ClickableXComponent} from './shared/components/clickable-x/clickable-x.component';
 import {ErrorLogComponent} from './shared/components/error-log/error-log.component';
 import {DraggableWindowComponent} from './shared/components/draggable-window/draggable-window.component';
+import { AlgorithmsMenuComponent } from './components/top-menu/algorithms-menu/algorithms-menu.component';
+import { TooltipDirective } from './shared/directives/tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -65,10 +67,12 @@ import {DraggableWindowComponent} from './shared/components/draggable-window/dra
     TreeDimensionsComponent,
     QuickstartComponent,
     CookiesNoticeComponent,
+    AlgorithmsMenuComponent,
+    TooltipDirective,
   ],
   imports: [
     BrowserModule, HttpClientModule, AngularDraggableModule, FormsModule, BrowserAnimationsModule,
-    ClickOutsideModule, HotkeyModule.forRoot()
+    ClickOutsideModule, HotkeyModule.forRoot(),
   ],
   providers: [UserActionControllerService, TooltipsService, UiSettingsService, SolverService, TreesFileService, ShortcutsService],
   bootstrap: [AppComponent]

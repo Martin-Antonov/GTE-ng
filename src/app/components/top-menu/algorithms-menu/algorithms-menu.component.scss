@@ -1,0 +1,47 @@
+@import "../../../shared/constants";
+@import "../../../shared/mixins";
+
+:host {
+  position: absolute;
+  top: 40px;
+  right: 5%;
+  @include removeSelection();
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: $grey1;
+
+  .lrsnash-options {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .algorithm {
+      padding-left: 36px;
+    }
+  }
+
+  .algorithm {
+    width: 300px;
+    height: 30px;
+    background: $grey3;
+    color: $grey-text;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: background 0.1s;
+    justify-content: space-between;
+
+    &:hover {
+      cursor: pointer;
+      background: $grey2;
+    }
+
+    &.lrsnash {
+      &:hover {
+        background: $grey3;
+        cursor: default;
+      }
+    }
+  }
+}

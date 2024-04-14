@@ -43,6 +43,7 @@
   border-radius: 5px;
   &:hover {
     background: $grey-border;
+    cursor: pointer;
   }
   &:active {
     background: $grey2;
@@ -67,9 +68,9 @@
   justify-content: center;
 }
 
-@mixin error-bg{
+@mixin error-bg {
   background: #8a1b18; /* Old browsers */
   background: -moz-linear-gradient(left, #8a1b18 0%, #801e1c 68%, #bf150e 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(left, #8a1b18 0%,#801e1c 68%,#bf150e 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to right, #8a1b18 0%,#801e1c 68%,#bf150e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: -webkit-linear-gradient(left, #8a1b18 0%, #801e1c 68%, #bf150e 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #8a1b18 0%, #801e1c 68%, #bf150e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
